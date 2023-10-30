@@ -1,7 +1,7 @@
 {
   "name": "candywrapper",
-  "version": "0.0.0",
-  "author": "Ignose <ihpares@gmail.com>",
+  "version": "0.0.1",
+  "author": "Ignose",
   "homepage": "",
   "license": "MIT",
   "scripts": {
@@ -35,5 +35,9 @@
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
-  }
+  },
+  "description": "A looping script, optimized for Halloween looping protection.",
+  "main": "candywrapper",
+  "repository": "https://github.com/Ignose/candywrapper.git",
+  "private": false
 }
