@@ -176,13 +176,13 @@ export function CSQuests(): Quest[] {
         {
           name: "Nightcap",
           ready: () => doneAdventuring(),
-          completed: () => args.ascend || totallyDrunk(),
+          completed: () => totallyDrunk(),
           do: () => cliExecute("CONSUME NIGHTCAP"),
         },
         {
           name: "Do Pizza",
           ready: () => doneAdventuring(),
-          completed: () => args.ascend || totallyDrunk(),
+          completed: () => totallyDrunk(),
           do: () => {!have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`) :
           !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) :
           !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined} ,
@@ -190,7 +190,7 @@ export function CSQuests(): Quest[] {
         {
           name: "Comb Beach",
           ready: () => have($item`Beach Comb`),
-          completed: () => !args.ascend || myAdventures() === 0,
+          completed: () => myAdventures() === 0,
           do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
         },
         {
@@ -207,7 +207,7 @@ export function CSQuests(): Quest[] {
                 (it) => have(it)
               ) || $item`none`
             );
-            if (args.ascend) cliExecute("garden pick");
+            cliExecute("garden pick");
           },
         },
         {
@@ -222,7 +222,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Pajamas",
-          completed: () => args.ascend || have($item`burning cape`),
+          completed: () => have($item`burning cape`),
           acquire: [
             { item: $item`clockwork maid`, price: 7 * get("valueOfAdventure"), optional: true },
             { item: $item`burning cape` },
@@ -246,12 +246,6 @@ export function CSQuests(): Quest[] {
           prepare: () => putCloset(itemAmount($item`soap knife`), $item`soap knife`),
           do: () => useSkill($skill`That's Not a Knife`),
           post: () => takeCloset(closetAmount($item`soap knife`), $item`soap knife`),
-        },
-        {
-          name: "Tip the Author", //disabled by default - must manually discover and enable the flag
-          ready: () => args.tip,
-          completed: () => !have($item`soap knife`),
-          do: () => cliExecute(`csend * soap knife to frazazel || Thanks for writing goorbo!`),
         },
         {
           name: "Alert-No Nightcap",

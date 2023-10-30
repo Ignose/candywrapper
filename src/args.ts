@@ -68,7 +68,7 @@ export const args = Args.create(
       toMoonSign,
       "MOONSIGN"
     ),
-    defaultclass: Args.custom(
+    class: Args.custom(
       {
         help: "Choose your default class, if goorbo doesn't have any other goals this run",
         options:

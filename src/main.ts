@@ -23,10 +23,6 @@ export function main(command?: string): void {
     printPermPlan();
     return;
   }
-  if (args.sim) {
-    printPermPlan();
-    return;
-  }
   if (args.version) {
     print(`goorbo v${version}`);
     return;
@@ -36,15 +32,6 @@ export function main(command?: string): void {
 
   const tasks = getTasks([AftercoreQuest(), ...CSQuests()]);
 
-  // Abort during the prepare() step of the specified task
-  if (args.abort) {
-    const to_abort = tasks.find((task) => task.name === args.abort);
-    if (!to_abort) throw `Unable to identify task ${args.abort}`;
-    to_abort.prepare = (): void => {
-      throw `Abort requested`;
-    };
-  }
-
   const engine = new ProfitTrackingEngine(tasks, "loop_profit_tracker");
   try {
     if (args.list) {
@@ -52,25 +39,12 @@ export function main(command?: string): void {
       return;
     }
 
-    engine.run(args.actions);
-
     // Print the next task that will be executed, if it exists
     const task = engine.getNextTask();
     if (task) {
       print(`Next: ${task.name}`, "blue");
     }
 
-    // If the engine ran to completion, all tasks should be complete.
-    // Print any tasks that are not complete.
-    if (args.actions === undefined) {
-      const uncompletedTasks = engine.tasks.filter((t) => !t.completed());
-      if (uncompletedTasks.length > 0) {
-        print("Uncompleted Tasks:");
-        for (const t of uncompletedTasks) {
-          print(t.name);
-        }
-      }
-    }
   } finally {
     engine.destruct();
   }

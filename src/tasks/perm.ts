@@ -92,7 +92,7 @@ import {
       ? baseClasses
       : baseClasses.includes(myClass())
       ? [myClass()]
-      : [getClass("goorboNextClass", args.defaultclass)];
+      : [getClass("goorboNextClass", args.class)];
     const ctPerms = planning ? targetPerms(false) : [];
     return !planning //current run
       ? defaultPermList().map((sks) =>
@@ -140,18 +140,18 @@ import {
   export function targetClass(planning: boolean): Class {
     if (myClass() === $class`Grey Goo`) {
       if (args.class && args.class !== $class`none`) return args.class;
-      return getClass("goorboNextClass", args.defaultclass);
+      return getClass("goorboNextClass", args.class);
     }
     if (planning && args.class && args.class !== $class`none`) return args.class;
     //can't access permed skill status in grey goo
 
-    if (shouldBankKarma(planning)) return args.defaultclass;
+    if (shouldBankKarma(planning)) return args.class;
     //if we will be banking skills
 
     const sk = permOptions(planning)
       .flat()
       .find((sk) => baseClasses.includes(sk.class));
-    return sk ? sk.class : args.defaultclass;
+    return sk ? sk.class : args.class;
   }
 
   export function targetPerms(planning: boolean): Skill[] {

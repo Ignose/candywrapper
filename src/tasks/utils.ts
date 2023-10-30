@@ -10,18 +10,15 @@ import {
     mallPrice,
     Monster,
     myAdventures,
-    myClass,
     myFamiliar,
     myFullness,
     myInebriety,
-    myLevel,
     mySpleenUse,
     retrieveItem,
     spleenLimit,
     use,
   } from "kolmafia";
   import {
-    $class,
     $familiar,
     $familiars,
     $item,
@@ -33,7 +30,6 @@ import {
     Snapper,
   } from "libram";
   import { garboAverageValue, garboValue } from "../engine/profits";
-  import { args } from "../args";
 
   export function haveAll(its: Item[]): boolean {
     return its.reduce((a, it) => a && have(it), true);
@@ -98,11 +94,6 @@ import {
 
   function famValue(fam: Familiar, mob?: Monster) {
     switch (fam) {
-      case $familiar`Grey Goose`:
-        return (myClass() === $class`Grey Goo` || myLevel() < args.targetlevel) &&
-          $familiar`Grey Goose`.experience < 400
-          ? 6000
-          : 0;
       case $familiar`Red-Nosed Snapper`:
         if (mob && Snapper.getTrackedPhylum() && mob.phylum === Snapper.getTrackedPhylum())
           return (
