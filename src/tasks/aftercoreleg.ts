@@ -194,13 +194,13 @@ export function AftercoreQuest(): Quest {
           !have($item`June cleaver`) || get("_juneCleaverFightsLeft") > 0 || myAdventures() === 0,
         choices: {
           1467: 3, //Poetic Justice
-          1468: () => (get("_juneCleaverSkips") < 5 ? 4 : 2), //Aunts not Ants
+          1468: get("_juneCleaverSkips") < 5 ? 4 : 2, //Aunts not Ants
           1469: 3, //Beware of Aligator
-          1470: () => (get("_juneCleaverSkips") < 5 ? 4 : 2), //Teacher's Pet
+          1470: get("_juneCleaverSkips") < 5 ? 4 : 2, //Teacher's Pet
           1471: 1, //Lost and Found
-          1472: () => (get("_juneCleaverSkips") < 5 ? 4 : 1), //Summer Days
-          1473: () => (get("_juneCleaverSkips") < 5 ? 4 : 1), //Bath Time
-          1474: () => (get("_juneCleaverSkips") < 5 ? 4 : 2), //Delicious Sprouts
+          1472: get("_juneCleaverSkips") < 5 ? 4 : 1, //Summer Days
+          1473: get("_juneCleaverSkips") < 5 ? 4 : 1, //Bath Time
+          1474: get("_juneCleaverSkips") < 5 ? 4 : 2, //Delicious Sprouts
           1475: 1, //Hypnotic Master
         },
         do: $location`Noob Cave`,
@@ -458,21 +458,6 @@ export function AftercoreQuest(): Quest {
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
       },
       {
-        name: "Grimace Maps",
-        completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
-        effects: $effects`Transpondent`,
-        choices: {
-          536: () =>
-            availableAmount($item`distention pill`) <
-            availableAmount($item`synthetic dog hair pill`) +
-              availableAmount($item`Map to Safety Shelter Grimace Prime`)
-              ? 1
-              : 2,
-        },
-        do: () => use($item`Map to Safety Shelter Grimace Prime`),
-        limit: { tries: 30 },
-      },
-      {
         name: "Garbo (Drunk)",
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
@@ -484,6 +469,12 @@ export function AftercoreQuest(): Quest {
             .forEach((ef) => uneffect(ef)),
         clear: "all",
         tracking: "Garbo",
+      },
+      {
+        name: "Comb Beach",
+        ready: () => have($item`Map to Safety Shelter Grimace Prime`),
+        completed: () => !have($item`Map to Safety Shelter Grimace Prime`) || myAdventures() === 0,
+        do: () => cliExecute("grimace maps"),
       },
       {
         name: "Comb Beach",
