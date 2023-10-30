@@ -14,6 +14,7 @@ import {
   haveEffect,
   haveEquipped,
   hippyStoneBroken,
+  holiday,
   inebrietyLimit,
   itemAmount,
   myAdventures,
@@ -384,9 +385,29 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Garbo",
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0) || holiday().includes("Halloween"),
         prepare: () => uneffect($effect`Beaten Up`),
         do: () => cliExecute(args.garboascend),
+        post: () => {
+          if (myAdventures() === 0)
+            $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+              .filter((ef) => have(ef))
+              .forEach((ef) => uneffect(ef));
+        },
+        clear: "all",
+        tracking: "Garbo",
+        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      },
+      {
+        name: "Garboween",
+        ready: () => holiday().includes("Halloween"),
+        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+        prepare: () => uneffect($effect`Beaten Up`),
+        do: (): void => {
+            cliExecute(`${args.garboascend} nodiet nobarf`);
+            cliExecute("consume ALL");
+            cliExecute(`freeCandy ${myAdventures()}`);
+        },
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
@@ -458,10 +479,28 @@ export function AftercoreQuest(): Quest {
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
       },
       {
+        name: "Freecandy Drunk",
+        ready: () => holiday().includes("Halloween"),
+        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+        prepare: () => uneffect($effect`Beaten Up`),
+        do: (): void => {
+            cliExecute(`freeCandy ${myAdventures()}`);
+        },
+        post: () => {
+          if (myAdventures() === 0)
+            $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+              .filter((ef) => have(ef))
+              .forEach((ef) => uneffect(ef));
+        },
+        clear: "all",
+        tracking: "Garbo",
+        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      },
+      {
         name: "Garbo (Drunk)",
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
-        completed: () => myAdventures() === 0,
+        completed: () => myAdventures() === 0 || holiday().includes("Halloween"),
         do: () => cliExecute("garbo ascend"),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`

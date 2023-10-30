@@ -7,6 +7,7 @@ import {
   getWorkshed,
   haveEffect,
   hippyStoneBroken,
+  holiday,
   inebrietyLimit,
   itemAmount,
   myAdventures,
@@ -132,7 +133,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Garbo",
-          ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
+          ready: () => get("_stenchAirportToday") || get("stenchAirportAlways") || holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(args.garbo),
@@ -143,6 +144,26 @@ export function CSQuests(): Quest[] {
           clear: "all",
           tracking: "Garbo",
         },
+          {
+            name: "Garboween",
+            ready: () => holiday().includes("Halloween"),
+            completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+            prepare: () => uneffect($effect`Beaten Up`),
+            do: (): void => {
+                cliExecute(`${args.garbo} nodiet nobarf`);
+                cliExecute("consume ALL");
+                cliExecute(`freeCandy ${myAdventures()}`);
+            },
+            post: () => {
+              if (myAdventures() === 0)
+                $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+                  .filter((ef) => have(ef))
+                  .forEach((ef) => uneffect(ef));
+            },
+            clear: "all",
+            tracking: "Garbo",
+            limit: { tries: 1 }, //this will run again after installing CMC, by magic
+          },
         {
           name: "Turn in FunFunds",
           ready: () => get("_stenchAirportToday") && itemAmount($item`FunFunds™`) >= 20,
@@ -210,6 +231,24 @@ export function CSQuests(): Quest[] {
             cliExecute("garden pick");
           },
         },
+        {
+            name: "Freecandy Drunk",
+            ready: () => holiday().includes("Halloween"),
+            completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+            prepare: () => uneffect($effect`Beaten Up`),
+            do: (): void => {
+                cliExecute(`freeCandy ${myAdventures()}`);
+            },
+            post: () => {
+              if (myAdventures() === 0)
+                $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+                  .filter((ef) => have(ef))
+                  .forEach((ef) => uneffect(ef));
+            },
+            clear: "all",
+            tracking: "Garbo",
+            limit: { tries: 1 }, //this will run again after installing CMC, by magic
+          },
         {
           name: "Offhand Remarkable",
           // eslint-disable-next-line libram/verify-constants
