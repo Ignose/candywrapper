@@ -2,18 +2,22 @@
   "name": "candywrapper",
   "version": "0.0.1",
   "author": "Ignose",
-  "homepage": "",
   "license": "MIT",
   "scripts": {
-    "build": "node build.mjs",
-    "format": "prettier --write src/**/*.ts *.{mjs,js,json}",
-    "watch": "node build.mjs --watch",
-    "install-mafia": "create-kolmafia-script --install"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "yarn run build:types && yarn run build:js",
+    "build:types": "tsc",
+    "build:js": "webpack",
+    "lint": "eslint src && prettier --check .",
+    "watch": "webpack --watch --progress"
   },
   "dependencies": {
+    "babel-loader": "^9.1.3",
+    "build": "^0.1.4",
     "grimoire-kolmafia": "^0.3.25",
     "kolmafia": "^5.27664.0",
-    "libram": "^0.8.15"
+    "libram": "^0.8.15",
+    "webpack": "^5.89.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
@@ -35,10 +39,16 @@
     "eslint-plugin-libram": "^0.3.3",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "webpack-cli": "^5.1.4"
   },
   "description": "A looping script, optimized for Halloween looping protection.",
   "main": "candywrapper",
+  "keywords": [
+    "KoLMafia",
+    "JS",
+    "TS"
+  ],
   "repository": "https://github.com/Ignose/candywrapper.git",
   "private": false
 }
