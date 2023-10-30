@@ -11,7 +11,7 @@
     "install-mafia": "create-kolmafia-script --install"
   },
   "dependencies": {
-    "kolmafia": "latest",
+    "kolmafia": "^5.27664.0",
     "libram": "^0.8.15"
   },
   "devDependencies": {
@@ -31,7 +31,7 @@
     "esbuild-plugin-babel": "^0.2.3",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-libram": "^0.2.32",
+    "eslint-plugin-libram": "^0.3.3",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6"
