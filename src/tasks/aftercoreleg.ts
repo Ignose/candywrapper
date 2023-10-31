@@ -6,9 +6,7 @@ import {
   closetAmount,
   getCampground,
   getClanName,
-  getPermedSkills,
   getWorkshed,
-  gnomadsAvailable,
   guildStoreAvailable,
   handlingChoice,
   haveEffect,
@@ -21,17 +19,13 @@ import {
   myClass,
   myHp,
   myInebriety,
-  myLevel,
   myMaxhp,
-  myMeat,
   myPrimestat,
-  print,
   putCloset,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   takeCloset,
-  toInt,
   use,
   useFamiliar,
   useSkill,
@@ -49,15 +43,12 @@ import {
   $path,
   $phylum,
   $skill,
-  $skills,
-  $stat,
   ascend,
   AsdonMartin,
   DNALab,
   get,
   getTodaysHolidayWanderers,
   have,
-  Lifestyle,
   Macro,
   set,
   uneffect,
@@ -74,7 +65,6 @@ import {
   toMoonSign,
   totallyDrunk,
 } from "./utils";
-import { printPermPlan, setClass, targetClass, targetPerms } from "./perm";
 import { args } from "../args";
 
 export function AftercoreQuest(): Quest {
@@ -253,120 +243,6 @@ export function AftercoreQuest(): Quest {
             .repeat()
         ),
         tracking: "Leveling",
-      },
-      {
-        name: "Train Gnome Skills",
-        ready: () => myMeat() >= 5000 && gnomadsAvailable(),
-        completed: () =>
-          !targetPerms(false).find(
-            (sk) =>
-              !have(sk) &&
-              $skills`Torso Awareness, Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.includes(
-                sk
-              )
-          ),
-        do: () =>
-          targetPerms(false)
-            .filter(
-              (sk) =>
-                !have(sk) &&
-                $skills`Torso Awareness, Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.includes(
-                  sk
-                )
-            )
-            .forEach((sk) =>
-              visitUrl(`gnomes.php?action=trainskill&whichskill=${toInt(sk)}`, true)
-            ),
-        limit: { tries: 5 },
-      },
-      {
-        name: "Unlock Guild",
-        ready: () =>
-          //ready if you find a skill in your perm plan that is guild-trainable that you don't know, or if you need to buy seal summoning supplies
-          !!targetPerms(false).find((sk) => !have(sk) && sk.level > 0) ||
-          (myClass() === $class`Seal Clubber` &&
-            Math.min(
-              ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-                availableAmount(it)
-              )
-            ) < 20),
-        completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
-        do: () => cliExecute("guild"),
-        choices: {
-          //sleazy back alley
-          108: 4, //craps: skip
-          109: 1, //drunken hobo: fight
-          110: 4, //entertainer: skip
-          112: 2, //harold's hammer: skip
-          21: 2, //under the knife: skip
-          //haunted pantry
-          115: 1, //drunken hobo: fight
-          116: 4, //singing tree: skip
-          117: 1, //knob goblin chef: fight
-          114: 2, //birthday cake: skip
-          //outskirts of cobb's knob
-          113: 2, //knob goblin chef: fight
-          111: 3, //chain gang: fight
-          118: 2, //medicine quest: skip
-        },
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${maxBase()}, ${
-            myPrimestat() === $stat`Muscle` ? "100 combat rate 20 max" : "-100 combat rate"
-          }, 250 bonus carnivorous potted plant`,
-        }),
-        combat: new CombatStrategy()
-          .macro(
-            () =>
-              Macro.step("pickpocket")
-                .externalIf(
-                  have($skill`Curse of Weaksauce`),
-                  Macro.trySkill($skill`Curse of Weaksauce`),
-                  Macro.tryItem($item`electronics kit`)
-                )
-                .tryItem($item`porquoise-handled sixgun`)
-                .trySkill($skill`Sing Along`)
-                .attack()
-                .repeat(),
-            getTodaysHolidayWanderers()
-          )
-          .macro(() =>
-            Macro.step("pickpocket")
-              .trySkill($skill`Sing Along`)
-              .tryItem($item`porquoise-handled sixgun`)
-              .attack()
-              .repeat()
-          ),
-      },
-      {
-        name: "Guild Skill Training",
-        ready: () => guildStoreAvailable(),
-        completed: () =>
-          //done if you don't find any  skills in your perm plan that are guild-trainable, that you don't have known
-          !targetPerms(false).find((sk) => !have(sk) && myLevel() >= sk.level),
-        do: () =>
-          targetPerms(false)
-            .filter((sk) => sk.class === myClass() && !have(sk) && myLevel() >= sk.level)
-            .forEach((sk) => {
-              print(`Purchasing ${sk} using skillid=${toInt(sk) % 1000}`);
-              visitUrl(`guild.php?action=buyskill&skillid=${toInt(sk) % 1000}`, true);
-            }),
-        limit: { tries: 3 }, //a few tries, in case your level is too low and you level up over the course of the day
-      },
-      {
-        name: "Stock Up on MMJs",
-        ready: () =>
-          guildStoreAvailable() &&
-          (myClass().primestat === $stat`Mysticality` ||
-            (myClass() === $class`Accordion Thief` && myLevel() >= 9)),
-        completed: () => availableAmount($item`magical mystery juice`) >= 500,
-        acquire: [
-          {
-            item: $item`magical mystery juice`,
-            num: 500,
-          },
-        ],
-        do: () => false,
       },
       {
         name: "Buy Seal Summoning Supplies",
@@ -549,36 +425,8 @@ export function AftercoreQuest(): Quest {
         name: "Ascend Community Service",
         completed: () => getCurrentLeg() >= Leg.CommunityService, //Change this
         do: (): void => {
-          printPermPlan();
-          if (targetPerms(false).find((sk) => !have(sk)))
-            throw new Error(
-              `Trying to ascend, but don't have the following targeted skills: [${targetPerms(false)
-                .filter((sk) => !have(sk))
-                .join(", ")}]`
-            );
-          const nClass = targetClass(true);
-          setClass("goorboNextClass", nClass);
 
-          const skillsToPerm = new Map();
-          targetPerms(false).forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
-          const nPerms = targetPerms(true);
-
-          const moonsign = toMoonSign(
-            have($item`hewn moon-rune spoon`) ||
-              !$skills`Torso Awareness, Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.find(
-                (sk) => !(sk.name in getPermedSkills()) //skip checking gnomes if you have a moon spoon or have all gnome skills permed
-              )
-              ? args.moonsign
-              : nPerms.includes($skill`Torso Awareness`) ||
-                (!!$skills`Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.find(
-                  (sk) => nPerms.includes(sk)
-                ) &&
-                  !$skills`Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.find(
-                    (sk) => !nPerms.includes(sk) && !(sk.name in getPermedSkills())
-                  )) //plan to perm Torso Awareness or (plan to perm at least 1 gnome skill and will end with all gnome skills permed)
-              ? "wombat"
-              : args.moonsign
-          );
+          const moonsign = toMoonSign(args.moonsign);
           ascend({
             path: $path`Community Service`,
             playerClass: args.class,
@@ -586,8 +434,6 @@ export function AftercoreQuest(): Quest {
             moon: moonsign,
             consumable: $item`astral six-pack`,
             pet: args.astralpet === $item`none` ? undefined : args.astralpet,
-            permOptions: {neverAbort: true,
-            permSkills: skillsToPerm}
             });
           cliExecute("refresh all");
         },
