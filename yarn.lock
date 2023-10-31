@@ -3263,10 +3263,10 @@ lru-queue@^0.1.0:
   dependencies:
     es5-ext "~0.10.2"
 
-mafia-shared-relay@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/mafia-shared-relay/-/mafia-shared-relay-0.0.9.tgz#a231d5a45a8c992efd0deb0bec5edd4531d78031"
-  integrity sha512-xU96YhV9aWvY2aF17/CHt5uPRCrwxFVOXuP0F1pWYy3QeIPsrDZ4I463oV6wAgqWYvhUfh/Gtl0cuZU237dJrQ==
+mafia-shared-relay@0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/mafia-shared-relay/-/mafia-shared-relay-0.0.7.tgz#1a0d333ebeed8cdbb4506360376099108c72d95b"
+  integrity sha512-sz5a+5tlI7u8eMasVVUdItPq5VdekLx6cDYCCbIjqhiFLluCE+0I1IqZ4n0JDzwLuiUZmAcsIq0VZfAp9WlbKA==
 
 makeerror@1.0.12:
   version "1.0.12"

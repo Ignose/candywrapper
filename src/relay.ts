@@ -25,7 +25,7 @@ function convertArgsToHtml(): RelayPage[] {
         name: key.key ?? name,
         description: key.help || "No Description Provided",
         preference: key.setting ?? `${metadata.scriptName}_${key.key ?? name}`,
-        default: "default" in key ? `${key["default"]}` : undefined,
+        default: "default" in key ? `${key["default"]}` : "block",
       };
 
       if (key.valueHelpName === "FLAG" || key.valueHelpName === "BOOLEAN") {

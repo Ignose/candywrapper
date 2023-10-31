@@ -17,7 +17,7 @@
     "grimoire-kolmafia": "^0.3.25",
     "kolmafia": "^5.27664.0",
     "libram": "^0.8.15",
-    "mafia-shared-relay": "^0.0.9",
+    "mafia-shared-relay": "0.0.7",
     "webpack": "^5.89.0"
   },
   "devDependencies": {
