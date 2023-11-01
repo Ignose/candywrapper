@@ -8439,7 +8439,7 @@ function CSQuests() {
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("breakfast")
     }, {
       name: "Garbo",
-      ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways") || (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
+      ready: () => !(0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 && !canDiet() || stooperDrunk(),
       prepare: () => uneffect(template_string_$effect(csleg_templateObject16 || (csleg_templateObject16 = csleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garbo),
