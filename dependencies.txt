@@ -1,4 +1,4 @@
-https://github.com/Ezandora/Bastille/branches/Release/
-https://github.com/Ezandora/Briefcase/branches/Release/
-https://github.com/Ezandora/Voting-Booth/trunk/Release/
-https://github.com/Ezandora/Detective-Solver/branches/Release/
+https://github.com/loathers/garbage-collector/
+https://github.com/loathers/freecandydotexe/
+https://github.com/soolar/CONSUME.ash/
+https://github.com/Ignose/FolgerCS/

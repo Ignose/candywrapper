@@ -8357,7 +8357,7 @@ function AftercoreQuest() {
   };
 }
 ;// CONCATENATED MODULE: ./src/tasks/csleg.ts
-var csleg_templateObject, csleg_templateObject2, csleg_templateObject3, csleg_templateObject4, csleg_templateObject5, csleg_templateObject6, csleg_templateObject7, csleg_templateObject8, csleg_templateObject9, csleg_templateObject10, csleg_templateObject11, csleg_templateObject12, csleg_templateObject13, csleg_templateObject14, csleg_templateObject15, csleg_templateObject16, csleg_templateObject17, csleg_templateObject18, csleg_templateObject19, csleg_templateObject20, csleg_templateObject21, csleg_templateObject22, csleg_templateObject23, csleg_templateObject24, csleg_templateObject25, csleg_templateObject26, csleg_templateObject27, csleg_templateObject28, csleg_templateObject29, csleg_templateObject30, csleg_templateObject31, csleg_templateObject32, csleg_templateObject33, csleg_templateObject34, csleg_templateObject35, csleg_templateObject36, csleg_templateObject37, csleg_templateObject38, csleg_templateObject39, csleg_templateObject40, csleg_templateObject41, csleg_templateObject42, csleg_templateObject43, csleg_templateObject44, csleg_templateObject45, csleg_templateObject46, csleg_templateObject47, csleg_templateObject48, csleg_templateObject49, csleg_templateObject50, csleg_templateObject51, csleg_templateObject52, csleg_templateObject53;
+var csleg_templateObject, csleg_templateObject2, csleg_templateObject3, csleg_templateObject4, csleg_templateObject5, csleg_templateObject6, csleg_templateObject7, csleg_templateObject8, csleg_templateObject9, csleg_templateObject10, csleg_templateObject11, csleg_templateObject12, csleg_templateObject13, csleg_templateObject14, csleg_templateObject15, csleg_templateObject16, csleg_templateObject17, csleg_templateObject18, csleg_templateObject19, csleg_templateObject20, csleg_templateObject21, csleg_templateObject22, csleg_templateObject23, csleg_templateObject24, csleg_templateObject25, csleg_templateObject26, csleg_templateObject27, csleg_templateObject28, csleg_templateObject29, csleg_templateObject30, csleg_templateObject31, csleg_templateObject32, csleg_templateObject33, csleg_templateObject34, csleg_templateObject35, csleg_templateObject36, csleg_templateObject37, csleg_templateObject38, csleg_templateObject39, csleg_templateObject40, csleg_templateObject41, csleg_templateObject42, csleg_templateObject43, csleg_templateObject44, csleg_templateObject45, csleg_templateObject46, csleg_templateObject47;
 function csleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
@@ -8531,12 +8531,6 @@ function CSQuests() {
         familiar: template_string_$familiars(csleg_templateObject47 || (csleg_templateObject47 = csleg_taggedTemplateLiteral(["Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose"]))).find(fam => lib_have(fam)),
         modifier: "adventures".concat(args.pvp ? ", 0.3 fites" : "")
       })
-    }, {
-      name: "Summon Soap Knife",
-      completed: () => !lib_have(template_string_$skill(csleg_templateObject48 || (csleg_templateObject48 = csleg_taggedTemplateLiteral(["That's Not a Knife"])))) || property_get("_discoKnife"),
-      prepare: () => (0,external_kolmafia_namespaceObject.putCloset)((0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(csleg_templateObject49 || (csleg_templateObject49 = csleg_taggedTemplateLiteral(["soap knife"])))), template_string_$item(csleg_templateObject50 || (csleg_templateObject50 = csleg_taggedTemplateLiteral(["soap knife"])))),
-      do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(csleg_templateObject51 || (csleg_templateObject51 = csleg_taggedTemplateLiteral(["That's Not a Knife"])))),
-      post: () => (0,external_kolmafia_namespaceObject.takeCloset)((0,external_kolmafia_namespaceObject.closetAmount)(template_string_$item(csleg_templateObject52 || (csleg_templateObject52 = csleg_taggedTemplateLiteral(["soap knife"])))), template_string_$item(csleg_templateObject53 || (csleg_templateObject53 = csleg_taggedTemplateLiteral(["soap knife"]))))
     }, {
       name: "Alert-No Nightcap",
       ready: () => !doneAdventuring(),
