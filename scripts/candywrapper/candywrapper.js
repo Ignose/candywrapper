@@ -7286,7 +7286,8 @@ var Leg = /*#__PURE__*/function (Leg) {
   return Leg;
 }({});
 function getCurrentLeg() {
-  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 || property_get("kingLiberated", false)) return Leg.CommunityService;
+  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && !property_get("kingLiberated", false)) return Leg.CommunityService;
+  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && property_get("kingLiberated", false)) return Leg.last;
   return Leg.Aftercore;
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2019/Snapper.js
@@ -8065,6 +8066,7 @@ function aftercoreleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = st
 function AftercoreQuest() {
   return {
     name: "Aftercore",
+    ready: () => getCurrentLeg() === 0,
     completed: () => getCurrentLeg() > Leg.Aftercore,
     tasks: [{
       name: "Whitelist VIP Clan",
@@ -8308,13 +8310,13 @@ function AftercoreQuest() {
       clear: "all",
       tracking: "Garbo"
     }, {
-      name: "Comb Beach",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject76 || (aftercoreleg_templateObject76 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))),
+      name: "Grimace Maps",
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject76 || (aftercoreleg_templateObject76 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) && totallyDrunk(),
       completed: () => !lib_have(template_string_$item(aftercoreleg_templateObject77 || (aftercoreleg_templateObject77 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("grimace maps")
     }, {
       name: "Comb Beach",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject78 || (aftercoreleg_templateObject78 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject78 || (aftercoreleg_templateObject78 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))) && totallyDrunk(),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("combo ".concat(11 - property_get("_freeBeachWalksUsed") + (0,external_kolmafia_namespaceObject.myAdventures)()))
     }, {
@@ -8357,13 +8359,14 @@ function AftercoreQuest() {
   };
 }
 ;// CONCATENATED MODULE: ./src/tasks/csleg.ts
-var csleg_templateObject, csleg_templateObject2, csleg_templateObject3, csleg_templateObject4, csleg_templateObject5, csleg_templateObject6, csleg_templateObject7, csleg_templateObject8, csleg_templateObject9, csleg_templateObject10, csleg_templateObject11, csleg_templateObject12, csleg_templateObject13, csleg_templateObject14, csleg_templateObject15, csleg_templateObject16, csleg_templateObject17, csleg_templateObject18, csleg_templateObject19, csleg_templateObject20, csleg_templateObject21, csleg_templateObject22, csleg_templateObject23, csleg_templateObject24, csleg_templateObject25, csleg_templateObject26, csleg_templateObject27, csleg_templateObject28, csleg_templateObject29, csleg_templateObject30, csleg_templateObject31, csleg_templateObject32, csleg_templateObject33, csleg_templateObject34, csleg_templateObject35, csleg_templateObject36, csleg_templateObject37, csleg_templateObject38, csleg_templateObject39, csleg_templateObject40, csleg_templateObject41, csleg_templateObject42, csleg_templateObject43, csleg_templateObject44, csleg_templateObject45, csleg_templateObject46, csleg_templateObject47;
+var csleg_templateObject, csleg_templateObject2, csleg_templateObject3, csleg_templateObject4, csleg_templateObject5, csleg_templateObject6, csleg_templateObject7, csleg_templateObject8, csleg_templateObject9, csleg_templateObject10, csleg_templateObject11, csleg_templateObject12, csleg_templateObject13, csleg_templateObject14, csleg_templateObject15, csleg_templateObject16, csleg_templateObject17, csleg_templateObject18, csleg_templateObject19, csleg_templateObject20, csleg_templateObject21, csleg_templateObject22, csleg_templateObject23, csleg_templateObject24, csleg_templateObject25, csleg_templateObject26, csleg_templateObject27, csleg_templateObject28, csleg_templateObject29, csleg_templateObject30, csleg_templateObject31, csleg_templateObject32, csleg_templateObject33, csleg_templateObject34, csleg_templateObject35, csleg_templateObject36, csleg_templateObject37, csleg_templateObject38, csleg_templateObject39, csleg_templateObject40, csleg_templateObject41, csleg_templateObject42, csleg_templateObject43, csleg_templateObject44, csleg_templateObject45, csleg_templateObject46;
 function csleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
 
 
 
+var pajamas = false;
 function CSQuests() {
   return [{
     name: "Community Service Run",
@@ -8388,7 +8391,8 @@ function CSQuests() {
     }]
   }, {
     name: "Post-Community Service Aftercore",
-    completed: () => getCurrentLeg() !== Leg.CommunityService,
+    ready: () => getCurrentLeg() === Leg.last,
+    completed: () => totallyDrunk() && pajamas,
     tasks: [{
       name: "Drink Pre-Tune",
       ready: () => (0,external_kolmafia_namespaceObject.mySign)().toLowerCase() === "blender" && (0,external_kolmafia_namespaceObject.myLevel)() >= 7 && lib_have(template_string_$item(csleg_templateObject2 || (csleg_templateObject2 = csleg_taggedTemplateLiteral(["mime army shotglass"])))) && (lib_have(template_string_$item(csleg_templateObject3 || (csleg_templateObject3 = csleg_taggedTemplateLiteral(["astral pilsner"])))) || lib_have(template_string_$item(csleg_templateObject4 || (csleg_templateObject4 = csleg_taggedTemplateLiteral(["astral six-pack"]))))),
@@ -8475,28 +8479,23 @@ function CSQuests() {
         !lib_have(template_string_$item(csleg_templateObject26 || (csleg_templateObject26 = csleg_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(csleg_templateObject27 || (csleg_templateObject27 = csleg_taggedTemplateLiteral(["Pizza of Legend"])))) : !lib_have(template_string_$item(csleg_templateObject28 || (csleg_templateObject28 = csleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(csleg_templateObject29 || (csleg_templateObject29 = csleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) : !lib_have(template_string_$item(csleg_templateObject30 || (csleg_templateObject30 = csleg_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(csleg_templateObject31 || (csleg_templateObject31 = csleg_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
       }
     }, {
-      name: "Comb Beach",
-      ready: () => lib_have(template_string_$item(csleg_templateObject32 || (csleg_templateObject32 = csleg_taggedTemplateLiteral(["Beach Comb"])))),
-      completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("combo ".concat(11 - property_get("_freeBeachWalksUsed") + (0,external_kolmafia_namespaceObject.myAdventures)()))
-    }, {
       name: "Plant Garden",
-      ready: () => doneAdventuring() && !!template_string_$items(csleg_templateObject33 || (csleg_templateObject33 = csleg_taggedTemplateLiteral(["packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth"]))).find(it => lib_have(it)),
-      completed: () => getGarden() !== template_string_$item(csleg_templateObject34 || (csleg_templateObject34 = csleg_taggedTemplateLiteral(["packet of tall grass seeds"]))),
+      ready: () => doneAdventuring() && !!template_string_$items(csleg_templateObject32 || (csleg_templateObject32 = csleg_taggedTemplateLiteral(["packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth"]))).find(it => lib_have(it)),
+      completed: () => getGarden() !== template_string_$item(csleg_templateObject33 || (csleg_templateObject33 = csleg_taggedTemplateLiteral(["packet of tall grass seeds"]))),
       do: () => {
-        (0,external_kolmafia_namespaceObject.use)(template_string_$items(csleg_templateObject35 || (csleg_templateObject35 = csleg_taggedTemplateLiteral(["packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth"]))).find(it => lib_have(it)) || template_string_$item(csleg_templateObject36 || (csleg_templateObject36 = csleg_taggedTemplateLiteral(["none"]))));
+        (0,external_kolmafia_namespaceObject.use)(template_string_$items(csleg_templateObject34 || (csleg_templateObject34 = csleg_taggedTemplateLiteral(["packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth"]))).find(it => lib_have(it)) || template_string_$item(csleg_templateObject35 || (csleg_templateObject35 = csleg_taggedTemplateLiteral(["none"]))));
         (0,external_kolmafia_namespaceObject.cliExecute)("garden pick");
       }
     }, {
       name: "Freecandy Drunk",
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => stooperDrunk() || !canDiet() && (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
-      prepare: () => uneffect(template_string_$effect(csleg_templateObject37 || (csleg_templateObject37 = csleg_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(csleg_templateObject36 || (csleg_templateObject36 = csleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("freeCandy ".concat((0,external_kolmafia_namespaceObject.myAdventures)()));
       },
       post: () => {
-        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(csleg_templateObject38 || (csleg_templateObject38 = csleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
+        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(csleg_templateObject37 || (csleg_templateObject37 = csleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
       },
       clear: "all",
       tracking: "Garbo",
@@ -8506,29 +8505,30 @@ function CSQuests() {
     }, {
       name: "Offhand Remarkable",
       // eslint-disable-next-line libram/verify-constants
-      ready: () => lib_have(template_string_$item(csleg_templateObject39 || (csleg_templateObject39 = csleg_taggedTemplateLiteral(["august scepter"])))),
+      ready: () => lib_have(template_string_$item(csleg_templateObject38 || (csleg_templateObject38 = csleg_taggedTemplateLiteral(["august scepter"])))),
       // eslint-disable-next-line libram/verify-constants
-      completed: () => lib_have(template_string_$effect(csleg_templateObject40 || (csleg_templateObject40 = csleg_taggedTemplateLiteral(["Offhand Remarkable"])))) || property_get("_aug13Cast", false),
+      completed: () => lib_have(template_string_$effect(csleg_templateObject39 || (csleg_templateObject39 = csleg_taggedTemplateLiteral(["Offhand Remarkable"])))) || property_get("_aug13Cast", false),
       do: () =>
       // eslint-disable-next-line libram/verify-constants
-      (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(csleg_templateObject41 || (csleg_templateObject41 = csleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
+      (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(csleg_templateObject40 || (csleg_templateObject40 = csleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
     }, {
       name: "Pajamas",
-      completed: () => lib_have(template_string_$item(csleg_templateObject42 || (csleg_templateObject42 = csleg_taggedTemplateLiteral(["burning cape"])))),
+      completed: () => lib_have(template_string_$item(csleg_templateObject41 || (csleg_templateObject41 = csleg_taggedTemplateLiteral(["burning cape"])))),
       acquire: [{
-        item: template_string_$item(csleg_templateObject43 || (csleg_templateObject43 = csleg_taggedTemplateLiteral(["clockwork maid"]))),
+        item: template_string_$item(csleg_templateObject42 || (csleg_templateObject42 = csleg_taggedTemplateLiteral(["clockwork maid"]))),
         price: 7 * property_get("valueOfAdventure"),
         optional: true
       }, {
-        item: template_string_$item(csleg_templateObject44 || (csleg_templateObject44 = csleg_taggedTemplateLiteral(["burning cape"])))
+        item: template_string_$item(csleg_templateObject43 || (csleg_templateObject43 = csleg_taggedTemplateLiteral(["burning cape"])))
       }],
       do: () => {
-        if (lib_have(template_string_$item(csleg_templateObject45 || (csleg_templateObject45 = csleg_taggedTemplateLiteral(["clockwork maid"]))))) {
-          (0,external_kolmafia_namespaceObject.use)(template_string_$item(csleg_templateObject46 || (csleg_templateObject46 = csleg_taggedTemplateLiteral(["clockwork maid"]))));
+        if (lib_have(template_string_$item(csleg_templateObject44 || (csleg_templateObject44 = csleg_taggedTemplateLiteral(["clockwork maid"]))))) {
+          (0,external_kolmafia_namespaceObject.use)(template_string_$item(csleg_templateObject45 || (csleg_templateObject45 = csleg_taggedTemplateLiteral(["clockwork maid"]))));
         }
+        pajamas = true;
       },
       outfit: () => ({
-        familiar: template_string_$familiars(csleg_templateObject47 || (csleg_templateObject47 = csleg_taggedTemplateLiteral(["Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose"]))).find(fam => lib_have(fam)),
+        familiar: template_string_$familiars(csleg_templateObject46 || (csleg_templateObject46 = csleg_taggedTemplateLiteral(["Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose"]))).find(fam => lib_have(fam)),
         modifier: "adventures".concat(args.pvp ? ", 0.3 fites" : "")
       })
     }, {
