@@ -1,7 +1,6 @@
 import {
   buy,
   cliExecute,
-  closetAmount,
   drink,
   getClanName,
   getWorkshed,
@@ -16,10 +15,8 @@ import {
   mySign,
   numericModifier,
   print,
-  putCloset,
   pvpAttacksLeft,
   retrieveItem,
-  takeCloset,
   use,
   useFamiliar,
   useSkill,
@@ -50,6 +47,7 @@ import {
   totallyDrunk,
 } from "./utils";
 
+let pajamas = false;
 
 export function CSQuests(): Quest[] {
   return [
@@ -84,7 +82,8 @@ export function CSQuests(): Quest[] {
     },
     {
       name: "Post-Community Service Aftercore",
-      completed: () => getCurrentLeg() !== Leg.CommunityService,
+      ready: () => getCurrentLeg() === Leg.last,
+      completed: () => totallyDrunk() && pajamas,
       tasks: [
         {
           name: "Drink Pre-Tune",
@@ -209,12 +208,6 @@ export function CSQuests(): Quest[] {
           !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined} ,
         },
         {
-          name: "Comb Beach",
-          ready: () => have($item`Beach Comb`),
-          completed: () => myAdventures() === 0,
-          do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
-        },
-        {
           name: "Plant Garden",
           ready: () =>
             doneAdventuring() &&
@@ -266,10 +259,11 @@ export function CSQuests(): Quest[] {
             { item: $item`clockwork maid`, price: 7 * get("valueOfAdventure"), optional: true },
             { item: $item`burning cape` },
           ],
-          do: () => {
+          do: (): void => {
             if (have($item`clockwork maid`)) {
               use($item`clockwork maid`);
             }
+            pajamas = true;
           },
           outfit: () => ({
             familiar:

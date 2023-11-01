@@ -70,6 +70,7 @@ import { args } from "../args";
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
+    ready: () => getCurrentLeg() === 0,
     completed: () => getCurrentLeg() > Leg.Aftercore,
     tasks: [
       {
@@ -386,14 +387,14 @@ export function AftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
-        name: "Comb Beach",
-        ready: () => have($item`Map to Safety Shelter Grimace Prime`),
+        name: "Grimace Maps",
+        ready: () => have($item`Map to Safety Shelter Grimace Prime`) && totallyDrunk(),
         completed: () => !have($item`Map to Safety Shelter Grimace Prime`) || myAdventures() === 0,
         do: () => cliExecute("grimace maps"),
       },
       {
         name: "Comb Beach",
-        ready: () => have($item`Beach Comb`),
+        ready: () => have($item`Beach Comb`) && totallyDrunk(),
         completed: () => myAdventures() === 0,
         do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
       },

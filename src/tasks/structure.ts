@@ -17,7 +17,9 @@ export enum Leg {
 }
 
 export function getCurrentLeg(): number {
-  if (myDaycount() === 1 || get("kingLiberated", false))
+  if (myDaycount() === 1 && !get("kingLiberated", false))
     return Leg.CommunityService;
+  if (myDaycount() === 1 && get("kingLiberated", false))
+    return Leg.last;
   return Leg.Aftercore;
 }
