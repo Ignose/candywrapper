@@ -24,6 +24,12 @@ export const args = Args.create(
       Item.get,
       "ITEM"
     ),
+    carpe: Args.flag(
+      {
+        help: "Should we skip acquiring Carpe?",
+        default: false
+      }
+    ),
     moonsign: Args.custom(
       {
         help: "Choose the moonsign you want to ascend into",

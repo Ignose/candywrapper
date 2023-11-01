@@ -46,6 +46,7 @@ import {
   $skill,
   ascend,
   AsdonMartin,
+  Clan,
   DNALab,
   get,
   getTodaysHolidayWanderers,
@@ -78,6 +79,11 @@ export function AftercoreQuest(): Quest {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
+      },
+      {
+        name: "Acquire Carpe",
+        completed: () => !args.carpe|| have($item`carpe`),
+        do: () => cliExecute("acquire carpe"),
       },
       {
         name: "Prep Fireworks Shop",
@@ -433,6 +439,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Ascend Community Service",
+        ready: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
         completed: () => getCurrentLeg() >= Leg.CommunityService, //Change this
         do: (): void => {
 

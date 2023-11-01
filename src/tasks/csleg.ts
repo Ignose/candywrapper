@@ -86,6 +86,11 @@ export function CSQuests(): Quest[] {
       completed: () => totallyDrunk() && pajamas,
       tasks: [
         {
+          name: "Acquire Carpe",
+          completed: () => !args.carpe|| have($item`carpe`),
+          do: () => cliExecute("acquire carpe"),
+        },
+        {
           name: "Drink Pre-Tune",
           ready: () =>
             mySign().toLowerCase() === "blender" &&
