@@ -202,10 +202,11 @@ export function CSQuests(): Quest[] {
         {
           name: "Do Pizza",
           ready: () => doneAdventuring(),
-          completed: () => totallyDrunk(),
-          do: () => {!have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`) :
-          !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) :
-          !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined} ,
+          completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
+          do: (): void => {
+          !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
+          !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
+          !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;} ,
         },
         {
           name: "Plant Garden",
