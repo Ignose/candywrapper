@@ -137,7 +137,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Garbo",
-          ready: () => get("_stenchAirportToday") || get("stenchAirportAlways") || holiday().includes("Halloween"),
+          ready: () => !holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(args.garbo),
