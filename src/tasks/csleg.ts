@@ -280,13 +280,6 @@ export function CSQuests(): Quest[] {
           }),
         },
         {
-          name: "Summon Soap Knife",
-          completed: () => !have($skill`That's Not a Knife`) || get("_discoKnife"),
-          prepare: () => putCloset(itemAmount($item`soap knife`), $item`soap knife`),
-          do: () => useSkill($skill`That's Not a Knife`),
-          post: () => takeCloset(closetAmount($item`soap knife`), $item`soap knife`),
-        },
-        {
           name: "Alert-No Nightcap",
           ready: () => !doneAdventuring(),
           completed: () => stooperDrunk(),
