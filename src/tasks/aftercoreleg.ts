@@ -3,7 +3,6 @@ import {
   availableAmount,
   buy,
   cliExecute,
-  closetAmount,
   getCampground,
   getClanName,
   getWorkshed,
@@ -21,12 +20,10 @@ import {
   myInebriety,
   myMaxhp,
   myPrimestat,
-  putCloset,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   retrieveItem,
-  takeCloset,
   use,
   useFamiliar,
   useSkill,
@@ -46,7 +43,6 @@ import {
   $skill,
   ascend,
   AsdonMartin,
-  Clan,
   DNALab,
   get,
   getTodaysHolidayWanderers,
@@ -429,13 +425,6 @@ export function AftercoreQuest(): Quest {
           cliExecute("UberPvPOptimizer");
           cliExecute("swagger");
         },
-      },
-      {
-        name: "Summon Soap Knife",
-        completed: () => !have($skill`That's Not a Knife`) || get("_discoKnife"),
-        prepare: () => putCloset(itemAmount($item`soap knife`), $item`soap knife`),
-        do: () => useSkill($skill`That's Not a Knife`),
-        post: () => takeCloset(closetAmount($item`soap knife`), $item`soap knife`),
       },
       {
         name: "Ascend Community Service",
