@@ -285,6 +285,17 @@ export function CSQuests(): Quest[] {
           }),
         },
         {
+          name: "Item Cleanup",
+          // eslint-disable-next-line libram/verify-constants
+          ready: () => !get("_cleanupToday", false),
+          // eslint-disable-next-line libram/verify-constants
+          completed: () => get("_cleanupToday", false),
+          do: (): void => {
+            if(args.itemcleanup !== "") cliExecute(`${args.itemcleanup}`);
+            cliExecute("set _cleanupToday = true");
+          },
+        },
+        {
           name: "Alert-No Nightcap",
           ready: () => !doneAdventuring(),
           completed: () => stooperDrunk(),

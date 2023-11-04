@@ -91,6 +91,10 @@ export const args = Args.create(
       help: `The command that will be used to diet and use all your adventures in Day 2 aftercore.`,
       default: "garbo ascend",
     }),
+    itemcleanup: Args.string({
+      help: `The script that will be used to mallsale items after a run`,
+      default: "",
+    }),
   }
 );
 

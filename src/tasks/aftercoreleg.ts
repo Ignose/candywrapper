@@ -56,7 +56,6 @@ import {
   bestFam,
   canDiet,
   getGarden,
-  isGoodGarboScript,
   maxBase,
   noML,
   stooperDrunk,
@@ -172,16 +171,6 @@ export function AftercoreQuest(): Quest {
           DNALab.makeTonic(3);
           DNALab.hybridize();
         },
-      },
-      {
-        name: "LGR Seed",
-        ready: () =>
-          //best guess if we're going to Dinseylandfill later in the day
-          isGoodGarboScript(args.garboascend) ||
-          args.garbo.includes("nobarf"),
-        completed: () =>
-          !have($item`lucky gold ring`) || get("_stenchAirportToday") || get("stenchAirportAlways"),
-        do: () => use($item`one-day ticket to Dinseylandfill`),
       },
       {
         name: "June Cleaver",
