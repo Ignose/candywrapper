@@ -327,12 +327,21 @@ import {
     }
 
     printProfitSegment(
-      "Grey You",
+      "Community Service",
       sum(records, (key) => key.startsWith("1")),
       "blue"
     );
     for (const key in records) {
       if (key.startsWith("1")) printProfitSegment(`* ${key.substring(2)}`, records[key], "green");
+    }
+
+    printProfitSegment(
+      "Community Service (AfterCore)",
+      sum(records, (key) => key.startsWith("2")),
+      "blue"
+    );
+    for (const key in records) {
+      if (key.startsWith("2")) printProfitSegment(`* ${key.substring(2)}`, records[key], "green");
     }
 
     printProfitSegment(
