@@ -5,7 +5,7 @@ import { CSQuests } from "./tasks/csleg";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { args } from "./args";
 
-const version = "0.0.1";
+const version = "0.0.2";
 
 export function main(command?: string): void {
   Args.fill(args, command);
@@ -21,6 +21,14 @@ export function main(command?: string): void {
   print(`Running: candyWrapper v${version}`);
 
   const tasks = getTasks([AftercoreQuest(), ...CSQuests()]);
+
+  if (args.abort) {
+    const to_abort = tasks.find((task) => task.name === args.abort);
+    if (!to_abort) throw `Unable to identify task ${args.abort}`;
+    to_abort.prepare = (): void => {
+      throw `Abort requested`;
+    };
+  }
 
   const engine = new ProfitTrackingEngine(tasks, "loop_profit_tracker");
   try {

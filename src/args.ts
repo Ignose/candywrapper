@@ -7,8 +7,22 @@ export const args = Args.create(
   "CandyWrapper",
   `Written by Seraphiii. This is a full-day wrapper for Community Service. It aims to be a single-press script that will take you through your Aftercore and Community Service legs. It chooses to perm learned skills upon ascension.`,
   {
+    version: Args.flag({
+      help: "Output script version number and exit.",
+      default: false,
+      setting: "",
+    }),
+    list: Args.flag({
+      help: "Show the status of all tasks and exit.",
+      setting: "",
+    }),
+
+    //partial run args
     actions: Args.number({
       help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time.",
+    }),
+    abort: Args.string({
+      help: "If given, abort during the prepare() step for the task with matching name.",
     }),
     //configuration args
     pvp: Args.flag({ help: "If true, break hippy stone and do pvp.", default: false }),
