@@ -7911,9 +7911,13 @@ function printProfits(records) {
   for (var _key4 in records) {
     if (_key4.startsWith("0")) printProfitSegment("* ".concat(_key4.substring(2)), records[_key4], "green");
   }
-  printProfitSegment("Grey You", profits_sum(records, key => key.startsWith("1")), "blue");
+  printProfitSegment("Community Service", profits_sum(records, key => key.startsWith("1")), "blue");
   for (var _key5 in records) {
     if (_key5.startsWith("1")) printProfitSegment("* ".concat(_key5.substring(2)), records[_key5], "green");
+  }
+  printProfitSegment("Community Service (AfterCore)", profits_sum(records, key => key.startsWith("2")), "blue");
+  for (var _key6 in records) {
+    if (_key6.startsWith("2")) printProfitSegment("* ".concat(_key6.substring(2)), records[_key6], "green");
   }
   printProfitSegment("Total", profits_sum(records, () => true), "black");
 }
