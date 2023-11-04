@@ -91,6 +91,11 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("acquire carpe"),
         },
         {
+          name: "Unlock Desert",
+          completed: () => have($item`bitchin' meatcar`),
+          do: () => cliExecute("acquire bitchin"),
+        },
+        {
           name: "Drink Pre-Tune",
           ready: () =>
             mySign().toLowerCase() === "blender" &&
