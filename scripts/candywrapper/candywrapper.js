@@ -8008,8 +8008,21 @@ function args_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.sl
 
 
 var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day wrapper for Community Service. It aims to be a single-press script that will take you through your Aftercore and Community Service legs. It chooses to perm learned skills upon ascension.", {
+  version: Args.flag({
+    help: "Output script version number and exit.",
+    default: false,
+    setting: ""
+  }),
+  list: Args.flag({
+    help: "Show the status of all tasks and exit.",
+    setting: ""
+  }),
+  //partial run args
   actions: Args.number({
     help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time."
+  }),
+  abort: Args.string({
+    help: "If given, abort during the prepare() step for the task with matching name."
   }),
   //configuration args
   pvp: Args.flag({
@@ -8683,7 +8696,7 @@ function main_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) 
 
 
 
-var version = "0.0.1";
+var version = "0.0.2";
 function main(command) {
   Args.fill(args, command);
   if (args.help) {
@@ -8697,6 +8710,13 @@ function main(command) {
 
   (0,external_kolmafia_namespaceObject.print)("Running: candyWrapper v".concat(version));
   var tasks = getTasks([AftercoreQuest()].concat(main_toConsumableArray(CSQuests())));
+  if (args.abort) {
+    var to_abort = tasks.find(task => task.name === args.abort);
+    if (!to_abort) throw "Unable to identify task ".concat(args.abort);
+    to_abort.prepare = () => {
+      throw "Abort requested";
+    };
+  }
   var engine = new ProfitTrackingEngine(tasks, "loop_profit_tracker");
   try {
     engine.run(args.actions);
