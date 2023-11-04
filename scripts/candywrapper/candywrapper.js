@@ -8063,10 +8063,14 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
   garboascend: Args.string({
     help: "The command that will be used to diet and use all your adventures in Day 2 aftercore.",
     default: "garbo ascend"
+  }),
+  itemcleanup: Args.string({
+    help: "The script that will be used to mallsale items after a run",
+    default: ""
   })
 });
 ;// CONCATENATED MODULE: ./src/tasks/aftercoreleg.ts
-var aftercoreleg_templateObject, aftercoreleg_templateObject2, aftercoreleg_templateObject3, aftercoreleg_templateObject4, aftercoreleg_templateObject5, aftercoreleg_templateObject6, aftercoreleg_templateObject7, aftercoreleg_templateObject8, aftercoreleg_templateObject9, aftercoreleg_templateObject10, aftercoreleg_templateObject11, aftercoreleg_templateObject12, aftercoreleg_templateObject13, aftercoreleg_templateObject14, aftercoreleg_templateObject15, aftercoreleg_templateObject16, aftercoreleg_templateObject17, aftercoreleg_templateObject18, aftercoreleg_templateObject19, aftercoreleg_templateObject20, aftercoreleg_templateObject21, aftercoreleg_templateObject22, aftercoreleg_templateObject23, aftercoreleg_templateObject24, aftercoreleg_templateObject25, aftercoreleg_templateObject26, aftercoreleg_templateObject27, aftercoreleg_templateObject28, aftercoreleg_templateObject29, aftercoreleg_templateObject30, aftercoreleg_templateObject31, aftercoreleg_templateObject32, aftercoreleg_templateObject33, aftercoreleg_templateObject34, aftercoreleg_templateObject35, aftercoreleg_templateObject36, aftercoreleg_templateObject37, aftercoreleg_templateObject38, aftercoreleg_templateObject39, aftercoreleg_templateObject40, aftercoreleg_templateObject41, aftercoreleg_templateObject42, aftercoreleg_templateObject43, aftercoreleg_templateObject44, aftercoreleg_templateObject45, aftercoreleg_templateObject46, aftercoreleg_templateObject47, aftercoreleg_templateObject48, aftercoreleg_templateObject49, aftercoreleg_templateObject50, aftercoreleg_templateObject51, aftercoreleg_templateObject52, aftercoreleg_templateObject53, aftercoreleg_templateObject54, aftercoreleg_templateObject55, aftercoreleg_templateObject56, aftercoreleg_templateObject57, aftercoreleg_templateObject58, aftercoreleg_templateObject59, aftercoreleg_templateObject60, aftercoreleg_templateObject61, aftercoreleg_templateObject62, aftercoreleg_templateObject63, aftercoreleg_templateObject64, aftercoreleg_templateObject65, aftercoreleg_templateObject66, aftercoreleg_templateObject67, aftercoreleg_templateObject68, aftercoreleg_templateObject69, aftercoreleg_templateObject70, aftercoreleg_templateObject71, aftercoreleg_templateObject72, aftercoreleg_templateObject73, aftercoreleg_templateObject74, aftercoreleg_templateObject75, aftercoreleg_templateObject76, aftercoreleg_templateObject77, aftercoreleg_templateObject78, aftercoreleg_templateObject79, aftercoreleg_templateObject80, aftercoreleg_templateObject81, aftercoreleg_templateObject82, aftercoreleg_templateObject83, aftercoreleg_templateObject84, aftercoreleg_templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98;
+var aftercoreleg_templateObject, aftercoreleg_templateObject2, aftercoreleg_templateObject3, aftercoreleg_templateObject4, aftercoreleg_templateObject5, aftercoreleg_templateObject6, aftercoreleg_templateObject7, aftercoreleg_templateObject8, aftercoreleg_templateObject9, aftercoreleg_templateObject10, aftercoreleg_templateObject11, aftercoreleg_templateObject12, aftercoreleg_templateObject13, aftercoreleg_templateObject14, aftercoreleg_templateObject15, aftercoreleg_templateObject16, aftercoreleg_templateObject17, aftercoreleg_templateObject18, aftercoreleg_templateObject19, aftercoreleg_templateObject20, aftercoreleg_templateObject21, aftercoreleg_templateObject22, aftercoreleg_templateObject23, aftercoreleg_templateObject24, aftercoreleg_templateObject25, aftercoreleg_templateObject26, aftercoreleg_templateObject27, aftercoreleg_templateObject28, aftercoreleg_templateObject29, aftercoreleg_templateObject30, aftercoreleg_templateObject31, aftercoreleg_templateObject32, aftercoreleg_templateObject33, aftercoreleg_templateObject34, aftercoreleg_templateObject35, aftercoreleg_templateObject36, aftercoreleg_templateObject37, aftercoreleg_templateObject38, aftercoreleg_templateObject39, aftercoreleg_templateObject40, aftercoreleg_templateObject41, aftercoreleg_templateObject42, aftercoreleg_templateObject43, aftercoreleg_templateObject44, aftercoreleg_templateObject45, aftercoreleg_templateObject46, aftercoreleg_templateObject47, aftercoreleg_templateObject48, aftercoreleg_templateObject49, aftercoreleg_templateObject50, aftercoreleg_templateObject51, aftercoreleg_templateObject52, aftercoreleg_templateObject53, aftercoreleg_templateObject54, aftercoreleg_templateObject55, aftercoreleg_templateObject56, aftercoreleg_templateObject57, aftercoreleg_templateObject58, aftercoreleg_templateObject59, aftercoreleg_templateObject60, aftercoreleg_templateObject61, aftercoreleg_templateObject62, aftercoreleg_templateObject63, aftercoreleg_templateObject64, aftercoreleg_templateObject65, aftercoreleg_templateObject66, aftercoreleg_templateObject67, aftercoreleg_templateObject68, aftercoreleg_templateObject69, aftercoreleg_templateObject70, aftercoreleg_templateObject71, aftercoreleg_templateObject72, aftercoreleg_templateObject73, aftercoreleg_templateObject74, aftercoreleg_templateObject75, aftercoreleg_templateObject76, aftercoreleg_templateObject77, aftercoreleg_templateObject78, aftercoreleg_templateObject79, aftercoreleg_templateObject80, aftercoreleg_templateObject81, aftercoreleg_templateObject82, aftercoreleg_templateObject83, aftercoreleg_templateObject84, aftercoreleg_templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96;
 function aftercoreleg_toConsumableArray(arr) { return aftercoreleg_arrayWithoutHoles(arr) || aftercoreleg_iterableToArray(arr) || aftercoreleg_unsupportedIterableToArray(arr) || aftercoreleg_nonIterableSpread(); }
 function aftercoreleg_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function aftercoreleg_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return aftercoreleg_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return aftercoreleg_arrayLikeToArray(o, minLen); }
@@ -8153,15 +8157,8 @@ function AftercoreQuest() {
         hybridize();
       }
     }, {
-      name: "LGR Seed",
-      ready: () =>
-      //best guess if we're going to Dinseylandfill later in the day
-      isGoodGarboScript(args.garboascend) || args.garbo.includes("nobarf"),
-      completed: () => !lib_have(template_string_$item(aftercoreleg_templateObject26 || (aftercoreleg_templateObject26 = aftercoreleg_taggedTemplateLiteral(["lucky gold ring"])))) || property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
-      do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(aftercoreleg_templateObject27 || (aftercoreleg_templateObject27 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"]))))
-    }, {
       name: "June Cleaver",
-      completed: () => !lib_have(template_string_$item(aftercoreleg_templateObject28 || (aftercoreleg_templateObject28 = aftercoreleg_taggedTemplateLiteral(["June cleaver"])))) || property_get("_juneCleaverFightsLeft") > 0 || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
+      completed: () => !lib_have(template_string_$item(aftercoreleg_templateObject26 || (aftercoreleg_templateObject26 = aftercoreleg_taggedTemplateLiteral(["June cleaver"])))) || property_get("_juneCleaverFightsLeft") > 0 || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       choices: {
         1467: 3,
         //Poetic Justice
@@ -8182,13 +8179,13 @@ function AftercoreQuest() {
         1475: 1 //Hypnotic Master
       },
 
-      do: $location(aftercoreleg_templateObject29 || (aftercoreleg_templateObject29 = aftercoreleg_taggedTemplateLiteral(["Noob Cave"]))),
+      do: $location(aftercoreleg_templateObject27 || (aftercoreleg_templateObject27 = aftercoreleg_taggedTemplateLiteral(["Noob Cave"]))),
       post: () => {
         if ((0,external_kolmafia_namespaceObject.handlingChoice)()) (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
-        if (lib_have(template_string_$effect(aftercoreleg_templateObject30 || (aftercoreleg_templateObject30 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"]))))) uneffect(template_string_$effect(aftercoreleg_templateObject31 || (aftercoreleg_templateObject31 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"]))));
+        if (lib_have(template_string_$effect(aftercoreleg_templateObject28 || (aftercoreleg_templateObject28 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"]))))) uneffect(template_string_$effect(aftercoreleg_templateObject29 || (aftercoreleg_templateObject29 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"]))));
       },
       outfit: () => ({
-        equip: template_string_$items(aftercoreleg_templateObject32 || (aftercoreleg_templateObject32 = aftercoreleg_taggedTemplateLiteral(["June cleaver"])))
+        equip: template_string_$items(aftercoreleg_templateObject30 || (aftercoreleg_templateObject30 = aftercoreleg_taggedTemplateLiteral(["June cleaver"])))
       }),
       limit: undefined
     }, {
@@ -8197,20 +8194,20 @@ function AftercoreQuest() {
       do: () => (0,external_kolmafia_namespaceObject.restoreHp)(0.95 * (0,external_kolmafia_namespaceObject.myMaxhp)())
     }, {
       name: "Implement Glitch",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject33 || (aftercoreleg_templateObject33 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject31 || (aftercoreleg_templateObject31 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"])))),
       completed: () => property_get("_glitchItemImplemented"),
-      do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(aftercoreleg_templateObject34 || (aftercoreleg_templateObject34 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"]))))
+      do: () => (0,external_kolmafia_namespaceObject.use)(template_string_$item(aftercoreleg_templateObject32 || (aftercoreleg_templateObject32 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"]))))
     }, {
       name: "Fight Glitch",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject35 || (aftercoreleg_templateObject35 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject33 || (aftercoreleg_templateObject33 = aftercoreleg_taggedTemplateLiteral(["[glitch season reward name]"])))),
       completed: () => property_get("_glitchMonsterFights") > 0,
-      acquire: template_string_$items(aftercoreleg_templateObject36 || (aftercoreleg_templateObject36 = aftercoreleg_taggedTemplateLiteral(["gas can, gas balloon, shard of double-ice"]))).map(it => ({
+      acquire: template_string_$items(aftercoreleg_templateObject34 || (aftercoreleg_templateObject34 = aftercoreleg_taggedTemplateLiteral(["gas can, gas balloon, shard of double-ice"]))).map(it => ({
         item: it,
         price: 1000
       })),
       prepare: () => {
         (0,external_kolmafia_namespaceObject.restoreHp)(0.9 * (0,external_kolmafia_namespaceObject.myMaxhp)());
-        if (lib_have(template_string_$skill(aftercoreleg_templateObject37 || (aftercoreleg_templateObject37 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"])))) && !lib_have(template_string_$effect(aftercoreleg_templateObject38 || (aftercoreleg_templateObject38 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"]))))) (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(aftercoreleg_templateObject39 || (aftercoreleg_templateObject39 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"]))));
+        if (lib_have(template_string_$skill(aftercoreleg_templateObject35 || (aftercoreleg_templateObject35 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"])))) && !lib_have(template_string_$effect(aftercoreleg_templateObject36 || (aftercoreleg_templateObject36 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"]))))) (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(aftercoreleg_templateObject37 || (aftercoreleg_templateObject37 = aftercoreleg_taggedTemplateLiteral(["Blood Bubble"]))));
       },
       do: () => (0,external_kolmafia_namespaceObject.visitUrl)("inv_eat.php?pwd&whichitem=10207"),
       post: () => {
@@ -8222,14 +8219,14 @@ function AftercoreQuest() {
       }),
       combat: new CombatStrategy().macro(() => {
         var _Macro$tryItem$trySki;
-        return (_Macro$tryItem$trySki = Macro.tryItem(template_string_$item(aftercoreleg_templateObject40 || (aftercoreleg_templateObject40 = aftercoreleg_taggedTemplateLiteral(["gas balloon"])))).trySkill(template_string_$skill(aftercoreleg_templateObject41 || (aftercoreleg_templateObject41 = aftercoreleg_taggedTemplateLiteral(["Feel Pride"]))))).tryItem.apply(_Macro$tryItem$trySki, aftercoreleg_toConsumableArray(template_string_$items(aftercoreleg_templateObject42 || (aftercoreleg_templateObject42 = aftercoreleg_taggedTemplateLiteral(["shard of double-ice, gas can"]))))).attack().repeat();
+        return (_Macro$tryItem$trySki = Macro.tryItem(template_string_$item(aftercoreleg_templateObject38 || (aftercoreleg_templateObject38 = aftercoreleg_taggedTemplateLiteral(["gas balloon"])))).trySkill(template_string_$skill(aftercoreleg_templateObject39 || (aftercoreleg_templateObject39 = aftercoreleg_taggedTemplateLiteral(["Feel Pride"]))))).tryItem.apply(_Macro$tryItem$trySki, aftercoreleg_toConsumableArray(template_string_$items(aftercoreleg_templateObject40 || (aftercoreleg_templateObject40 = aftercoreleg_taggedTemplateLiteral(["shard of double-ice, gas can"]))))).attack().repeat();
       }),
       tracking: "Leveling"
     }, {
       name: "Buy Seal Summoning Supplies",
-      ready: () => (0,external_kolmafia_namespaceObject.myClass)() === $class(aftercoreleg_templateObject43 || (aftercoreleg_templateObject43 = aftercoreleg_taggedTemplateLiteral(["Seal Clubber"]))) && (0,external_kolmafia_namespaceObject.guildStoreAvailable)(),
-      completed: () => Math.min.apply(Math, aftercoreleg_toConsumableArray(template_string_$items(aftercoreleg_templateObject44 || (aftercoreleg_templateObject44 = aftercoreleg_taggedTemplateLiteral(["figurine of a wretched-looking seal, seal-blubber candle"]))).map(it => (0,external_kolmafia_namespaceObject.availableAmount)(it)))) >= 40,
-      acquire: template_string_$items(aftercoreleg_templateObject45 || (aftercoreleg_templateObject45 = aftercoreleg_taggedTemplateLiteral(["figurine of a wretched-looking seal, seal-blubber candle"]))).map(it => ({
+      ready: () => (0,external_kolmafia_namespaceObject.myClass)() === $class(aftercoreleg_templateObject41 || (aftercoreleg_templateObject41 = aftercoreleg_taggedTemplateLiteral(["Seal Clubber"]))) && (0,external_kolmafia_namespaceObject.guildStoreAvailable)(),
+      completed: () => Math.min.apply(Math, aftercoreleg_toConsumableArray(template_string_$items(aftercoreleg_templateObject42 || (aftercoreleg_templateObject42 = aftercoreleg_taggedTemplateLiteral(["figurine of a wretched-looking seal, seal-blubber candle"]))).map(it => (0,external_kolmafia_namespaceObject.availableAmount)(it)))) >= 40,
+      acquire: template_string_$items(aftercoreleg_templateObject43 || (aftercoreleg_templateObject43 = aftercoreleg_taggedTemplateLiteral(["figurine of a wretched-looking seal, seal-blubber candle"]))).map(it => ({
         item: it,
         num: 500
       })),
@@ -8237,10 +8234,10 @@ function AftercoreQuest() {
     }, {
       name: "Garbo",
       completed: () => stooperDrunk() || !canDiet() && (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
-      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject46 || (aftercoreleg_templateObject46 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject44 || (aftercoreleg_templateObject44 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garboascend),
       post: () => {
-        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject47 || (aftercoreleg_templateObject47 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
+        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject45 || (aftercoreleg_templateObject45 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
       },
       clear: "all",
       tracking: "Garbo",
@@ -8251,14 +8248,14 @@ function AftercoreQuest() {
       name: "Garboween",
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => stooperDrunk() || !canDiet() && (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
-      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject48 || (aftercoreleg_templateObject48 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject46 || (aftercoreleg_templateObject46 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garboascend, " nodiet nobarf"));
         (0,external_kolmafia_namespaceObject.cliExecute)("consume ALL");
         (0,external_kolmafia_namespaceObject.cliExecute)("freeCandy ".concat((0,external_kolmafia_namespaceObject.myAdventures)()));
       },
       post: () => {
-        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject49 || (aftercoreleg_templateObject49 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
+        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject47 || (aftercoreleg_templateObject47 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
       },
       clear: "all",
       tracking: "Garbo",
@@ -8267,62 +8264,62 @@ function AftercoreQuest() {
       } //this will run again after installing CMC, by magic
     }, {
       name: "Do Pizza",
-      completed: () => lib_have(template_string_$item(aftercoreleg_templateObject50 || (aftercoreleg_templateObject50 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(aftercoreleg_templateObject51 || (aftercoreleg_templateObject51 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(aftercoreleg_templateObject52 || (aftercoreleg_templateObject52 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))),
+      completed: () => lib_have(template_string_$item(aftercoreleg_templateObject48 || (aftercoreleg_templateObject48 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(aftercoreleg_templateObject49 || (aftercoreleg_templateObject49 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(aftercoreleg_templateObject50 || (aftercoreleg_templateObject50 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))),
       do: () => {
-        !lib_have(template_string_$item(aftercoreleg_templateObject53 || (aftercoreleg_templateObject53 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject54 || (aftercoreleg_templateObject54 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) : undefined;
-        !lib_have(template_string_$item(aftercoreleg_templateObject55 || (aftercoreleg_templateObject55 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject56 || (aftercoreleg_templateObject56 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) : undefined;
-        !lib_have(template_string_$item(aftercoreleg_templateObject57 || (aftercoreleg_templateObject57 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject58 || (aftercoreleg_templateObject58 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
+        !lib_have(template_string_$item(aftercoreleg_templateObject51 || (aftercoreleg_templateObject51 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject52 || (aftercoreleg_templateObject52 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) : undefined;
+        !lib_have(template_string_$item(aftercoreleg_templateObject53 || (aftercoreleg_templateObject53 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject54 || (aftercoreleg_templateObject54 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) : undefined;
+        !lib_have(template_string_$item(aftercoreleg_templateObject55 || (aftercoreleg_templateObject55 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject56 || (aftercoreleg_templateObject56 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
       }
     }, {
       name: "Stooper",
-      ready: () => (0,external_kolmafia_namespaceObject.myInebriety)() === (0,external_kolmafia_namespaceObject.inebrietyLimit)() && lib_have(template_string_$item(aftercoreleg_templateObject59 || (aftercoreleg_templateObject59 = aftercoreleg_taggedTemplateLiteral(["tiny stillsuit"])))) && property_get("familiarSweat") >= 300,
-      completed: () => !lib_have(template_string_$familiar(aftercoreleg_templateObject60 || (aftercoreleg_templateObject60 = aftercoreleg_taggedTemplateLiteral(["Stooper"])))) || stooperDrunk(),
+      ready: () => (0,external_kolmafia_namespaceObject.myInebriety)() === (0,external_kolmafia_namespaceObject.inebrietyLimit)() && lib_have(template_string_$item(aftercoreleg_templateObject57 || (aftercoreleg_templateObject57 = aftercoreleg_taggedTemplateLiteral(["tiny stillsuit"])))) && property_get("familiarSweat") >= 300,
+      completed: () => !lib_have(template_string_$familiar(aftercoreleg_templateObject58 || (aftercoreleg_templateObject58 = aftercoreleg_taggedTemplateLiteral(["Stooper"])))) || stooperDrunk(),
       do: () => {
-        (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(aftercoreleg_templateObject61 || (aftercoreleg_templateObject61 = aftercoreleg_taggedTemplateLiteral(["Stooper"]))));
+        (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(aftercoreleg_templateObject59 || (aftercoreleg_templateObject59 = aftercoreleg_taggedTemplateLiteral(["Stooper"]))));
         (0,external_kolmafia_namespaceObject.cliExecute)("drink stillsuit distillate");
       }
     }, {
       name: "Barfing Drunk with Stooper",
-      ready: () => stooperDrunk() && lib_have(template_string_$familiar(aftercoreleg_templateObject62 || (aftercoreleg_templateObject62 = aftercoreleg_taggedTemplateLiteral(["Stooper"])))) && !lib_have(template_string_$item(aftercoreleg_templateObject63 || (aftercoreleg_templateObject63 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
+      ready: () => stooperDrunk() && lib_have(template_string_$familiar(aftercoreleg_templateObject60 || (aftercoreleg_templateObject60 = aftercoreleg_taggedTemplateLiteral(["Stooper"])))) && !lib_have(template_string_$item(aftercoreleg_templateObject61 || (aftercoreleg_templateObject61 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || totallyDrunk(),
       acquire: [{
-        item: template_string_$item(aftercoreleg_templateObject64 || (aftercoreleg_templateObject64 = aftercoreleg_taggedTemplateLiteral(["seal tooth"])))
+        item: template_string_$item(aftercoreleg_templateObject62 || (aftercoreleg_templateObject62 = aftercoreleg_taggedTemplateLiteral(["seal tooth"])))
       }],
       outfit: () => ({
-        familiar: template_string_$familiar(aftercoreleg_templateObject65 || (aftercoreleg_templateObject65 = aftercoreleg_taggedTemplateLiteral(["Stooper"]))),
+        familiar: template_string_$familiar(aftercoreleg_templateObject63 || (aftercoreleg_templateObject63 = aftercoreleg_taggedTemplateLiteral(["Stooper"]))),
         modifier: "".concat(maxBase(), ", 2.5 meat, 0.6 items")
       }),
-      effects: $effects(aftercoreleg_templateObject66 || (aftercoreleg_templateObject66 = aftercoreleg_taggedTemplateLiteral(["How to Scam Tourists"]))),
+      effects: $effects(aftercoreleg_templateObject64 || (aftercoreleg_templateObject64 = aftercoreleg_taggedTemplateLiteral(["How to Scam Tourists"]))),
       //need to add meat buffs that we can cast
       prepare: () => {
         (0,external_kolmafia_namespaceObject.restoreHp)(0.75 * (0,external_kolmafia_namespaceObject.myMaxhp)());
         (0,external_kolmafia_namespaceObject.restoreMp)(20);
       },
-      do: $location(aftercoreleg_templateObject67 || (aftercoreleg_templateObject67 = aftercoreleg_taggedTemplateLiteral(["Barf Mountain"]))),
-      combat: new CombatStrategy().macro(Macro.trySkill(template_string_$skill(aftercoreleg_templateObject68 || (aftercoreleg_templateObject68 = aftercoreleg_taggedTemplateLiteral(["Curse of Weaksauce"])))), getTodaysHolidayWanderers()).macro(() => Macro.step("pickpocket").tryItem(template_string_$item(aftercoreleg_templateObject69 || (aftercoreleg_templateObject69 = aftercoreleg_taggedTemplateLiteral(["train whistle"])))).trySkill(template_string_$skill(aftercoreleg_templateObject70 || (aftercoreleg_templateObject70 = aftercoreleg_taggedTemplateLiteral(["Bowl Straight Up"])))).trySkill(template_string_$skill(aftercoreleg_templateObject71 || (aftercoreleg_templateObject71 = aftercoreleg_taggedTemplateLiteral(["Sing Along"])))).tryItem(template_string_$item(aftercoreleg_templateObject72 || (aftercoreleg_templateObject72 = aftercoreleg_taggedTemplateLiteral(["porquoise-handled sixgun"])))).externalIf((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(aftercoreleg_templateObject73 || (aftercoreleg_templateObject73 = aftercoreleg_taggedTemplateLiteral(["mafia pointer finger ring"])))), Macro.trySkill(template_string_$skill(aftercoreleg_templateObject74 || (aftercoreleg_templateObject74 = aftercoreleg_taggedTemplateLiteral(["Furious Wallop"])))).trySkill(template_string_$skill(aftercoreleg_templateObject75 || (aftercoreleg_templateObject75 = aftercoreleg_taggedTemplateLiteral(["Summer Siesta"])))).trySkill(template_string_$skill(aftercoreleg_templateObject76 || (aftercoreleg_templateObject76 = aftercoreleg_taggedTemplateLiteral(["Throw Shield"])))).trySkill(template_string_$skill(aftercoreleg_templateObject77 || (aftercoreleg_templateObject77 = aftercoreleg_taggedTemplateLiteral(["Precision Shot"]))))).attack().repeat()),
+      do: $location(aftercoreleg_templateObject65 || (aftercoreleg_templateObject65 = aftercoreleg_taggedTemplateLiteral(["Barf Mountain"]))),
+      combat: new CombatStrategy().macro(Macro.trySkill(template_string_$skill(aftercoreleg_templateObject66 || (aftercoreleg_templateObject66 = aftercoreleg_taggedTemplateLiteral(["Curse of Weaksauce"])))), getTodaysHolidayWanderers()).macro(() => Macro.step("pickpocket").tryItem(template_string_$item(aftercoreleg_templateObject67 || (aftercoreleg_templateObject67 = aftercoreleg_taggedTemplateLiteral(["train whistle"])))).trySkill(template_string_$skill(aftercoreleg_templateObject68 || (aftercoreleg_templateObject68 = aftercoreleg_taggedTemplateLiteral(["Bowl Straight Up"])))).trySkill(template_string_$skill(aftercoreleg_templateObject69 || (aftercoreleg_templateObject69 = aftercoreleg_taggedTemplateLiteral(["Sing Along"])))).tryItem(template_string_$item(aftercoreleg_templateObject70 || (aftercoreleg_templateObject70 = aftercoreleg_taggedTemplateLiteral(["porquoise-handled sixgun"])))).externalIf((0,external_kolmafia_namespaceObject.haveEquipped)(template_string_$item(aftercoreleg_templateObject71 || (aftercoreleg_templateObject71 = aftercoreleg_taggedTemplateLiteral(["mafia pointer finger ring"])))), Macro.trySkill(template_string_$skill(aftercoreleg_templateObject72 || (aftercoreleg_templateObject72 = aftercoreleg_taggedTemplateLiteral(["Furious Wallop"])))).trySkill(template_string_$skill(aftercoreleg_templateObject73 || (aftercoreleg_templateObject73 = aftercoreleg_taggedTemplateLiteral(["Summer Siesta"])))).trySkill(template_string_$skill(aftercoreleg_templateObject74 || (aftercoreleg_templateObject74 = aftercoreleg_taggedTemplateLiteral(["Throw Shield"])))).trySkill(template_string_$skill(aftercoreleg_templateObject75 || (aftercoreleg_templateObject75 = aftercoreleg_taggedTemplateLiteral(["Precision Shot"]))))).attack().repeat()),
       limit: {
         tries: 30
       }
     }, {
       name: "Nightcap (Wine Glass)",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject78 || (aftercoreleg_templateObject78 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject76 || (aftercoreleg_templateObject76 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
       completed: () => totallyDrunk(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("CONSUME NIGHTCAP VALUE ".concat(property_get("valueOfAdventure") - 1000))
     }, {
       name: "Nightcap (Marginal)",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject79 || (aftercoreleg_templateObject79 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))) || lib_have(template_string_$item(aftercoreleg_templateObject80 || (aftercoreleg_templateObject80 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject77 || (aftercoreleg_templateObject77 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))) || lib_have(template_string_$item(aftercoreleg_templateObject78 || (aftercoreleg_templateObject78 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))),
       completed: () => totallyDrunk(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("CONSUME NIGHTCAP VALUE 500")
     }, {
       name: "Freecandy Drunk",
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => stooperDrunk() || !canDiet() && (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
-      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject81 || (aftercoreleg_templateObject81 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject79 || (aftercoreleg_templateObject79 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("freeCandy ".concat((0,external_kolmafia_namespaceObject.myAdventures)()));
       },
       post: () => {
-        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject82 || (aftercoreleg_templateObject82 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
+        if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject80 || (aftercoreleg_templateObject80 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
       },
       clear: "all",
       tracking: "Garbo",
@@ -8331,28 +8328,28 @@ function AftercoreQuest() {
       } //this will run again after installing CMC, by magic
     }, {
       name: "Garbo (Drunk)",
-      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject83 || (aftercoreleg_templateObject83 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
-      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject84 || (aftercoreleg_templateObject84 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject81 || (aftercoreleg_templateObject81 = aftercoreleg_taggedTemplateLiteral(["Drunkula's wineglass"])))),
+      prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject82 || (aftercoreleg_templateObject82 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("garbo ascend"),
-      post: () => $effects(aftercoreleg_templateObject85 || (aftercoreleg_templateObject85 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
+      post: () => $effects(aftercoreleg_templateObject83 || (aftercoreleg_templateObject83 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
       clear: "all",
       tracking: "Garbo"
     }, {
       name: "Grimace Maps",
-      ready: () => lib_have(template_string_$item(_templateObject86 || (_templateObject86 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) && totallyDrunk(),
-      completed: () => !lib_have(template_string_$item(_templateObject87 || (_templateObject87 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
+      ready: () => lib_have(template_string_$item(aftercoreleg_templateObject84 || (aftercoreleg_templateObject84 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) && totallyDrunk(),
+      completed: () => !lib_have(template_string_$item(aftercoreleg_templateObject85 || (aftercoreleg_templateObject85 = aftercoreleg_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("grimace maps")
     }, {
       name: "Comb Beach",
-      ready: () => lib_have(template_string_$item(_templateObject88 || (_templateObject88 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))) && totallyDrunk(),
+      ready: () => lib_have(template_string_$item(_templateObject86 || (_templateObject86 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))) && totallyDrunk(),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("combo ".concat(11 - property_get("_freeBeachWalksUsed") + (0,external_kolmafia_namespaceObject.myAdventures)()))
     }, {
       name: "Turn in FunFunds",
-      ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(_templateObject89 || (_templateObject89 = aftercoreleg_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
-      completed: () => lib_have(template_string_$item(_templateObject90 || (_templateObject90 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
-      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(_templateObject91 || (_templateObject91 = aftercoreleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(_templateObject92 || (_templateObject92 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
+      ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(_templateObject87 || (_templateObject87 = aftercoreleg_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
+      completed: () => lib_have(template_string_$item(_templateObject88 || (_templateObject88 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
+      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(_templateObject89 || (_templateObject89 = aftercoreleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(_templateObject90 || (_templateObject90 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
       tracking: "Garbo"
     }, {
       name: "PvP",
@@ -8364,18 +8361,18 @@ function AftercoreQuest() {
       }
     }, {
       name: "Ascend Community Service",
-      ready: () => lib_have(template_string_$item(_templateObject93 || (_templateObject93 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(_templateObject94 || (_templateObject94 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(_templateObject95 || (_templateObject95 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))),
+      ready: () => lib_have(template_string_$item(_templateObject91 || (_templateObject91 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(_templateObject92 || (_templateObject92 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(_templateObject93 || (_templateObject93 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))),
       completed: () => getCurrentLeg() >= Leg.CommunityService,
       //Change this
       do: () => {
         var moonsign = toMoonSign(args.moonsign);
         ascend({
-          path: $path(_templateObject96 || (_templateObject96 = aftercoreleg_taggedTemplateLiteral(["Community Service"]))),
+          path: $path(_templateObject94 || (_templateObject94 = aftercoreleg_taggedTemplateLiteral(["Community Service"]))),
           playerClass: args.class,
           lifestyle: 2,
           moon: moonsign,
-          consumable: template_string_$item(_templateObject97 || (_templateObject97 = aftercoreleg_taggedTemplateLiteral(["astral six-pack"]))),
-          pet: args.astralpet === template_string_$item(_templateObject98 || (_templateObject98 = aftercoreleg_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet
+          consumable: template_string_$item(_templateObject95 || (_templateObject95 = aftercoreleg_taggedTemplateLiteral(["astral six-pack"]))),
+          pet: args.astralpet === template_string_$item(_templateObject96 || (_templateObject96 = aftercoreleg_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet
         });
         (0,external_kolmafia_namespaceObject.cliExecute)("refresh all");
       }
@@ -8565,6 +8562,16 @@ function CSQuests() {
         familiar: template_string_$familiars(csleg_templateObject51 || (csleg_templateObject51 = csleg_taggedTemplateLiteral(["Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose"]))).find(fam => lib_have(fam)),
         modifier: "adventures".concat(args.pvp ? ", 0.3 fites" : "")
       })
+    }, {
+      name: "Item Cleanup",
+      // eslint-disable-next-line libram/verify-constants
+      ready: () => !property_get("_cleanupToday", false),
+      // eslint-disable-next-line libram/verify-constants
+      completed: () => property_get("_cleanupToday", false),
+      do: () => {
+        if (args.itemcleanup !== "") (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.itemcleanup));
+        (0,external_kolmafia_namespaceObject.cliExecute)("set _cleanupToday = true");
+      }
     }, {
       name: "Alert-No Nightcap",
       ready: () => !doneAdventuring(),
