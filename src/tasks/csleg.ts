@@ -82,7 +82,7 @@ export function CSQuests(): Quest[] {
     },
     {
       name: "Post-Community Service Aftercore",
-      ready: () => getCurrentLeg() === Leg.last,
+      ready: () => get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
         {
