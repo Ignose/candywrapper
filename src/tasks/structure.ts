@@ -13,10 +13,13 @@ export type Quest = BaseQuest<Task>;
 export enum Leg {
   Aftercore = 0,
   CommunityService = 1,
+  PostCS = 2
 }
 
 export function getCurrentLeg(): number {
   if (myDaycount() === 1 && !get("kingLiberated", false))
     return Leg.CommunityService;
+  if (myDaycount() === 1 && get("kingLiberated", false))
+    return Leg.PostCS;
   return Leg.Aftercore;
 }

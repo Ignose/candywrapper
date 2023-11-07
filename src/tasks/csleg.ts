@@ -75,14 +75,12 @@ export function CSQuests(): Quest[] {
           name: "Run",
           completed: () => get("kingLiberated"),
           do: () => cliExecute(args.csscript),
-          clear: "all",
-          tracking: "Run",
         },
       ],
     },
     {
       name: "Post-Community Service Aftercore",
-      ready: () => get("kingLiberated", false),
+      ready: () => getCurrentLeg() === Leg.PostCS,
       completed: () => totallyDrunk() && pajamas,
       tasks: [
         {
