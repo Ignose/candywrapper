@@ -7282,10 +7282,12 @@ function prepareAscension() {
 var Leg = /*#__PURE__*/function (Leg) {
   Leg[Leg["Aftercore"] = 0] = "Aftercore";
   Leg[Leg["CommunityService"] = 1] = "CommunityService";
+  Leg[Leg["PostCS"] = 2] = "PostCS";
   return Leg;
 }({});
 function getCurrentLeg() {
   if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && !property_get("kingLiberated", false)) return Leg.CommunityService;
+  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && property_get("kingLiberated", false)) return Leg.PostCS;
   return Leg.Aftercore;
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2019/Snapper.js
@@ -8408,13 +8410,11 @@ function CSQuests() {
     }, {
       name: "Run",
       completed: () => property_get("kingLiberated"),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.csscript),
-      clear: "all",
-      tracking: "Run"
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.csscript)
     }]
   }, {
     name: "Post-Community Service Aftercore",
-    ready: () => property_get("kingLiberated", false),
+    ready: () => getCurrentLeg() === Leg.PostCS,
     completed: () => totallyDrunk() && pajamas,
     tasks: [{
       name: "Acquire Carpe",
