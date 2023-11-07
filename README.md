@@ -2,24 +2,23 @@
 
 A Looping script, optimized for Halloween looping protection.
 
-# Development
+## Installation
 
-First turn your TypeScript files into something KoLmafia can understand by running
+To install the script, use the following command in the KoLMafia CLI.
 
-```bash
- run build
+```text
+git checkout https://github.com/Ignose/FolgerCS.git release
 ```
 
-Then you can automatically create symlinks to your built files by running
 
-```bash
- run install-mafia
-```
+## Usage
 
-When you're developing you can have your files automatically rebuild by keeping
+This is intended as a "full day" wrapper, it will:
+1) Run Garbo Ascend with any arguments you give it (run candyWrapper Help for more information)
+2) Automatically ascend into the class of your choosing, with the astral item(s) of your choosing
+3) Run the CS Script of your choosing (default is my own FolgerCS)
+4) Run Garbo with any arguments you give it
+5) Put on Pajamas, Nightcap, and maximize for rollover profit
+6) Automatically mall-sale items if you have a script to do so (like Philter!)
 
-```bash
- run watch
-```
-
-running in the background. If you've already built symlinks, your up-to-date script can be run instantly by entering `candywrapper` into the KoLmafia CLI.
+On Halloween, it will default to freecandy instead of Garbo - please adjust accordingly, ensuring freecandy is installed.
