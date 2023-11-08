@@ -13,10 +13,11 @@ export function main(command?: string): void {
     Args.showHelp(args);
     return;
   }
-  // if (args.profits) {
-  //   print("work in progress");
-  //   return;
-  // }
+
+  /*if (args.profits) {
+    printProfits(this.profits.all());
+    return;
+  };*/
 
   print(`Running: candyWrapper v${version}`);
 

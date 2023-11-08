@@ -16,6 +16,10 @@ export const args = Args.create(
       help: "Show the status of all tasks and exit.",
       setting: "",
     }),
+    profits: Args.flag({
+      help: "Print out daily profit and exit.",
+      setting: "",
+    }),
 
     //partial run args
     actions: Args.number({

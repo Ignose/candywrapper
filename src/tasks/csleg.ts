@@ -48,6 +48,7 @@ import {
 } from "./utils";
 
 let pajamas = false;
+const didStorage = get("lastEmptiedStorage");
 
 export function CSQuests(): Quest[] {
   return [
@@ -75,6 +76,8 @@ export function CSQuests(): Quest[] {
           name: "Run",
           completed: () => get("kingLiberated"),
           do: () => cliExecute(args.csscript),
+          clear: "all",
+          tracking: "Run",
         },
       ],
     },
@@ -83,6 +86,12 @@ export function CSQuests(): Quest[] {
       ready: () => getCurrentLeg() === Leg.PostCS,
       completed: () => totallyDrunk() && pajamas,
       tasks: [
+        {
+          name: "Pull All",
+          completed: () => didStorage !== get("lastEmptiedStorage"),
+          do: () => cliExecute("pull all; refresh all"),
+          clear: "all",
+        },
         {
           name: "Acquire Carpe",
           completed: () => !args.carpe|| have($item`carpe`),
