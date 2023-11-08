@@ -8021,6 +8021,10 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
     help: "Show the status of all tasks and exit.",
     setting: ""
   }),
+  profits: Args.flag({
+    help: "Print out daily profit and exit.",
+    setting: ""
+  }),
   //partial run args
   actions: Args.number({
     help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time."
@@ -8392,6 +8396,7 @@ function csleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.s
 
 
 var pajamas = false;
+var didStorage = property_get("lastEmptiedStorage");
 function CSQuests() {
   return [{
     name: "Community Service Run",
@@ -8410,13 +8415,20 @@ function CSQuests() {
     }, {
       name: "Run",
       completed: () => property_get("kingLiberated"),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.csscript)
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.csscript),
+      clear: "all",
+      tracking: "Run"
     }]
   }, {
     name: "Post-Community Service Aftercore",
     ready: () => getCurrentLeg() === Leg.PostCS,
     completed: () => totallyDrunk() && pajamas,
     tasks: [{
+      name: "Pull All",
+      completed: () => didStorage !== property_get("lastEmptiedStorage"),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all"),
+      clear: "all"
+    }, {
       name: "Acquire Carpe",
       completed: () => !args.carpe || lib_have(template_string_$item(csleg_templateObject2 || (csleg_templateObject2 = csleg_taggedTemplateLiteral(["carpe"])))),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("acquire carpe")
@@ -8712,10 +8724,11 @@ function main(command) {
     Args.showHelp(args);
     return;
   }
-  // if (args.profits) {
-  //   print("work in progress");
-  //   return;
-  // }
+
+  /*if (args.profits) {
+    printProfits(this.profits.all());
+    return;
+  };*/
 
   (0,external_kolmafia_namespaceObject.print)("Running: candyWrapper v".concat(version));
   var tasks = getTasks([AftercoreQuest()].concat(main_toConsumableArray(CSQuests())));
