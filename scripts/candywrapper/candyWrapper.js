@@ -7277,17 +7277,14 @@ function prepareAscension() {
 }
 ;// CONCATENATED MODULE: ./src/tasks/structure.ts
 
-
 // eslint-disable-next-line no-restricted-syntax
 var Leg = /*#__PURE__*/function (Leg) {
   Leg[Leg["Aftercore"] = 0] = "Aftercore";
   Leg[Leg["CommunityService"] = 1] = "CommunityService";
-  Leg[Leg["PostCS"] = 2] = "PostCS";
   return Leg;
 }({});
 function getCurrentLeg() {
-  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && !property_get("kingLiberated", false)) return Leg.CommunityService;
-  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1 && property_get("kingLiberated", false)) return Leg.PostCS;
+  if ((0,external_kolmafia_namespaceObject.myDaycount)() === 1) return Leg.CommunityService;
   return Leg.Aftercore;
 }
 ;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2019/Snapper.js
@@ -8421,7 +8418,7 @@ function CSQuests() {
     }]
   }, {
     name: "Post-Community Service Aftercore",
-    ready: () => getCurrentLeg() === Leg.PostCS,
+    ready: () => getCurrentLeg() === Leg.CommunityService && property_get("kingLiberated", false),
     completed: () => totallyDrunk() && pajamas,
     tasks: [{
       name: "Pull All",
@@ -8583,7 +8580,7 @@ function CSQuests() {
       // eslint-disable-next-line libram/verify-constants
       completed: () => property_get("_cleanupToday", false),
       do: () => {
-        if (args.itemcleanup !== "") (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.itemcleanup));
+        (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.itemcleanup));
         (0,external_kolmafia_namespaceObject.cliExecute)("set _cleanupToday = true");
       }
     }, {
