@@ -83,7 +83,7 @@ export function CSQuests(): Quest[] {
     },
     {
       name: "Post-Community Service Aftercore",
-      ready: () => getCurrentLeg() === Leg.PostCS,
+      ready: () => getCurrentLeg() === Leg.CommunityService && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
         {
@@ -298,7 +298,7 @@ export function CSQuests(): Quest[] {
           // eslint-disable-next-line libram/verify-constants
           completed: () => get("_cleanupToday", false),
           do: (): void => {
-            if(args.itemcleanup !== "") cliExecute(`${args.itemcleanup}`);
+            cliExecute(`${args.itemcleanup}`);
             cliExecute("set _cleanupToday = true");
           },
         },
