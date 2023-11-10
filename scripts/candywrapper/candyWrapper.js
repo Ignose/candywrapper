@@ -7281,6 +7281,7 @@ function prepareAscension() {
 var Leg = /*#__PURE__*/function (Leg) {
   Leg[Leg["Aftercore"] = 0] = "Aftercore";
   Leg[Leg["CommunityService"] = 1] = "CommunityService";
+  Leg[Leg["last"] = 1] = "last";
   return Leg;
 }({});
 function getCurrentLeg() {
@@ -8408,7 +8409,8 @@ function CSQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.visitUrl)("clan_viplounge.php?action=fwshop&whichfloor=2");
         _set("_goorboFireworksPrepped", true);
-      }
+      },
+      tracking: "Run"
     }, {
       name: "Run",
       completed: () => property_get("kingLiberated"),
