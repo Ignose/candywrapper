@@ -8415,7 +8415,6 @@ function CSQuests() {
       name: "Run",
       completed: () => property_get("kingLiberated"),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.csscript),
-      clear: "all",
       tracking: "Run"
     }]
   }, {
