@@ -10,6 +10,7 @@ import {
   inebrietyLimit,
   itemAmount,
   myAdventures,
+  myAscensions,
   myInebriety,
   myLevel,
   mySign,
@@ -88,7 +89,7 @@ export function CSQuests(): Quest[] {
       tasks: [
         {
           name: "Pull All",
-          completed: () => didStorage !== get("lastEmptiedStorage"),
+          completed: () => get("lastEmptiedStorage") !== myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
           clear: "all",
         },
