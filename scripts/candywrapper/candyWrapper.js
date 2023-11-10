@@ -8423,7 +8423,7 @@ function CSQuests() {
     completed: () => totallyDrunk() && pajamas,
     tasks: [{
       name: "Pull All",
-      completed: () => didStorage !== property_get("lastEmptiedStorage"),
+      completed: () => property_get("lastEmptiedStorage") !== (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all"),
       clear: "all"
     }, {
