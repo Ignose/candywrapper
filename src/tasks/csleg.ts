@@ -77,7 +77,6 @@ export function CSQuests(): Quest[] {
           name: "Run",
           completed: () => get("kingLiberated"),
           do: () => cliExecute(args.csscript),
-          clear: "all",
           tracking: "Run",
         },
       ],
