@@ -71,6 +71,7 @@ export function CSQuests(): Quest[] {
             visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
             set("_goorboFireworksPrepped", true);
           },
+          tracking: "Run",
         },
         {
           name: "Run",
