@@ -90,7 +90,6 @@ export function CSQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
-          clear: "all",
         },
         {
           name: "Acquire Carpe",
