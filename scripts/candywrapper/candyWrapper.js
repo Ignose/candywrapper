@@ -8394,7 +8394,6 @@ function csleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.s
 
 
 var pajamas = false;
-var didStorage = property_get("lastEmptiedStorage");
 function CSQuests() {
   return [{
     name: "Community Service Run",
@@ -8423,7 +8422,7 @@ function CSQuests() {
     completed: () => totallyDrunk() && pajamas,
     tasks: [{
       name: "Pull All",
-      completed: () => property_get("lastEmptiedStorage") !== (0,external_kolmafia_namespaceObject.myAscensions)(),
+      completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all"),
       clear: "all"
     }, {
