@@ -49,7 +49,6 @@ import {
 } from "./utils";
 
 let pajamas = false;
-const didStorage = get("lastEmptiedStorage");
 
 export function CSQuests(): Quest[] {
   return [
@@ -89,7 +88,7 @@ export function CSQuests(): Quest[] {
       tasks: [
         {
           name: "Pull All",
-          completed: () => get("lastEmptiedStorage") !== myAscensions(),
+          completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
           clear: "all",
         },
