@@ -8423,8 +8423,7 @@ function CSQuests() {
     tasks: [{
       name: "Pull All",
       completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all"),
-      clear: "all"
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
       name: "Acquire Carpe",
       completed: () => !args.carpe || lib_have(template_string_$item(csleg_templateObject2 || (csleg_templateObject2 = csleg_taggedTemplateLiteral(["carpe"])))),
