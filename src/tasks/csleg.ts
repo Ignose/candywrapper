@@ -18,6 +18,7 @@ import {
   print,
   pvpAttacksLeft,
   retrieveItem,
+  setProperty,
   use,
   useFamiliar,
   useSkill,
@@ -90,6 +91,21 @@ export function CSQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
+        },
+        {
+          name: "But dad I don't want to feel lost",
+          completed: () => !have($effect`Feeling Lost`),
+          do: () => uneffect($effect`Feeling Lost`),
+        },
+        {
+          name: "Smoke em if you got em",
+          completed: () => !have($item`stick of firewood`),
+          do: (): void => {let smoke = 1;
+            while(have($item`stick of firewood`)) {
+              setProperty("choiceAdventure1394",`1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`);
+              use(1,$item`campfire smoke`);
+              smoke = smoke + 1;
+            }}
         },
         {
           name: "Acquire Carpe",
