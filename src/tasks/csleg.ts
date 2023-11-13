@@ -9,6 +9,7 @@ import {
   holiday,
   inebrietyLimit,
   itemAmount,
+  mallPrice,
   myAdventures,
   myAscensions,
   myInebriety,
@@ -101,9 +102,12 @@ export function CSQuests(): Quest[] {
           name: "Smoke em if you got em",
           completed: () => !have($item`stick of firewood`),
           do: (): void => {let smoke = 1;
+            if(mallPrice($item`stick of firewood`) <= 200)
+              buy($item`stick of firewood`, 10);
             while(have($item`stick of firewood`)) {
               setProperty("choiceAdventure1394",`1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`);
               use(1,$item`campfire smoke`);
+              print(`Smoked ${smoke} firewoods!`)
               smoke = smoke + 1;
             }}
         },
