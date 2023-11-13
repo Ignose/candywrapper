@@ -8390,6 +8390,7 @@ function csleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.s
 
 
 var pajamas = false;
+var smoke = 1;
 function CSQuests() {
   return [{
     name: "Community Service Run",
@@ -8426,9 +8427,8 @@ function CSQuests() {
       do: () => uneffect(template_string_$effect(csleg_templateObject3 || (csleg_templateObject3 = csleg_taggedTemplateLiteral(["Feeling Lost"]))))
     }, {
       name: "Smoke em if you got em",
-      completed: () => !lib_have(template_string_$item(csleg_templateObject4 || (csleg_templateObject4 = csleg_taggedTemplateLiteral(["stick of firewood"])))),
+      completed: () => !lib_have(template_string_$item(csleg_templateObject4 || (csleg_templateObject4 = csleg_taggedTemplateLiteral(["stick of firewood"])))) || smoke >= 10,
       do: () => {
-        var smoke = 1;
         if ((0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(csleg_templateObject5 || (csleg_templateObject5 = csleg_taggedTemplateLiteral(["stick of firewood"])))) <= 200) (0,external_kolmafia_namespaceObject.buy)(template_string_$item(csleg_templateObject6 || (csleg_templateObject6 = csleg_taggedTemplateLiteral(["stick of firewood"]))), 10);
         while (lib_have(template_string_$item(csleg_templateObject7 || (csleg_templateObject7 = csleg_taggedTemplateLiteral(["stick of firewood"]))))) {
           (0,external_kolmafia_namespaceObject.setProperty)("choiceAdventure1394", "1&message=".concat(smoke, " Thanks Seraphiii for writing Candywrapper!"));
