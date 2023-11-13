@@ -8589,9 +8589,7 @@ function CSQuests() {
     }, {
       name: "Item Cleanup",
       // eslint-disable-next-line libram/verify-constants
-      ready: () => !property_get("_cleanupToday", false),
-      // eslint-disable-next-line libram/verify-constants
-      completed: () => property_get("_cleanupToday", false),
+      completed: () => property_get("_cleanupToday", false) || args.itemcleanup === "",
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.itemcleanup));
         (0,external_kolmafia_namespaceObject.cliExecute)("set _cleanupToday = true");
