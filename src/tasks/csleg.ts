@@ -109,7 +109,10 @@ export function CSQuests(): Quest[] {
               use(1,$item`campfire smoke`);
               print(`Smoked ${smoke} firewoods!`)
               smoke = smoke + 1;
-            }}
+            }
+            if(mallPrice($item`stick of firewood`) <= 200)
+              buy($item`stick of firewood`, 1);
+          }
         },
         {
           name: "Acquire Carpe",
