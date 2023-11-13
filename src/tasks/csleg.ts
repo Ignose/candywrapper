@@ -51,6 +51,7 @@ import {
 } from "./utils";
 
 let pajamas = false;
+let smoke = 1;
 
 export function CSQuests(): Quest[] {
   return [
@@ -100,8 +101,8 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Smoke em if you got em",
-          completed: () => !have($item`stick of firewood`),
-          do: (): void => {let smoke = 1;
+          completed: () => !have($item`stick of firewood`) || smoke >= 10,
+          do: (): void => {
             if(mallPrice($item`stick of firewood`) <= 200)
               buy($item`stick of firewood`, 10);
             while(have($item`stick of firewood`)) {
