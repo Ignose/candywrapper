@@ -317,9 +317,7 @@ export function CSQuests(): Quest[] {
         {
           name: "Item Cleanup",
           // eslint-disable-next-line libram/verify-constants
-          ready: () => !get("_cleanupToday", false),
-          // eslint-disable-next-line libram/verify-constants
-          completed: () => get("_cleanupToday", false),
+          completed: () => get("_cleanupToday", false) || args.itemcleanup === "",
           do: (): void => {
             cliExecute(`${args.itemcleanup}`);
             cliExecute("set _cleanupToday = true");
