@@ -95,13 +95,6 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("pull all; refresh all"),
         },
         {
-          name: "LED Candle",
-          // eslint-disable-next-line libram/verify-constants
-          completed: () => !have($item`LED candle`) || get("ledCandleMode", "") === "Ultraviolet",
-          do: ()=> cliExecute("familiar Jill; equip LED candle; jillcandle ultraviolet"),
-          limit: { tries: 1 },
-        },
-        {
           name: "But dad I don't want to feel lost",
           completed: () => !have($effect`Feeling Lost`),
           do: () => uneffect($effect`Feeling Lost`),
