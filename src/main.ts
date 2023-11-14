@@ -1,4 +1,4 @@
-import { print } from "kolmafia";
+import { gamedayToInt, print, todayToString } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
 import { AftercoreQuest } from "./tasks/aftercoreleg";
 import { CSQuests } from "./tasks/csleg";
@@ -7,11 +7,17 @@ import { args } from "./args";
 
 const version = "0.0.2";
 
+const dontCS = gamedayToInt() === 78 || todayToString().includes("1030");
+
 export function main(command?: string): void {
   Args.fill(args, command);
   if (args.help) {
     Args.showHelp(args);
     return;
+  }
+
+  if(dontCS && args.lowshiny) {
+    throw `Tomorrow is halloween, run something that lets you get steel organs!`
   }
 
   /*if (args.profits) {
