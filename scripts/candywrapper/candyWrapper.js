@@ -8069,6 +8069,10 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
   itemcleanup: Args.string({
     help: "The script that will be used to mallsale items after a run",
     default: ""
+  }),
+  lowshiny: Args.flag({
+    help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
+    default: true
   })
 });
 ;// CONCATENATED MODULE: ./src/tasks/aftercoreleg.ts
@@ -8726,11 +8730,15 @@ function main_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) 
 
 
 var version = "0.0.2";
+var dontCS = (0,external_kolmafia_namespaceObject.gamedayToInt)() === 78 || (0,external_kolmafia_namespaceObject.todayToString)().includes("1030");
 function main(command) {
   Args.fill(args, command);
   if (args.help) {
     Args.showHelp(args);
     return;
+  }
+  if (dontCS && args.lowshiny) {
+    throw "Tomorrow is halloween, run something that lets you get steel organs!";
   }
 
   /*if (args.profits) {
