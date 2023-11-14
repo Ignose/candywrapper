@@ -8425,7 +8425,7 @@ function CSQuests() {
       name: "LED Candle",
       // eslint-disable-next-line libram/verify-constants
       completed: () => !lib_have(template_string_$item(csleg_templateObject2 || (csleg_templateObject2 = csleg_taggedTemplateLiteral(["LED candle"])))) || property_get("ledCandleMode", "") === "Ultraviolet",
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("familiar Jill; equip LED cande; jillcandle ultraviolet"),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("familiar Jill; equip LED candle; jillcandle ultraviolet"),
       limit: {
         tries: 1
       }
