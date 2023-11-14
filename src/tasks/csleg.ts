@@ -98,7 +98,7 @@ export function CSQuests(): Quest[] {
           name: "LED Candle",
           // eslint-disable-next-line libram/verify-constants
           completed: () => !have($item`LED candle`) || get("ledCandleMode", "") === "Ultraviolet",
-          do: () => cliExecute("jillcandle ultraviolet"),
+          do: ()=> cliExecute("familiar Jill; equip LED cande; jillcandle ultraviolet"),
           limit: { tries: 1 },
         },
         {
