@@ -70,7 +70,7 @@ export class ProfitTrackingEngine extends Engine<never, Task> {
     try {
       super.execute(task);
     } finally {
-      this.profits.record(`${getCurrentLeg()}@${task.tracking ?? "Other"}`, task.name);
+      this.profits.record(`${getCurrentLeg()}@${task.tracking ?? "Other"}`);
     }
   }
 

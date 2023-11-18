@@ -11,8 +11,7 @@ export type Quest = BaseQuest<Task>;
 // eslint-disable-next-line no-restricted-syntax
 export enum Leg {
   Aftercore = 0,
-  CommunityService = 1,
-  last = 1,
+  CommunityService = 1
 }
 
 export function getCurrentLeg(): number {
