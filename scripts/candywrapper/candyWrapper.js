@@ -7281,7 +7281,6 @@ function prepareAscension() {
 var Leg = /*#__PURE__*/function (Leg) {
   Leg[Leg["Aftercore"] = 0] = "Aftercore";
   Leg[Leg["CommunityService"] = 1] = "CommunityService";
-  Leg[Leg["last"] = 1] = "last";
   return Leg;
 }({});
 function getCurrentLeg() {
@@ -7688,7 +7687,7 @@ var Session = /*#__PURE__*/function () {
   return Session;
 }();
 ;// CONCATENATED MODULE: ./src/engine/profits.ts
-var profits_templateObject, profits_templateObject2, profits_templateObject3, profits_templateObject4, profits_templateObject5, profits_templateObject6, profits_templateObject7, profits_templateObject8, profits_templateObject9, profits_templateObject10, profits_templateObject11, profits_templateObject12, profits_templateObject13, profits_templateObject14, profits_templateObject15, profits_templateObject16, profits_templateObject17, profits_templateObject18, profits_templateObject19, profits_templateObject20, profits_templateObject21, profits_templateObject22, profits_templateObject23, profits_templateObject24, profits_templateObject25, profits_templateObject26, profits_templateObject27, profits_templateObject28, profits_templateObject29, profits_templateObject30, profits_templateObject31, profits_templateObject32, profits_templateObject33, profits_templateObject34, profits_templateObject35, profits_templateObject36, profits_templateObject37, profits_templateObject38, profits_templateObject39, profits_templateObject40, profits_templateObject41, profits_templateObject42, profits_templateObject43, profits_templateObject44, profits_templateObject45;
+var profits_templateObject, profits_templateObject2, profits_templateObject3, profits_templateObject4, profits_templateObject5, profits_templateObject6, profits_templateObject7, profits_templateObject8, profits_templateObject9, profits_templateObject10, profits_templateObject11, profits_templateObject12, profits_templateObject13, profits_templateObject14, profits_templateObject15, profits_templateObject16, profits_templateObject17, profits_templateObject18, profits_templateObject19, profits_templateObject20, profits_templateObject21, profits_templateObject22, profits_templateObject23, profits_templateObject24, profits_templateObject25, profits_templateObject26, profits_templateObject27, profits_templateObject28, profits_templateObject29, profits_templateObject30, profits_templateObject31, profits_templateObject32, profits_templateObject33, profits_templateObject34, profits_templateObject35, profits_templateObject36, profits_templateObject37, profits_templateObject38, profits_templateObject39, profits_templateObject40, profits_templateObject41, profits_templateObject42, profits_templateObject43, profits_templateObject44, profits_templateObject45, profits_templateObject46, profits_templateObject47, profits_templateObject48, profits_templateObject49, profits_templateObject50, profits_templateObject51, profits_templateObject52, profits_templateObject53, profits_templateObject54, profits_templateObject55, profits_templateObject56, profits_templateObject57, profits_templateObject58, profits_templateObject59, profits_templateObject60, profits_templateObject61, profits_templateObject62, profits_templateObject63, profits_templateObject64, profits_templateObject65, profits_templateObject66, profits_templateObject67, profits_templateObject68, profits_templateObject69, profits_templateObject70, profits_templateObject71, profits_templateObject72, profits_templateObject73, profits_templateObject74, profits_templateObject75;
 function profits_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 function profits_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, profits_toPropertyKey(descriptor.key), descriptor); } }
 function profits_createClass(Constructor, protoProps, staticProps) { if (protoProps) profits_defineProperties(Constructor.prototype, protoProps); if (staticProps) profits_defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
@@ -7812,7 +7811,7 @@ var ProfitTracker = /*#__PURE__*/function () {
     profits_defineProperty(this, "ascensions", void 0);
     this.setting = new DailySetting(key);
     this.records = this.setting.get({});
-    this.session = Session.current();
+    this.session = getCurrentSession();
     this.turns = (0,external_kolmafia_namespaceObject.myTurncount)();
     this.hours = (0,external_kolmafia_namespaceObject.gametimeToInt)() / (1000 * 60 * 60);
     this.ascensions = (0,external_kolmafia_namespaceObject.myAscensions)();
@@ -7821,7 +7820,7 @@ var ProfitTracker = /*#__PURE__*/function () {
   profits_createClass(ProfitTracker, [{
     key: "reset",
     value: function reset() {
-      this.session = Session.current();
+      this.session = getCurrentSession();
       this.turns = (0,external_kolmafia_namespaceObject.myTurncount)();
       this.hours = (0,external_kolmafia_namespaceObject.gametimeToInt)() / (1000 * 60 * 60);
       this.ascensions = (0,external_kolmafia_namespaceObject.myAscensions)();
@@ -7829,7 +7828,7 @@ var ProfitTracker = /*#__PURE__*/function () {
     }
   }, {
     key: "record",
-    value: function record(tag, taskName) {
+    value: function record(tag) {
       if (this.ascensions < (0,external_kolmafia_namespaceObject.myAscensions)()) {
         // Session tracking is not accurate across ascensions
         this.reset();
@@ -7853,7 +7852,7 @@ var ProfitTracker = /*#__PURE__*/function () {
       } finally {
         _iterator2.f();
       }
-      var diff = Session.current().diff(this.session);
+      var diff = getCurrentSession().diff(this.session);
       if (!(tag in this.records)) this.records[tag] = {
         meat: 0,
         items: 0,
@@ -7865,7 +7864,7 @@ var ProfitTracker = /*#__PURE__*/function () {
       this.records[tag].items += value.items;
       this.records[tag].turns += (0,external_kolmafia_namespaceObject.myTurncount)() - this.turns;
       this.records[tag].hours += (0,external_kolmafia_namespaceObject.gametimeToInt)() / (1000 * 60 * 60) - this.hours;
-      (0,external_kolmafia_namespaceObject.print)("Profit for ".concat(taskName, ": ").concat(value.meat, ", ").concat(value.items, ", ").concat((0,external_kolmafia_namespaceObject.myTurncount)() - this.turns, ", ").concat((0,external_kolmafia_namespaceObject.gametimeToInt)() / (1000 * 60 * 60) - this.hours));
+      (0,external_kolmafia_namespaceObject.print)("Profit: ".concat(value.meat, ", ").concat(value.items, ", ").concat((0,external_kolmafia_namespaceObject.myTurncount)() - this.turns, ", ").concat((0,external_kolmafia_namespaceObject.gametimeToInt)() / (1000 * 60 * 60) - this.hours));
       this.reset();
     }
   }, {
@@ -7881,6 +7880,38 @@ var ProfitTracker = /*#__PURE__*/function () {
   }]);
   return ProfitTracker;
 }();
+function getCurrentSession() {
+  /*
+  Libram includes getStorage() in the generated session, since pulling an
+  item in-ronin does indeed modify the underlying mafia session tracking,
+  i.e., -1 from getStorage and +1 from mySessionItems.
+   But pulling all items out of ronin does not modify the underling mafia
+  session tracking, i.e., -1 from getStorage but +0 from mySessionItems.
+   Since we already handle in-ronin pulls above (see ProfitTracker.pulled),
+  we just ignore getStorage from the Session.
+   This should be changed if libram/mafia changes how stored items are tracked.
+  */
+
+  var manyToOne = (primary, mapped) => mapped.map(target => [target, primary]);
+  var foldable = item => manyToOne(item, getFoldGroup(item));
+  var itemMappings = new Map([].concat(profits_toConsumableArray(foldable(template_string_$item(profits_templateObject46 || (profits_templateObject46 = profits_taggedTemplateLiteral(["liar's pants"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject47 || (profits_templateObject47 = profits_taggedTemplateLiteral(["ice pick"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject48 || (profits_templateObject48 = profits_taggedTemplateLiteral(["Spooky Putty sheet"]))), [template_string_$item(profits_templateObject49 || (profits_templateObject49 = profits_taggedTemplateLiteral(["Spooky Putty monster"])))].concat(profits_toConsumableArray(getFoldGroup(template_string_$item(profits_templateObject50 || (profits_templateObject50 = profits_taggedTemplateLiteral(["Spooky Putty sheet"])))))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject51 || (profits_templateObject51 = profits_taggedTemplateLiteral(["stinky cheese sword"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject52 || (profits_templateObject52 = profits_taggedTemplateLiteral(["naughty paper shuriken"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject53 || (profits_templateObject53 = profits_taggedTemplateLiteral(["Loathing Legion knife"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject54 || (profits_templateObject54 = profits_taggedTemplateLiteral(["deceased crimbo tree"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject55 || (profits_templateObject55 = profits_taggedTemplateLiteral(["makeshift turban"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject56 || (profits_templateObject56 = profits_taggedTemplateLiteral(["turtle wax shield"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject57 || (profits_templateObject57 = profits_taggedTemplateLiteral(["metallic foil bow"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject58 || (profits_templateObject58 = profits_taggedTemplateLiteral(["ironic moustache"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject59 || (profits_templateObject59 = profits_taggedTemplateLiteral(["bugged balaclava"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject60 || (profits_templateObject60 = profits_taggedTemplateLiteral(["toggle switch (Bartend)"]))))), profits_toConsumableArray(foldable(template_string_$item(profits_templateObject61 || (profits_templateObject61 = profits_taggedTemplateLiteral(["mushroom cap"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject62 || (profits_templateObject62 = profits_taggedTemplateLiteral(["can of Rain-Doh"]))), template_string_$items(profits_templateObject63 || (profits_templateObject63 = profits_taggedTemplateLiteral(["empty Rain-Doh can"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject64 || (profits_templateObject64 = profits_taggedTemplateLiteral(["meteorite fragment"]))), template_string_$items(profits_templateObject65 || (profits_templateObject65 = profits_taggedTemplateLiteral(["meteorite earring, meteorite necklace, meteorite ring"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject66 || (profits_templateObject66 = profits_taggedTemplateLiteral(["Sneaky Pete's leather jacket"]))), template_string_$items(profits_templateObject67 || (profits_templateObject67 = profits_taggedTemplateLiteral(["Sneaky Pete's leather jacket (collar popped)"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject68 || (profits_templateObject68 = profits_taggedTemplateLiteral(["Boris's Helm"]))), template_string_$items(profits_templateObject69 || (profits_templateObject69 = profits_taggedTemplateLiteral(["Boris's Helm (askew)"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject70 || (profits_templateObject70 = profits_taggedTemplateLiteral(["Jarlsberg's pan"]))), template_string_$items(profits_templateObject71 || (profits_templateObject71 = profits_taggedTemplateLiteral(["Jarlsberg's pan (Cosmic portal mode)"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject72 || (profits_templateObject72 = profits_taggedTemplateLiteral(["tiny plastic sword"]))), template_string_$items(profits_templateObject73 || (profits_templateObject73 = profits_taggedTemplateLiteral(["grogtini, bodyslam, dirty martini, vesper, cherry bomb, sangria del diablo"]))))), profits_toConsumableArray(manyToOne(template_string_$item(profits_templateObject74 || (profits_templateObject74 = profits_taggedTemplateLiteral(["earthenware muffin tin"]))), template_string_$items(profits_templateObject75 || (profits_templateObject75 = profits_taggedTemplateLiteral(["blueberry muffin, bran muffin, chocolate chip muffin"])))))));
+  var result = Session.current();
+  for (var _i2 = 0, _arr2 = [external_kolmafia_namespaceObject.getCloset, external_kolmafia_namespaceObject.getStorage]; _i2 < _arr2.length; _i2++) {
+    var inventoryFunc = _arr2[_i2];
+    for (var _i3 = 0, _Object$entries = Object.entries(inventoryFunc()); _i3 < _Object$entries.length; _i3++) {
+      var _itemMappings$get;
+      var _Object$entries$_i = profits_slicedToArray(_Object$entries[_i3], 2),
+        itemStr = _Object$entries$_i[0],
+        quantity = _Object$entries$_i[1];
+      var item = (0,external_kolmafia_namespaceObject.toItem)(itemStr);
+      var mappedItem = (_itemMappings$get = itemMappings.get(item)) !== null && _itemMappings$get !== void 0 ? _itemMappings$get : item;
+      result.register(mappedItem, -1 * quantity);
+    }
+  }
+  result.register("meat", -1 * (0,external_kolmafia_namespaceObject.myStorageMeat)());
+  result.register("meat", -1 * (0,external_kolmafia_namespaceObject.myClosetMeat)());
+  return result;
+}
 function profits_sum(record, where) {
   var included = [];
   for (var _key3 in record) {
@@ -8703,7 +8734,7 @@ var ProfitTrackingEngine = /*#__PURE__*/function (_Engine) {
         engine_get(engine_getPrototypeOf(ProfitTrackingEngine.prototype), "execute", this).call(this, task);
       } finally {
         var _task$tracking;
-        this.profits.record("".concat(getCurrentLeg(), "@").concat((_task$tracking = task.tracking) !== null && _task$tracking !== void 0 ? _task$tracking : "Other"), task.name);
+        this.profits.record("".concat(getCurrentLeg(), "@").concat((_task$tracking = task.tracking) !== null && _task$tracking !== void 0 ? _task$tracking : "Other"));
       }
     }
   }, {
