@@ -7940,7 +7940,7 @@ function printProfits(records) {
   for (var _key4 in records) {
     if (_key4.startsWith("0")) printProfitSegment("* ".concat(_key4.substring(2)), records[_key4], "green");
   }
-  printProfitSegment("Community Service", profits_sum(records, key => key.startsWith("1")), "blue");
+  printProfitSegment("Run and Post-Run", profits_sum(records, key => key.startsWith("1")), "blue");
   for (var _key5 in records) {
     if (_key5.startsWith("1")) printProfitSegment("* ".concat(_key5.substring(2)), records[_key5], "green");
   }
@@ -8101,11 +8101,25 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
     help: "The script that will be used to mallsale items after a run",
     default: ""
   }),
-  lowshiny: Args.flag({
+  halloween: Args.flag({
     help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
     default: true
   })
 });
+;// CONCATENATED MODULE: ./src/tasks/perm.ts
+
+
+function filterPermableSkills() {
+  var allSkills = external_kolmafia_namespaceObject.Skill.all().filter(sk => sk.permable);
+  var permedSkill = permedSkills();
+  var filteredSkills = allSkills.filter(skill => skill.permable && lib_have(skill) && ![Lifestyle.softcore, Lifestyle.hardcore].includes(permedSkill.get(skill)));
+  return filteredSkills;
+}
+function targetPerms() {
+  var pOptions = filterPermableSkills();
+  var maxQty = Math.floor(((0,external_kolmafia_namespaceObject.toInt)(property_get("bankedKarma", 0)) - 11) / 100);
+  return pOptions.slice(0, maxQty);
+}
 ;// CONCATENATED MODULE: ./src/tasks/aftercoreleg.ts
 var aftercoreleg_templateObject, aftercoreleg_templateObject2, aftercoreleg_templateObject3, aftercoreleg_templateObject4, aftercoreleg_templateObject5, aftercoreleg_templateObject6, aftercoreleg_templateObject7, aftercoreleg_templateObject8, aftercoreleg_templateObject9, aftercoreleg_templateObject10, aftercoreleg_templateObject11, aftercoreleg_templateObject12, aftercoreleg_templateObject13, aftercoreleg_templateObject14, aftercoreleg_templateObject15, aftercoreleg_templateObject16, aftercoreleg_templateObject17, aftercoreleg_templateObject18, aftercoreleg_templateObject19, aftercoreleg_templateObject20, aftercoreleg_templateObject21, aftercoreleg_templateObject22, aftercoreleg_templateObject23, aftercoreleg_templateObject24, aftercoreleg_templateObject25, aftercoreleg_templateObject26, aftercoreleg_templateObject27, aftercoreleg_templateObject28, aftercoreleg_templateObject29, aftercoreleg_templateObject30, aftercoreleg_templateObject31, aftercoreleg_templateObject32, aftercoreleg_templateObject33, aftercoreleg_templateObject34, aftercoreleg_templateObject35, aftercoreleg_templateObject36, aftercoreleg_templateObject37, aftercoreleg_templateObject38, aftercoreleg_templateObject39, aftercoreleg_templateObject40, aftercoreleg_templateObject41, aftercoreleg_templateObject42, aftercoreleg_templateObject43, aftercoreleg_templateObject44, aftercoreleg_templateObject45, aftercoreleg_templateObject46, aftercoreleg_templateObject47, aftercoreleg_templateObject48, aftercoreleg_templateObject49, aftercoreleg_templateObject50, aftercoreleg_templateObject51, aftercoreleg_templateObject52, aftercoreleg_templateObject53, aftercoreleg_templateObject54, aftercoreleg_templateObject55, aftercoreleg_templateObject56, aftercoreleg_templateObject57, aftercoreleg_templateObject58, aftercoreleg_templateObject59, aftercoreleg_templateObject60, aftercoreleg_templateObject61, aftercoreleg_templateObject62, aftercoreleg_templateObject63, aftercoreleg_templateObject64, aftercoreleg_templateObject65, aftercoreleg_templateObject66, aftercoreleg_templateObject67, aftercoreleg_templateObject68, aftercoreleg_templateObject69, aftercoreleg_templateObject70, aftercoreleg_templateObject71, aftercoreleg_templateObject72, aftercoreleg_templateObject73, aftercoreleg_templateObject74, aftercoreleg_templateObject75, aftercoreleg_templateObject76, aftercoreleg_templateObject77, aftercoreleg_templateObject78, aftercoreleg_templateObject79, aftercoreleg_templateObject80, aftercoreleg_templateObject81, aftercoreleg_templateObject82, aftercoreleg_templateObject83, aftercoreleg_templateObject84, aftercoreleg_templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96;
 function aftercoreleg_toConsumableArray(arr) { return aftercoreleg_arrayWithoutHoles(arr) || aftercoreleg_iterableToArray(arr) || aftercoreleg_unsupportedIterableToArray(arr) || aftercoreleg_nonIterableSpread(); }
@@ -8115,6 +8129,7 @@ function aftercoreleg_iterableToArray(iter) { if (typeof Symbol !== "undefined" 
 function aftercoreleg_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return aftercoreleg_arrayLikeToArray(arr); }
 function aftercoreleg_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function aftercoreleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
 
 
 
@@ -8402,6 +8417,8 @@ function AftercoreQuest() {
       completed: () => getCurrentLeg() >= Leg.CommunityService,
       //Change this
       do: () => {
+        var skillsToPerm = new Map();
+        targetPerms().forEach(sk => skillsToPerm.set(sk, Lifestyle.softcore));
         var moonsign = toMoonSign(args.moonsign);
         ascend({
           path: $path(_templateObject94 || (_templateObject94 = aftercoreleg_taggedTemplateLiteral(["Community Service"]))),
@@ -8409,7 +8426,11 @@ function AftercoreQuest() {
           lifestyle: 2,
           moon: moonsign,
           consumable: template_string_$item(_templateObject95 || (_templateObject95 = aftercoreleg_taggedTemplateLiteral(["astral six-pack"]))),
-          pet: args.astralpet === template_string_$item(_templateObject96 || (_templateObject96 = aftercoreleg_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet
+          pet: args.astralpet === template_string_$item(_templateObject96 || (_templateObject96 = aftercoreleg_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet,
+          permOptions: {
+            permSkills: skillsToPerm,
+            neverAbort: false
+          }
         });
         (0,external_kolmafia_namespaceObject.cliExecute)("refresh all");
       }
@@ -8768,7 +8789,7 @@ function main(command) {
     Args.showHelp(args);
     return;
   }
-  if (dontCS && args.lowshiny) {
+  if (dontCS && args.halloween) {
     throw "Tomorrow is halloween, run something that lets you get steel organs!";
   }
 
