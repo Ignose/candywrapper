@@ -99,7 +99,7 @@ export const args = Args.create(
       help: `The script that will be used to mallsale items after a run`,
       default: "",
     }),
-    lowshiny: Args.flag(
+    halloween: Args.flag(
       {
         help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
         default: true

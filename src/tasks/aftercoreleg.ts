@@ -47,6 +47,7 @@ import {
   get,
   getTodaysHolidayWanderers,
   have,
+  Lifestyle,
   Macro,
   set,
   uneffect,
@@ -63,6 +64,7 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
+import { targetPerms } from "./perm";
 
 export function AftercoreQuest(): Quest {
   return {
@@ -420,6 +422,8 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
         completed: () => getCurrentLeg() >= Leg.CommunityService, //Change this
         do: (): void => {
+          const skillsToPerm = new Map();
+          targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
 
           const moonsign = toMoonSign(args.moonsign);
           ascend({
@@ -429,6 +433,7 @@ export function AftercoreQuest(): Quest {
             moon: moonsign,
             consumable: $item`astral six-pack`,
             pet: args.astralpet === $item`none` ? undefined : args.astralpet,
+            permOptions: { permSkills: skillsToPerm, neverAbort: false },
             });
           cliExecute("refresh all");
         },

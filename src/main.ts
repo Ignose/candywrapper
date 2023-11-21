@@ -16,7 +16,7 @@ export function main(command?: string): void {
     return;
   }
 
-  if(dontCS && args.lowshiny) {
+  if(dontCS && args.halloween) {
     throw `Tomorrow is halloween, run something that lets you get steel organs!`
   }
 

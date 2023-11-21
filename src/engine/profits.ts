@@ -404,7 +404,7 @@ import {
     }
 
     printProfitSegment(
-      "Community Service",
+      "Run and Post-Run",
       sum(records, (key) => key.startsWith("1")),
       "blue"
     );
