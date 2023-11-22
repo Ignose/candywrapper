@@ -1,6 +1,6 @@
 import { Args } from "grimoire-kolmafia";
 import { Item, toClass } from "kolmafia";
-import { $class, $classes, $item, $items } from "libram";
+import { $class, $classes, $item, $items, get } from "libram";
 import { toMoonSign } from "./tasks/utils";
 
 export const args = Args.create(
@@ -18,6 +18,14 @@ export const args = Args.create(
     }),
     profits: Args.flag({
       help: "Print out daily profit and exit.",
+      setting: "",
+    }),
+    cs: Args.flag({
+      help: "Ascend into and run CS.",
+      setting: "",
+    }),
+    smol: Args.flag({
+      help: "Ascend into and run smol.",
       setting: "",
     }),
 
@@ -86,6 +94,19 @@ export const args = Args.create(
     csscript: Args.string({
       help: "The command that will do your Community Service run for you. Include any arguments desired.",
       default: "folgercs",
+    }),
+    smolscript: Args.string({
+      help: "The command that will do your smol run for you. Include any arguments desired.",
+      default: "loopsmol",
+    }),
+    pulls: Args.items({
+      help: "A list of items to pull at the start of the smol run.",
+      default: [
+        ...$items`mafia thumb ring, lucky gold ring`,
+        ...(get("stenchAirportAlways") || get("_stenchAirportToday")
+          ? []
+          : $items`one-day ticket to Dinseylandfill`),
+      ],
     }),
     garbo: Args.string({
       help: "The command that will be used to diet and use all your adventures after reaching level 13 in Day 1 aftercore.",

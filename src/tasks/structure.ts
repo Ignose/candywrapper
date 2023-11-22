@@ -11,11 +11,11 @@ export type Quest = BaseQuest<Task>;
 // eslint-disable-next-line no-restricted-syntax
 export enum Leg {
   Aftercore = 0,
-  CommunityService = 1
+  Run = 1
 }
 
 export function getCurrentLeg(): number {
   if (myDaycount() === 1)
-    return Leg.CommunityService;
+    return Leg.Run;
   return Leg.Aftercore;
 }

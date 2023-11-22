@@ -58,7 +58,7 @@ export function CSQuests(): Quest[] {
     {
       name: "Community Service Run",
       completed: () =>
-        getCurrentLeg() !== Leg.CommunityService ||
+        getCurrentLeg() !== Leg.Run ||
         get("kingLiberated"),
       tasks: [
         {
@@ -86,7 +86,7 @@ export function CSQuests(): Quest[] {
     },
     {
       name: "Post-Community Service Aftercore",
-      ready: () => getCurrentLeg() === Leg.CommunityService && get("kingLiberated", false),
+      ready: () => getCurrentLeg() === Leg.Run && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
         {

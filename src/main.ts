@@ -1,9 +1,11 @@
 import { gamedayToInt, print, todayToString } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
-import { AftercoreQuest } from "./tasks/aftercoreleg";
+import { CSAftercoreQuest } from "./tasks/csaftercoreleg";
 import { CSQuests } from "./tasks/csleg";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { args } from "./args";
+import { SmolAftercoreQuest } from "./tasks/smolaftercore";
+import { SmolQuests } from "./tasks/smol";
 
 const version = "0.0.2";
 
@@ -27,7 +29,9 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  const tasks = getTasks([AftercoreQuest(), ...CSQuests()]);
+  const tasks = args.cs ? getTasks([CSAftercoreQuest(), ...CSQuests()]) : args.smol ? getTasks([SmolAftercoreQuest(), ...SmolQuests()]) : undefined;
+
+  if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
 
   if (args.abort) {
     const to_abort = tasks.find((task) => task.name === args.abort);
