@@ -100,6 +100,11 @@ export function CSQuests(): Quest[] {
           do: () => uneffect($effect`Feeling Lost`),
         },
         {
+          name: "Clear citizen",
+          completed: () => get("_citizenZone", "") !== "Madness Bakery",
+          do: () => uneffect($effect`Citizen of a Zone`),
+        },
+        {
           name: "Smoke em if you got em",
           completed: () => !have($item`stick of firewood`) || smoke >= 10,
           do: (): void => {

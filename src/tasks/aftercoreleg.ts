@@ -17,12 +17,13 @@ import {
   myClass,
   myHp,
   myInebriety,
+  myLevel,
   myMaxhp,
   myPrimestat,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
-  runChoice,
+  retrieveItem,
   use,
   useFamiliar,
   useSkill,
@@ -37,16 +38,14 @@ import {
   $item,
   $items,
   $location,
-  $path,
   $phylum,
   $skill,
-  ascend,
+  $stat,
   AsdonMartin,
   DNALab,
   get,
   getTodaysHolidayWanderers,
   have,
-  Lifestyle,
   Macro,
   set,
   uneffect,
@@ -63,9 +62,11 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
-import { targetPerms } from "./perm";
 
-export function SmolAftercoreQuest(): Quest {
+const doSmol = args.smol ? true : false;
+const doCS = args.cs ? true : false;
+
+export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
     completed: () => getCurrentLeg() > Leg.Aftercore,
@@ -243,42 +244,15 @@ export function SmolAftercoreQuest(): Quest {
         ),
         tracking: "Leveling",
       },
-      /*{
-        name: "Train Gnome Skills",
-        ready: () => myMeat() >= 5000 && gnomadsAvailable(),
-        completed: () =>
-          !targetPerms(false).find(
-            (sk) =>
-              !have(sk) &&
-              $skills`Torso Awareness, Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.includes(
-                sk
-              )
-          ),
-        do: () =>
-          targetPerms(false)
-            .filter(
-              (sk) =>
-                !have(sk) &&
-                $skills`Torso Awareness, Gnefarious Pickpocketing, Powers of Observatiogn, Gnomish Hardigness, Cosmic Ugnderstanding`.includes(
-                  sk
-                )
-            )
-            .forEach((sk) =>
-              visitUrl(`gnomes.php?action=trainskill&whichskill=${toInt(sk)}`, true)
-            ),
-        limit: { tries: 5 },
-      },
       {
         name: "Unlock Guild",
         ready: () =>
-          //ready if you find a skill in your perm plan that is guild-trainable that you don't know, or if you need to buy seal summoning supplies
-          !!targetPerms(false).find((sk) => !have(sk) && sk.level > 0) ||
           (myClass() === $class`Seal Clubber` &&
             Math.min(
               ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
                 availableAmount(it)
               )
-            ) < 20),
+            ) < 20) && doSmol,
         completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
         do: () => cliExecute("guild"),
         choices: {
@@ -328,21 +302,6 @@ export function SmolAftercoreQuest(): Quest {
           ),
       },
       {
-        name: "Guild Skill Training",
-        ready: () => guildStoreAvailable(),
-        completed: () =>
-          //done if you don't find any  skills in your perm plan that are guild-trainable, that you don't have known
-          !targetPerms(false).find((sk) => !have(sk) && myLevel() >= sk.level),
-        do: () =>
-          targetPerms(false)
-            .filter((sk) => sk.class === myClass() && !have(sk) && myLevel() >= sk.level)
-            .forEach((sk) => {
-              print(`Purchasing ${sk} using skillid=${toInt(sk) % 1000}`);
-              visitUrl(`guild.php?action=buyskill&skillid=${toInt(sk) % 1000}`, true);
-            }),
-        limit: { tries: 3 }, //a few tries, in case your level is too low and you level up over the course of the day
-      },
-      {
         name: "Stock Up on MMJs",
         ready: () =>
           guildStoreAvailable() &&
@@ -356,7 +315,7 @@ export function SmolAftercoreQuest(): Quest {
           },
         ],
         do: () => false,
-      },*/
+      },
       {
         name: "Buy Seal Summoning Supplies",
         ready: () => myClass() === $class`Seal Clubber` && guildStoreAvailable(),
@@ -447,21 +406,12 @@ export function SmolAftercoreQuest(): Quest {
         completed: () => totallyDrunk(),
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
       },
-      /*{
+      {
         name: "Grimace Maps",
         completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
-        effects: $effects`Transpondent`,
-        choices: {
-          536: () =>
-            availableAmount($item`distention pill`) <
-            availableAmount($item`synthetic dog hair pill`) +
-              availableAmount($item`Map to Safety Shelter Grimace Prime`)
-              ? 1
-              : 2,
-        },
-        do: () => use($item`Map to Safety Shelter Grimace Prime`),
+        do: () => cliExecute("grimace maps"),
         limit: { tries: 30 },
-      },*/
+      },
       {
         name: "Garbo (Drunk)",
         ready: () => have($item`Drunkula's wineglass`),
@@ -500,6 +450,7 @@ export function SmolAftercoreQuest(): Quest {
       },
       {
         name: "Prepare for LoopSmol",
+        ready: () => doSmol,
         completed: () =>
           have($item`Pizza of Legend`) &&
           have($item`Frosty's frosty mug`) &&
@@ -515,36 +466,14 @@ export function SmolAftercoreQuest(): Quest {
         },
       },
       {
-        name: "Ascend Smol",
-        completed: () => getCurrentLeg() >= Leg.Run,
+        name: "Prepare for LoopCS",
+        ready: () => doCS,
+        completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
         do: (): void => {
-          /*printPermPlan();
-          if (targetPerms(false).find((sk) => !have(sk)))
-            throw new Error(
-              `Trying to ascend, but don't have the following targeted skills: [${targetPerms(false)
-                .filter((sk) => !have(sk))
-                .join(", ")}]`
-            );*/
-
-          const skillsToPerm = new Map();
-          targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
-
-          //const skillsToPerm = new Map();
-          //targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
-
-          ascend({
-            path: $path`A Shrunken Adventurer am I`,
-            playerClass: args.class,
-            lifestyle: 2,
-            moon: args.moonsign,
-            consumable: $item`astral six-pack`,
-            pet: args.astralpet === $item`none` ? undefined : args.astralpet,
-            permOptions: { permSkills: skillsToPerm, neverAbort: false },
-          });
-          if (visitUrl("choice.php").includes("somewhat-human-shaped mass of grey goo nanites"))
-            runChoice(1);
-          cliExecute("refresh all");
-        },
+        !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
+        !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
+        !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
+        !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;} ,
       },
     ],
   };

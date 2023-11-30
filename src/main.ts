@@ -1,15 +1,17 @@
 import { gamedayToInt, print, todayToString } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
-import { CSAftercoreQuest } from "./tasks/csaftercoreleg";
-import { CSQuests } from "./tasks/csleg";
+import { CSQuests } from "./tasks/csrunleg";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { args } from "./args";
-import { SmolAftercoreQuest } from "./tasks/smolaftercore";
-import { SmolQuests } from "./tasks/smol";
+import { AftercoreQuest } from "./tasks/aftercoreleg";
+import { SmolQuests } from "./tasks/smolrunleg";
+import { GarboWeenQuest } from "./tasks/Garboween";
+import { AscendQuest } from "./tasks/ascend";
 
-const version = "0.0.2";
+const version = "0.0.3";
 
 const dontCS = gamedayToInt() === 78 || todayToString().includes("1030");
+const halloween = gamedayToInt() === 79 || todayToString().includes("1031");
 
 export function main(command?: string): void {
   Args.fill(args, command);
@@ -18,8 +20,12 @@ export function main(command?: string): void {
     return;
   }
 
-  if(dontCS && args.halloween) {
+  if(dontCS && args.halloween && args.cs) {
     throw `Tomorrow is halloween, run something that lets you get steel organs!`
+  }
+
+  if(halloween && args.halloween && args.smol) {
+    throw `Today is halloween, run CS for more organ space!`
   }
 
   /*if (args.profits) {
@@ -29,7 +35,12 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  const tasks = args.cs ? getTasks([CSAftercoreQuest(), ...CSQuests()]) : args.smol ? getTasks([SmolAftercoreQuest(), ...SmolQuests()]) : undefined;
+  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : undefined;
+  if(runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
+
+  const tasks = halloween ?
+    getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest]) :
+    getTasks([AftercoreQuest(), AscendQuest(), ...runQuest])
 
   if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
 
