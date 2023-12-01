@@ -102,7 +102,22 @@ export function CSQuests(): Quest[] {
         {
           name: "Clear citizen",
           completed: () => get("_citizenZone", "") !== "Madness Bakery",
-          do: () => uneffect($effect`Citizen of a Zone`),
+          do: (): void =>{
+            uneffect($effect`Citizen of a Zone`);
+            cliExecute(`set _citizenZone = ""`);
+          },
+        },
+        {
+          name: "Wardrobe-o-matic",
+          // eslint-disable-next-line libram/verify-constants
+          ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
+          completed: () => get("_wardrobeUsed", false),
+          do: (): void => {
+            // eslint-disable-next-line libram/verify-constants
+            use($item`wardrobe-o-matic`);
+            cliExecute("set _wardrobeUsed = true");
+          },
+          limit: { tries: 1 },
         },
         {
           name: "Smoke em if you got em",
