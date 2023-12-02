@@ -1,8 +1,10 @@
 import {
+  adv1,
   buy,
   cliExecute,
   drink,
   getClanName,
+  getProperty,
   getWorkshed,
   haveEffect,
   hippyStoneBroken,
@@ -10,8 +12,10 @@ import {
   inebrietyLimit,
   itemAmount,
   mallPrice,
+  maximize,
   myAdventures,
   myAscensions,
+  myClass,
   myInebriety,
   myLevel,
   mySign,
@@ -20,12 +24,14 @@ import {
   pvpAttacksLeft,
   retrieveItem,
   setProperty,
+  toInt,
   use,
   useFamiliar,
   useSkill,
   visitUrl,
 } from "kolmafia";
 import {
+  $class,
   $coinmaster,
   $effect,
   $effects,
@@ -33,6 +39,7 @@ import {
   $familiars,
   $item,
   $items,
+  $location,
   $skill,
   AsdonMartin,
   get,
@@ -191,6 +198,30 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("breakfast"),
         },
         {
+          name: "Clip Art Club Prevention",
+          completed: () => get("_clipartSummons") >= 3,
+          do: () => retrieveItem($item`box of Familiar Jacks`, 3 - get("_clipartSummons")),
+        },
+        {
+          name: "Get Bofa Wish",
+          ready: () => myClass() === $class`Seal Clubber` ||
+          myClass() === $class`Pastamancer` ||
+          myClass() === $class`Sauceror`,
+          completed: () => toInt(getProperty("_bookOfFactsWishes")) >= 3,
+          do: (): void => {
+            if(myClass() === $class`Seal Clubber`) {
+              maximize("familiar weight, .1 item drop -equip broken champagne bottle", false);
+              useFamiliar($familiar`Pair of Stomping Boots`);
+              adv1($location`Shadow Rift (Forest Village)`, 1, "if monstername shadow guy || monstername shadow spider; runaway; abort; endif; skill Saucegeyser; repeat");
+            }
+
+            if(myClass() === $class`Pastamancer`){
+              print("I didn't build this yet");
+            }
+            //Repeat this for PM and Sauceror - an excercise left to Alii
+          }
+        },
+        {
           name: "Garbo",
           ready: () => !holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
@@ -226,9 +257,11 @@ export function CSQuests(): Quest[] {
         {
           name: "Turn in FunFunds",
           ready: () => get("_stenchAirportToday") && itemAmount($item`FunFunds™`) >= 20,
-          completed: () => have($item`one-day ticket to Dinseylandfill`),
-          do: () =>
-            buy($coinmaster`The Dinsey Company Store`, 1, $item`one-day ticket to Dinseylandfill`),
+          completed: () => itemAmount($item`FunFunds™`) <= 20,
+          do: (): void => {
+            const buyPasses = itemAmount($item`FunFunds™`) / 20;
+            buy($coinmaster`The Dinsey Company Store`, buyPasses, $item`one-day ticket to Dinseylandfill`);
+          },
           tracking: "Garbo",
         },
         {

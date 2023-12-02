@@ -4,24 +4,20 @@ import { $class, $classes, $item, $items, get } from "libram";
 import { toMoonSign } from "./tasks/utils";
 
 export const args = Args.create(
-  "CandyWrapper",
-  `Written by Seraphiii. This is a full-day wrapper for Community Service. It aims to be a single-press script that will take you through your Aftercore and Community Service legs. It chooses to perm learned skills upon ascension.`,
+  "Alii",
+  `alii.ash moved to TS by request`,
   {
     version: Args.flag({
       help: "Output script version number and exit.",
       default: false,
       setting: "",
     }),
-    list: Args.flag({
-      help: "Show the status of all tasks and exit.",
-      setting: "",
-    }),
-    profits: Args.flag({
-      help: "Print out daily profit and exit.",
-      setting: "",
-    }),
-    cs: Args.flag({
+    cloop: Args.flag({
       help: "Ascend into and run CS.",
+      setting: "",
+    }),
+    gloop: Args.flag({
+      help: "Ascend into and run Gyou.",
       setting: "",
     }),
     smol: Args.flag({
@@ -29,13 +25,6 @@ export const args = Args.create(
       setting: "",
     }),
 
-    //partial run args
-    actions: Args.number({
-      help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time.",
-    }),
-    abort: Args.string({
-      help: "If given, abort during the prepare() step for the task with matching name.",
-    }),
     //configuration args
     pvp: Args.flag({ help: "If true, break hippy stone and do pvp.", default: false }),
     astralpet: Args.custom(
@@ -99,8 +88,30 @@ export const args = Args.create(
       help: "The command that will do your smol run for you. Include any arguments desired.",
       default: "loopsmol",
     }),
-    pulls: Args.items({
+    gyouscript: Args.string({
+      help: "The command that will do your grey you run for you. Include any arguments desired.",
+      default: "loopgyou",
+    }),
+    smolpulls: Args.items({
       help: "A list of items to pull at the start of the smol run.",
+      default: [
+        ...$items`mafia thumb ring, lucky gold ring`,
+        ...(get("stenchAirportAlways") || get("_stenchAirportToday")
+          ? []
+          : $items`one-day ticket to Dinseylandfill`),
+      ],
+    }),
+    gyoupulls: Args.items({
+      help: "A list of items to pull at the start of the gyou run.",
+      default: [
+        ...$items`mafia thumb ring, lucky gold ring`,
+        ...(get("stenchAirportAlways") || get("_stenchAirportToday")
+          ? []
+          : $items`one-day ticket to Dinseylandfill`),
+      ],
+    }),
+    cspulls: Args.items({
+      help: "A list of items to pull at the start of the cs run.",
       default: [
         ...$items`mafia thumb ring, lucky gold ring`,
         ...(get("stenchAirportAlways") || get("_stenchAirportToday")

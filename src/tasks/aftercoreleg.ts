@@ -1,18 +1,19 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  adv1,
   availableAmount,
   buy,
   cliExecute,
   getCampground,
   getClanName,
-  getWorkshed,
+  getProperty,
   guildStoreAvailable,
-  haveEffect,
   haveEquipped,
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
   mallPrice,
+  maximize,
   myAdventures,
   myClass,
   myHp,
@@ -20,10 +21,13 @@ import {
   myLevel,
   myMaxhp,
   myPrimestat,
+  print,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   retrieveItem,
+  setProperty,
+  toInt,
   use,
   useFamiliar,
   useSkill,
@@ -38,11 +42,8 @@ import {
   $item,
   $items,
   $location,
-  $phylum,
   $skill,
   $stat,
-  AsdonMartin,
-  DNALab,
   get,
   getTodaysHolidayWanderers,
   have,
@@ -64,7 +65,7 @@ import {
 import { args } from "../args";
 
 const doSmol = args.smol ? true : false;
-const doCS = args.cs ? true : false;
+const doCS = args.cloop ? true : false;
 
 export function AftercoreQuest(): Quest {
   return {
@@ -85,9 +86,38 @@ export function AftercoreQuest(): Quest {
         },
       },
       {
+        name: "Ptrack Start",
+        completed: () => get("_ptrackStarted", false),
+        do: (): void => {
+          cliExecute("ptrack add coffeeBegin; set _ptrackStarted = true");
+          print("Doing start-of-day activites!", "teal");
+          setProperty("_monstersMapped", "1");
+        }
+      },
+      {
+        name: "Acquire Carpe",
+        completed: () => !args.carpe|| have($item`carpe`),
+        do: () => cliExecute("acquire carpe"),
+      },
+      {
         name: "Breakfast",
         completed: () => get("breakfastCompleted"),
         do: () => cliExecute("breakfast"),
+      },
+      {
+        name: "Eat Tofu",
+        completed: () => get("_essentialTofuUsed", false),
+        do: (): void => {
+          print("Tofu unused! Trying to buy some!", "teal");
+          if(mallPrice($item`essential tofu`) < toInt(getProperty("valueOfAdventure")) * 4)
+            buy($item`essential tofu`, 1)
+		      if(have($item`essential tofu`)) {
+			      use(1, $item`essential tofu`);
+		      }
+		      else {
+			      print("Tofu is more expensive than would be vialble. Skipping Tofu.");
+		      }
+        }
       },
       {
         name: "Harvest Garden",
@@ -108,100 +138,23 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "SIT Course",
-        // eslint-disable-next-line libram/verify-constants
         ready: () => have($item`S.I.T. Course Completion Certificate`),
         completed: () => get("_sitCourseCompleted", false),
         choices: {
           1494: 2,
         },
         do: () =>
-          // eslint-disable-next-line libram/verify-constants
           use($item`S.I.T. Course Completion Certificate`),
-      },
-      {
-        name: "Drive Observantly",
-        completed: () =>
-          get("dailyDungeonDone") ||
-          getWorkshed() !== $item`Asdon Martin keyfob` ||
-          haveEffect($effect`Driving Observantly`) >=
-            (totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60),
-        do: () =>
-          AsdonMartin.drive(
-            $effect`Driving Observantly`,
-            totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60,
-            false
-          ),
-        limit: { tries: 5 },
-      },
-      {
-        name: "Sample Constellation DNA",
-        ready: () => have($item`DNA extraction syringe`),
-        completed: () =>
-          !DNALab.installed() ||
-          DNALab.isHybridized($phylum`Constellation`) ||
-          get("dnaSyringe") === $phylum`Constellation`,
-        outfit: {
-          familiar: bestFam(),
-          modifier: `${maxBase()}`,
-        },
-        do: $location`The Hole in the Sky`,
-        combat: new CombatStrategy()
-          .macro(Macro.skill($skill`Curse of Weaksauce`), getTodaysHolidayWanderers())
-          .macro(Macro.tryItem($item`DNA extraction syringe`))
-          .macro(
-            Macro.tryItem($item`train whistle`)
-              .tryItem($item`porquoise-handled sixgun`)
-              .trySkill($skill`Sing Along`)
-              .attack()
-              .repeat()
-          ),
-      },
-      {
-        name: "Hybridize Constellation",
-        ready: () => get("dnaSyringe") === $phylum`Constellation`,
-        completed: () => !DNALab.installed() || DNALab.isHybridized($phylum`Constellation`),
-        do: () => {
-          DNALab.makeTonic(3);
-          DNALab.hybridize();
-        },
       },
       {
         name: "LGR Seed",
         ready: () =>
           //best guess if we're going to Dinseylandfill later in the day
-          isGoodGarboScript(args.garboascend) ||
-          args.pulls.includes($item`one-day ticket to Dinseylandfill`),
+          isGoodGarboScript(args.garboascend),
         completed: () =>
           !have($item`lucky gold ring`) || get("_stenchAirportToday") || get("stenchAirportAlways"),
         do: () => use($item`one-day ticket to Dinseylandfill`),
       },
-      /*{
-        name: "June Cleaver",
-        completed: () =>
-          !have($item`June cleaver`) || get("_juneCleaverFightsLeft") > 0 || myAdventures() === 0,
-        choices: {
-          1467: 3, //Poetic Justice
-          1468: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Aunts not Ants
-          1469: 3, //Beware of Aligator
-          1470: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Teacher's Pet
-          1471: 1, //Lost and Found
-          1472: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 1), //Summer Days
-          1473: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 1), //Bath Time
-          1474: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Delicious Sprouts
-          1475: 1, //Hypnotic Master
-        },
-        do: $location`Noob Cave`,
-        post: () => {
-          if (handlingChoice()) visitUrl("main.php");
-          if (have($effect`Beaten Up`)) uneffect($effect`Beaten Up`);
-        },
-        outfit: () => ({ equip: $items`June cleaver` }),
-        limit: undefined,
-      },*/
       {
         name: "Restore HP",
         completed: () => myHp() > 0.5 * myMaxhp(),
@@ -246,13 +199,6 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Unlock Guild",
-        ready: () =>
-          (myClass() === $class`Seal Clubber` &&
-            Math.min(
-              ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-                availableAmount(it)
-              )
-            ) < 20) && doSmol,
         completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
         do: () => cliExecute("guild"),
         choices: {
@@ -330,6 +276,30 @@ export function AftercoreQuest(): Quest {
           num: 500,
         })),
         do: () => false,
+      },
+      {
+        name: "Get Bofa Wish",
+        ready: () => myClass() === $class`Seal Clubber` ||
+        myClass() === $class`Pastamancer` ||
+        myClass() === $class`Sauceror`,
+        completed: () => toInt(getProperty("_bookOfFactsWishes")) >= 3,
+        do: (): void => {
+          if(myClass() === $class`Seal Clubber`) {
+            maximize("familiar weight, .1 item drop -equip broken champagne bottle", false);
+            useFamiliar($familiar`Pair of Stomping Boots`);
+            adv1($location`Shadow Rift (Forest Village)`, 1, "if monstername shadow guy || monstername shadow spider; runaway; abort; endif; skill Saucegeyser; repeat");
+          }
+
+          if(myClass() === $class`Pastamancer`){
+            print("I didn't build this yet");
+          }
+          //Repeat this for PM and Sauceror - an excercise left to Alii
+        }
+      },
+      {
+        name: "Clip Art Club Prevention",
+        completed: () => get("_clipartSummons") >= 3,
+        do: () => retrieveItem($item`box of Familiar Jacks`, 3 - get("_clipartSummons")),
       },
       {
         name: "Garbo",
@@ -440,6 +410,23 @@ export function AftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
+        name: "Cast August",
+        completed: () => toInt(getProperty("_augSkillsCAst")) >= 5,
+        do: (): void => {
+          print("Garbo didn't cast all of the scepter skills. Burning remaining casts.", "red");
+          const goodAugustSkills = [$skill`Aug. 3rd: Watermelon Day!`,
+          $skill`Aug. 4th: Water Balloon Day!`,
+          $skill`Aug. 5th: Oyster Day!`,
+          $skill`Aug. 24th: Waffle Day!`,
+          $skill`Aug. 25th: Banana Split Day!`,
+          $skill`Aug. 26th: Toilet Paper Day!`];
+
+           goodAugustSkills.forEach(sk => {
+            if(have(sk)) useSkill(sk)
+           });
+        }
+      },
+      {
         name: "PvP",
         completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
         do: (): void => {
@@ -473,7 +460,8 @@ export function AftercoreQuest(): Quest {
         !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
         !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
         !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
-        !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;} ,
+        !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
+        },
       },
     ],
   };
