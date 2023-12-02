@@ -48,7 +48,7 @@ function convertArgsToHtml(): RelayPage[] {
     .forEach((p) => {
       const html: ComponentHtml = {
         type: "html",
-        data: `<h1 style="text-align: center;">CandyWrapper ${
+        data: `<h1 style="text-align: center;">Alii.ash Conversion ${
           p.page
         }</div>`,
       };

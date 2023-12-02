@@ -1,29 +1,33 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  adv1,
   availableAmount,
   buy,
   cliExecute,
   getCampground,
   getClanName,
-  getWorkshed,
+  getProperty,
   guildStoreAvailable,
-  handlingChoice,
-  haveEffect,
   haveEquipped,
   hippyStoneBroken,
-  holiday,
   inebrietyLimit,
   itemAmount,
+  mallPrice,
+  maximize,
   myAdventures,
   myClass,
   myHp,
   myInebriety,
+  myLevel,
   myMaxhp,
   myPrimestat,
+  print,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   retrieveItem,
+  setProperty,
+  toInt,
   use,
   useFamiliar,
   useSkill,
@@ -38,16 +42,11 @@ import {
   $item,
   $items,
   $location,
-  $path,
-  $phylum,
   $skill,
-  ascend,
-  AsdonMartin,
-  DNALab,
+  $stat,
   get,
   getTodaysHolidayWanderers,
   have,
-  Lifestyle,
   Macro,
   set,
   uneffect,
@@ -57,30 +56,26 @@ import {
   bestFam,
   canDiet,
   getGarden,
+  isGoodGarboScript,
   maxBase,
   noML,
   stooperDrunk,
-  toMoonSign,
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
-import { targetPerms } from "./perm";
 
-export function CSAftercoreQuest(): Quest {
+const doSmol = args.smol ? true : false;
+const doCS = args.cloop ? true : false;
+
+export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    ready: () => getCurrentLeg() === 0,
     completed: () => getCurrentLeg() > Leg.Aftercore,
     tasks: [
       {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
-      },
-      {
-        name: "Acquire Carpe",
-        completed: () => !args.carpe|| have($item`carpe`),
-        do: () => cliExecute("acquire carpe"),
       },
       {
         name: "Prep Fireworks Shop",
@@ -91,9 +86,38 @@ export function CSAftercoreQuest(): Quest {
         },
       },
       {
+        name: "Ptrack Start",
+        completed: () => get("_ptrackStarted", false),
+        do: (): void => {
+          cliExecute("ptrack add coffeeBegin; set _ptrackStarted = true");
+          print("Doing start-of-day activites!", "teal");
+          setProperty("_monstersMapped", "1");
+        }
+      },
+      {
+        name: "Acquire Carpe",
+        completed: () => !args.carpe|| have($item`carpe`),
+        do: () => cliExecute("acquire carpe"),
+      },
+      {
         name: "Breakfast",
         completed: () => get("breakfastCompleted"),
         do: () => cliExecute("breakfast"),
+      },
+      {
+        name: "Eat Tofu",
+        completed: () => get("_essentialTofuUsed", false),
+        do: (): void => {
+          print("Tofu unused! Trying to buy some!", "teal");
+          if(mallPrice($item`essential tofu`) < toInt(getProperty("valueOfAdventure")) * 4)
+            buy($item`essential tofu`, 1)
+		      if(have($item`essential tofu`)) {
+			      use(1, $item`essential tofu`);
+		      }
+		      else {
+			      print("Tofu is more expensive than would be vialble. Skipping Tofu.");
+		      }
+        }
       },
       {
         name: "Harvest Garden",
@@ -114,88 +138,22 @@ export function CSAftercoreQuest(): Quest {
       },
       {
         name: "SIT Course",
-        // eslint-disable-next-line libram/verify-constants
         ready: () => have($item`S.I.T. Course Completion Certificate`),
         completed: () => get("_sitCourseCompleted", false),
         choices: {
           1494: 2,
         },
         do: () =>
-          // eslint-disable-next-line libram/verify-constants
           use($item`S.I.T. Course Completion Certificate`),
       },
       {
-        name: "Drive Observantly",
+        name: "LGR Seed",
+        ready: () =>
+          //best guess if we're going to Dinseylandfill later in the day
+          isGoodGarboScript(args.garboascend),
         completed: () =>
-          getWorkshed() !== $item`Asdon Martin keyfob` ||
-          haveEffect($effect`Driving Observantly`) >=
-            (totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60),
-        do: () =>
-          AsdonMartin.drive(
-            $effect`Driving Observantly`,
-            totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60,
-            false
-          ),
-        limit: { tries: 5 },
-      },
-      {
-        name: "Sample Constellation DNA",
-        ready: () => have($item`DNA extraction syringe`),
-        completed: () =>
-          !DNALab.installed() ||
-          DNALab.isHybridized($phylum`Constellation`) ||
-          get("dnaSyringe") === $phylum`Constellation`,
-        outfit: {
-          familiar: bestFam(),
-          modifier: `${maxBase()}`,
-        },
-        do: $location`The Hole in the Sky`,
-        combat: new CombatStrategy()
-          .macro(Macro.skill($skill`Curse of Weaksauce`), getTodaysHolidayWanderers())
-          .macro(Macro.tryItem($item`DNA extraction syringe`))
-          .macro(
-            Macro.tryItem($item`train whistle`)
-              .tryItem($item`porquoise-handled sixgun`)
-              .trySkill($skill`Sing Along`)
-              .attack()
-              .repeat()
-          ),
-      },
-      {
-        name: "Hybridize Constellation",
-        ready: () => get("dnaSyringe") === $phylum`Constellation`,
-        completed: () => !DNALab.installed() || DNALab.isHybridized($phylum`Constellation`),
-        do: () => {
-          DNALab.makeTonic(3);
-          DNALab.hybridize();
-        },
-      },
-      {
-        name: "June Cleaver",
-        completed: () =>
-          !have($item`June cleaver`) || get("_juneCleaverFightsLeft") > 0 || myAdventures() === 0,
-        choices: {
-          1467: 3, //Poetic Justice
-          1468: get("_juneCleaverSkips") < 5 ? 4 : 2, //Aunts not Ants
-          1469: 3, //Beware of Aligator
-          1470: get("_juneCleaverSkips") < 5 ? 4 : 2, //Teacher's Pet
-          1471: 1, //Lost and Found
-          1472: get("_juneCleaverSkips") < 5 ? 4 : 1, //Summer Days
-          1473: get("_juneCleaverSkips") < 5 ? 4 : 1, //Bath Time
-          1474: get("_juneCleaverSkips") < 5 ? 4 : 2, //Delicious Sprouts
-          1475: 1, //Hypnotic Master
-        },
-        do: $location`Noob Cave`,
-        post: () => {
-          if (handlingChoice()) visitUrl("main.php");
-          if (have($effect`Beaten Up`)) uneffect($effect`Beaten Up`);
-        },
-        outfit: () => ({ equip: $items`June cleaver` }),
-        limit: undefined,
+          !have($item`lucky gold ring`) || get("_stenchAirportToday") || get("stenchAirportAlways"),
+        do: () => use($item`one-day ticket to Dinseylandfill`),
       },
       {
         name: "Restore HP",
@@ -240,6 +198,71 @@ export function CSAftercoreQuest(): Quest {
         tracking: "Leveling",
       },
       {
+        name: "Unlock Guild",
+        completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
+        do: () => cliExecute("guild"),
+        choices: {
+          //sleazy back alley
+          108: 4, //craps: skip
+          109: 1, //drunken hobo: fight
+          110: 4, //entertainer: skip
+          112: 2, //harold's hammer: skip
+          21: 2, //under the knife: skip
+          //haunted pantry
+          115: 1, //drunken hobo: fight
+          116: 4, //singing tree: skip
+          117: 1, //knob goblin chef: fight
+          114: 2, //birthday cake: skip
+          //outskirts of cobb's knob
+          113: 2, //knob goblin chef: fight
+          111: 3, //chain gang: fight
+          118: 2, //medicine quest: skip
+        },
+        outfit: () => ({
+          familiar: bestFam(),
+          modifier: `${maxBase()}, ${
+            myPrimestat() === $stat`Muscle` ? "100 combat rate 20 max" : "-100 combat rate"
+          }, 250 bonus carnivorous potted plant`,
+        }),
+        combat: new CombatStrategy()
+          .macro(
+            () =>
+              Macro.step("pickpocket")
+                .externalIf(
+                  have($skill`Curse of Weaksauce`),
+                  Macro.trySkill($skill`Curse of Weaksauce`),
+                  Macro.tryItem($item`electronics kit`)
+                )
+                .tryItem($item`porquoise-handled sixgun`)
+                .trySkill($skill`Sing Along`)
+                .attack()
+                .repeat(),
+            getTodaysHolidayWanderers()
+          )
+          .macro(() =>
+            Macro.step("pickpocket")
+              .trySkill($skill`Sing Along`)
+              .tryItem($item`porquoise-handled sixgun`)
+              .attack()
+              .repeat()
+          ),
+      },
+      {
+        name: "Stock Up on MMJs",
+        ready: () =>
+          guildStoreAvailable() &&
+          (myClass().primestat === $stat`Mysticality` ||
+            (myClass() === $class`Accordion Thief` && myLevel() >= 9)),
+        completed: () => availableAmount($item`magical mystery juice`) >= 500,
+        acquire: [
+          {
+            item: $item`magical mystery juice`,
+            num: 500,
+          },
+        ],
+        do: () => false,
+      },
+      {
         name: "Buy Seal Summoning Supplies",
         ready: () => myClass() === $class`Seal Clubber` && guildStoreAvailable(),
         completed: () =>
@@ -255,8 +278,32 @@ export function CSAftercoreQuest(): Quest {
         do: () => false,
       },
       {
+        name: "Get Bofa Wish",
+        ready: () => myClass() === $class`Seal Clubber` ||
+        myClass() === $class`Pastamancer` ||
+        myClass() === $class`Sauceror`,
+        completed: () => toInt(getProperty("_bookOfFactsWishes")) >= 3,
+        do: (): void => {
+          if(myClass() === $class`Seal Clubber`) {
+            maximize("familiar weight, .1 item drop -equip broken champagne bottle", false);
+            useFamiliar($familiar`Pair of Stomping Boots`);
+            adv1($location`Shadow Rift (Forest Village)`, 1, "if monstername shadow guy || monstername shadow spider; runaway; abort; endif; skill Saucegeyser; repeat");
+          }
+
+          if(myClass() === $class`Pastamancer`){
+            print("I didn't build this yet");
+          }
+          //Repeat this for PM and Sauceror - an excercise left to Alii
+        }
+      },
+      {
+        name: "Clip Art Club Prevention",
+        completed: () => get("_clipartSummons") >= 3,
+        do: () => retrieveItem($item`box of Familiar Jacks`, 3 - get("_clipartSummons")),
+      },
+      {
         name: "Garbo",
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0) || holiday().includes("Halloween"),
+        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
         prepare: () => uneffect($effect`Beaten Up`),
         do: () => cliExecute(args.garboascend),
         post: () => {
@@ -268,34 +315,6 @@ export function CSAftercoreQuest(): Quest {
         clear: "all",
         tracking: "Garbo",
         limit: { tries: 1 }, //this will run again after installing CMC, by magic
-      },
-      {
-        name: "Garboween",
-        ready: () => holiday().includes("Halloween"),
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
-        prepare: () => uneffect($effect`Beaten Up`),
-        do: (): void => {
-            cliExecute(`${args.garboascend} nodiet nobarf`);
-            cliExecute("consume ALL");
-            cliExecute(`freeCandy ${myAdventures()}`);
-        },
-        post: () => {
-          if (myAdventures() === 0)
-            $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-              .filter((ef) => have(ef))
-              .forEach((ef) => uneffect(ef));
-        },
-        clear: "all",
-        tracking: "Garbo",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
-      },
-      {
-        name: "Do Pizza",
-        completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
-        do: (): void => {
-        !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
-        !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
-        !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;} ,
       },
       {
         name: "Stooper",
@@ -358,28 +377,16 @@ export function CSAftercoreQuest(): Quest {
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
       },
       {
-        name: "Freecandy Drunk",
-        ready: () => holiday().includes("Halloween"),
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
-        prepare: () => uneffect($effect`Beaten Up`),
-        do: (): void => {
-            cliExecute(`freeCandy ${myAdventures()}`);
-        },
-        post: () => {
-          if (myAdventures() === 0)
-            $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-              .filter((ef) => have(ef))
-              .forEach((ef) => uneffect(ef));
-        },
-        clear: "all",
-        tracking: "Garbo",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+        name: "Grimace Maps",
+        completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
+        do: () => cliExecute("grimace maps"),
+        limit: { tries: 30 },
       },
       {
         name: "Garbo (Drunk)",
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
-        completed: () => myAdventures() === 0 || holiday().includes("Halloween"),
+        completed: () => myAdventures() === 0,
         do: () => cliExecute("garbo ascend"),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
@@ -389,14 +396,8 @@ export function CSAftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
-        name: "Grimace Maps",
-        ready: () => have($item`Map to Safety Shelter Grimace Prime`) && totallyDrunk(),
-        completed: () => !have($item`Map to Safety Shelter Grimace Prime`) || myAdventures() === 0,
-        do: () => cliExecute("grimace maps"),
-      },
-      {
         name: "Comb Beach",
-        ready: () => have($item`Beach Comb`) && totallyDrunk(),
+        ready: () => have($item`Beach Comb`),
         completed: () => myAdventures() === 0,
         do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
       },
@@ -409,6 +410,23 @@ export function CSAftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
+        name: "Cast August",
+        completed: () => toInt(getProperty("_augSkillsCAst")) >= 5,
+        do: (): void => {
+          print("Garbo didn't cast all of the scepter skills. Burning remaining casts.", "red");
+          const goodAugustSkills = [$skill`Aug. 3rd: Watermelon Day!`,
+          $skill`Aug. 4th: Water Balloon Day!`,
+          $skill`Aug. 5th: Oyster Day!`,
+          $skill`Aug. 24th: Waffle Day!`,
+          $skill`Aug. 25th: Banana Split Day!`,
+          $skill`Aug. 26th: Toilet Paper Day!`];
+
+           goodAugustSkills.forEach(sk => {
+            if(have(sk)) useSkill(sk)
+           });
+        }
+      },
+      {
         name: "PvP",
         completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
         do: (): void => {
@@ -418,24 +436,40 @@ export function CSAftercoreQuest(): Quest {
         },
       },
       {
-        name: "Ascend Community Service",
-        ready: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
-        completed: () => getCurrentLeg() >= Leg.Run, //Change this
+        name: "Prepare for LoopSmol",
+        ready: () => doSmol,
+        completed: () =>
+          have($item`Pizza of Legend`) &&
+          have($item`Frosty's frosty mug`) &&
+          have($item`Ol' Scratch's salad fork`),
         do: (): void => {
-          const skillsToPerm = new Map();
-          targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
-
-          const moonsign = toMoonSign(args.moonsign);
-          ascend({
-            path: $path`Community Service`,
-            playerClass: args.class,
-            lifestyle: 2,
-            moon: moonsign,
-            consumable: $item`astral six-pack`,
-            pet: args.astralpet === $item`none` ? undefined : args.astralpet,
-            permOptions: { permSkills: skillsToPerm, neverAbort: false },
-            });
-          cliExecute("refresh all");
+          if (
+            mallPrice($item`Frosty's frosty mug`) < 200000 &&
+            mallPrice($item`Ol' Scratch's salad fork`) < 200000
+          )
+            cliExecute(
+              "acquire Pizza of Legend; acquire Frosty's frosty mug; acquire Ol' Scratch's salad fork"
+            );
+        },
+      },
+      {
+        name: "Prepare for LoopCS",
+        ready: () => doCS,
+        completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
+        do: (): void => {
+        !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
+        !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
+        !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
+        !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
+        },
+      },
+      {
+        name: "Ptrack Aftercore",
+        ready: () => myAdventures() === 0,
+        completed: () => get("_ptrackAftercore", false),
+        do: (): void => {
+        cliExecute("ptrack add Garbo1");
+        setProperty("_ptrackAftercore", "true");
         },
       },
     ],

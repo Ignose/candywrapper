@@ -1,47 +1,42 @@
-import { CombatStrategy, step } from "grimoire-kolmafia";
+import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  adv1,
   buy,
-  buyUsingStorage,
   cliExecute,
-  closetAmount,
   drink,
-  eat,
   Effect,
-  equip,
-  fullnessLimit,
-  getClanName,
+  getProperty,
   getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
   mallPrice,
+  maximize,
   myAdventures,
   myAscensions,
+  myClass,
   myDaycount,
-  myFullness,
   myInebriety,
   myLevel,
   myMaxhp,
   mySign,
   numericModifier,
   print,
-  pullsRemaining,
-  putCloset,
+  putDisplay,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   retrieveItem,
   setProperty,
   storageAmount,
-  takeCloset,
   toInt,
   use,
   useFamiliar,
   useSkill,
-  visitUrl,
   wait,
 } from "kolmafia";
 import {
+  $class,
   $coinmaster,
   $effect,
   $effects,
@@ -51,15 +46,13 @@ import {
   $items,
   $location,
   $skill,
-  clamp,
   get,
   have,
   Macro,
-  set,
   uneffect,
 } from "libram";
 import { args } from "../args";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
@@ -73,29 +66,11 @@ import {
 
 let pajamas = false;
 let smoke = 1;
+
 const checkMelange =
   get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
   !have($item`designer sweatpants`);
 
-export function howManySausagesCouldIEat() {
-  if (!have($item`Kramco Sausage-o-Matic™`)) return 0;
-  // You may be full but you can't be overfull
-  if (myFullness() > fullnessLimit()) return 0;
-
-  return clamp(
-    23 - get("_sausagesEaten"),
-    0,
-    itemAmount($item`magical sausage`) + itemAmount($item`magical sausage casing`)
-  );
-}
-
-function firstWorkshed() {
-  return (
-    $items`model train set, Asdon Martin keyfob, cold medicine cabinet, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-      (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-    ) || $item`none`
-  );
-}
 function altWorkshed() {
   const ws = getWorkshed();
   switch (ws) {
@@ -134,141 +109,8 @@ function altWorkshed() {
   }
 }
 
-export function SmolQuests(): Quest[] {
+export function RunAftercoreQuests(): Quest[] {
   return [
-    {
-      name: "Smol Run",
-      completed: () => getCurrentLeg() !== Leg.Run || get("kingLiberated", false),
-      tasks: [
-        {
-          name: "Whitelist VIP Clan",
-          completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
-          do: () => cliExecute(`/whitelist ${args.clan}`),
-        },
-        {
-          name: "Prep Fireworks Shop",
-          completed: () =>
-            !have($item`Clan VIP Lounge key`) || get("_goorboFireworksPrepped", false),
-          do: () => {
-            visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
-            set("_goorboFireworksPrepped", true);
-          },
-        },
-        {
-          name: "Pre-Pulls",
-          completed: () =>
-            pullsRemaining() === 0 ||
-            !args.pulls.find(
-              (it) => !have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())
-            ), //can't find a pull that (we dont have and it hasn't been pulled today)
-          do: () =>
-            args.pulls.forEach((it) => {
-              if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
-                if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
-                cliExecute(`pull ${it}`);
-              }
-            }),
-        },
-        {
-          name: "LGR Seed",
-          ready: () =>
-            have($item`lucky gold ring`) && have($item`one-day ticket to Dinseylandfill`),
-          completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          do: () => use($item`one-day ticket to Dinseylandfill`),
-          tracking: "Garbo",
-        },
-        {
-          name: "Install First Workshed",
-          ready: () => have(firstWorkshed()),
-          completed: () =>
-            firstWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() !== $item`none`,
-          do: () => use(firstWorkshed()),
-        },
-        {
-          name: "SIT Course",
-          // eslint-disable-next-line libram/verify-constants
-          ready: () => have($item`S.I.T. Course Completion Certificate`),
-          completed: () => get("_sitCourseCompleted", false),
-          choices: {
-            1494: 2,
-          },
-          do: () =>
-            // eslint-disable-next-line libram/verify-constants
-            use($item`S.I.T. Course Completion Certificate`),
-        },
-        {
-          name: "Break Stone",
-          completed: () => hippyStoneBroken() || !args.pvp,
-          do: (): void => {
-            visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
-            visitUrl("peevpee.php?place=fight");
-          },
-        },
-        {
-          name: "Prepare Empathy",
-          completed: () => get("_empathyReady", false),
-          do: (): void => {
-            cliExecute("maximize MP; set _empathyReady = true");
-          },
-        },
-        {
-          name: "Stillsuit Prep",
-          completed: () => itemAmount($item`tiny stillsuit`) === 0,
-          do: () =>
-            equip(
-              $item`tiny stillsuit`,
-              get(
-                "stillsuitFamiliar",
-                $familiars`Gelatinous Cubeling, Levitating Potato, Mosquito`.find((fam) =>
-                  have(fam)
-                ) || $familiar`none`
-              )
-            ),
-        },
-        {
-          name: "Run",
-          completed: () => step("questL13Final") > 11,
-          do: () => cliExecute(args.smolscript),
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "drink",
-          ready: () =>
-            step("questL13Final") > 11 &&
-            (have($item`designer sweatpants`) || checkMelange) &&
-            have($skill`Drinking to Drink`) &&
-            storageAmount($item`synthetic dog hair pill`) >= 1,
-          completed: () => myInebriety() >= 2,
-          do: (): void => {
-            if (have($skill`The Ode to Booze`)) useSkill($skill`The Ode to Booze`);
-            drink($item`astral pilsner`, 1);
-          },
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "Sausages",
-          completed: () => howManySausagesCouldIEat() === 0,
-          do: (): void => {
-            eat($item`magical sausage`, howManySausagesCouldIEat());
-          },
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "Free King",
-          ready: () => step("questL13Final") > 11,
-          completed: () => get("kingLiberated", false),
-          do: (): void => {
-            visitUrl("place.php?whichplace=nstower&action=ns_11_prism");
-          },
-          clear: "all",
-        },
-      ],
-    },
     {
       name: "Post-Grey You Aftercore",
       ready: () => myDaycount() === 1 && get("kingLiberated", false),
@@ -346,7 +188,8 @@ export function SmolQuests(): Quest[] {
           name: "Gold Wedding Ring",
           completed: () =>
             !have($skill`Comprehensive Cartography`) ||
-            myAscensions() === get("lastCartographyBooPeak"),
+            myAscensions() === get("lastCartographyBooPeak") ||
+            (!args.smol && !args.gloop),
           choices: { 1430: 3, 606: 4, 610: 1, 1056: 1 },
           do: $location`A-Boo Peak`,
           outfit: { modifier: "initiative 40 min 40 max, -tie" },
@@ -362,7 +205,8 @@ export function SmolQuests(): Quest[] {
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
             have($item`Azazel's lollipop`) ||
-            have($item`observational glasses`),
+            have($item`observational glasses`) ||
+            (!args.smol && !args.gloop),
           effects: () => [
             ...(have($skill`Musk of the Moose`) ? $effects`Musk of the Moose` : []),
             ...(have($skill`Carlweather's Cantata of Confrontation`)
@@ -401,7 +245,8 @@ export function SmolQuests(): Quest[] {
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
             have($item`Azazel's unicorn`) ||
-            backstageItemsDone(),
+            backstageItemsDone() ||
+            (!args.smol && !args.gloop),
           effects: () => [
             ...(have($skill`Smooth Movement`) ? $effects`Smooth Movements` : []),
             ...(have($skill`The Sonata of Sneakiness`) ? $effects`The Sonata of Sneakiness` : []),
@@ -438,7 +283,8 @@ export function SmolQuests(): Quest[] {
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
-            have($item`Azazel's lollipop`),
+            have($item`Azazel's lollipop`) ||
+            (!args.smol && !args.gloop),
           outfit: {
             equip: $items`hilarious comedy prop, observational glasses, Victor\, the Insult Comic Hellhound Puppet`,
           },
@@ -450,7 +296,8 @@ export function SmolQuests(): Quest[] {
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
-            have($item`Azazel's unicorn`),
+            have($item`Azazel's unicorn`) ||
+            (!args.smol && !args.gloop),
           do: (): void => {
             cliExecute(
               `panda arena Bognort ${$items`giant marshmallow, gin-soaked blotter paper`.find((a) =>
@@ -476,7 +323,8 @@ export function SmolQuests(): Quest[] {
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
-            have($item`Azazel's tutu`),
+            have($item`Azazel's tutu`) ||
+            (!args.smol && !args.gloop),
           acquire: () =>
             $items`bus pass, imp air`.map((it) => ({
               item: it,
@@ -489,14 +337,60 @@ export function SmolQuests(): Quest[] {
         {
           name: "Steel Margarita",
           ready: () => haveAll($items`Azazel's tutu, Azazel's lollipop, Azazel's unicorn`),
-          completed: () => have($skill`Liver of Steel`) || have($item`steel margarita`),
+          completed: () => have($skill`Liver of Steel`) || have($item`steel margarita`) ||
+          (!args.smol && !args.gloop),
           do: () => cliExecute("panda temple"),
         },
         {
           name: "Liver of Steel",
           ready: () => have($item`steel margarita`),
-          completed: () => have($skill`Liver of Steel`),
+          completed: () => have($skill`Liver of Steel`) ||
+          (!args.smol && !args.gloop),
           do: () => drink(1, $item`steel margarita`),
+        },
+        {
+          name: "Acquire Carpe",
+          completed: () => !args.carpe|| have($item`carpe`),
+          do: () => cliExecute("acquire carpe"),
+        },
+        {
+          name: "Breakfast",
+          completed: () => get("breakfastCompleted"),
+          do: () => cliExecute("breakfast"),
+        },
+        {
+          name: "Eat Tofu",
+          completed: () => get("_essentialTofuUsed", false),
+          do: (): void => {
+            print("Tofu unused! Trying to buy some!", "teal");
+            if(mallPrice($item`essential tofu`) < toInt(getProperty("valueOfAdventure")) * 4)
+              buy($item`essential tofu`, 1)
+            if(have($item`essential tofu`)) {
+              use(1, $item`essential tofu`);
+            }
+            else {
+              print("Tofu is more expensive than would be vialble. Skipping Tofu.");
+            }
+          }
+        },
+        {
+          name: "Get Bofa Wish",
+          ready: () => myClass() === $class`Seal Clubber` ||
+          myClass() === $class`Pastamancer` ||
+          myClass() === $class`Sauceror`,
+          completed: () => toInt(getProperty("_bookOfFactsWishes")) >= 3,
+          do: (): void => {
+            if(myClass() === $class`Seal Clubber`) {
+              maximize("familiar weight, .1 item drop -equip broken champagne bottle", false);
+              useFamiliar($familiar`Pair of Stomping Boots`);
+              adv1($location`Shadow Rift (Forest Village)`, 1, "if monstername shadow guy || monstername shadow spider; runaway; abort; endif; skill Saucegeyser; repeat");
+            }
+
+            if(myClass() === $class`Pastamancer`){
+              print("I didn't build this yet");
+            }
+            //Repeat this for PM and Sauceror - an excercise left to Alii
+          }
         },
         {
           name: "Garbo",
@@ -514,9 +408,11 @@ export function SmolQuests(): Quest[] {
         {
           name: "Turn in FunFunds",
           ready: () => get("_stenchAirportToday") && itemAmount($item`FunFunds™`) >= 20,
-          completed: () => have($item`one-day ticket to Dinseylandfill`),
-          do: () =>
-            buy($coinmaster`The Dinsey Company Store`, 1, $item`one-day ticket to Dinseylandfill`),
+          completed: () => itemAmount($item`FunFunds™`) <= 20,
+          do: (): void => {
+            const buyPasses = itemAmount($item`FunFunds™`) / 20;
+            buy($coinmaster`The Dinsey Company Store`, buyPasses, $item`one-day ticket to Dinseylandfill`);
+          },
           tracking: "Garbo",
         },
         {
@@ -575,6 +471,23 @@ export function SmolQuests(): Quest[] {
             useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },
         {
+          name: "Cast August",
+          completed: () => toInt(getProperty("_augSkillsCAst")) >= 5,
+          do: (): void => {
+            print("Garbo didn't cast all of the scepter skills. Burning remaining casts.", "red");
+            const goodAugustSkills = [$skill`Aug. 3rd: Watermelon Day!`,
+            $skill`Aug. 4th: Water Balloon Day!`,
+            $skill`Aug. 5th: Oyster Day!`,
+            $skill`Aug. 24th: Waffle Day!`,
+            $skill`Aug. 25th: Banana Split Day!`,
+            $skill`Aug. 26th: Toilet Paper Day!`];
+
+             goodAugustSkills.forEach(sk => {
+              if(have(sk)) useSkill(sk)
+             });
+          }
+        },
+        {
           name: "Pajamas",
           completed: () => have($item`burning cape`),
           acquire: [
@@ -596,11 +509,29 @@ export function SmolQuests(): Quest[] {
           }),
         },
         {
-          name: "Summon Soap Knife",
-          completed: () => !have($skill`That's Not a Knife`) || get("_discoKnife"),
-          prepare: () => putCloset(itemAmount($item`soap knife`), $item`soap knife`),
-          do: () => useSkill($skill`That's Not a Knife`),
-          post: () => takeCloset(closetAmount($item`soap knife`), $item`soap knife`),
+          name: "Display my Stuff and Clean Up!",
+          completed: () => get("_stuffDisplayed", false),
+          do: (): void => {
+            const displayItems = [$item`surprisingly capacious handbag`,
+            $item`designer handbag`,
+            $item`fireclutch`];
+
+            cliExecute("ptrack add smokeEnd");
+            cliExecute("mallbuy 9999 surprisingly capacious handbag @ 120");
+		        cliExecute("mallbuy 9999 fireclutch @ 650");
+
+            displayItems.forEach((it) => {
+              if(have(it)) putDisplay(9999, it);});
+		        cliExecute("pTrack recap");
+          },
+        },
+        {
+          name: "Return Ring",
+          completed: () => !have($item`navel ring of navel gazing`),
+          do: (): void => {
+            print("Returning ring to Noob");
+            cliExecute(`csend 1 navel ring of navel gazing to Noobsauce || Returning your ring.`);
+          },
         },
         {
           name: "Alert-No Nightcap",
