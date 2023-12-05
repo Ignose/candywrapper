@@ -498,6 +498,7 @@ export function AftercoreQuest(): Quest {
             Station.CANDY_FACTORY, // candies (we don't get items during free banishes)
           ]);
           cliExecute("set _folgerInitialConfig = true");
+          cliExecute("set _folgerSecondConfig = false");
         },
         limit: { tries: 2 },
       },

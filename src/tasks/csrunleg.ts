@@ -95,6 +95,11 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("pull all; refresh all"),
         },
         {
+          name: "Ensure prefs reset",
+          completed: () => !get("_folgerInitialConfig", false),
+          do: () => cliExecute("set _folgerInitialConfig = false"),
+        },
+        {
           name: "But dad I don't want to feel lost",
           completed: () => !have($effect`Feeling Lost`),
           do: () => uneffect($effect`Feeling Lost`),
