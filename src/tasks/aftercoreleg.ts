@@ -62,6 +62,7 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
+import { setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -474,6 +475,31 @@ export function AftercoreQuest(): Quest {
         !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
         !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
         !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;} ,
+      },
+      {
+        name: "Pre-Configure Trainset",
+        after: ["Install Trainset"],
+        completed: () => get("_folgerInitialConfig", false),
+        do: (): void => {
+          const statStation: Station = {
+            Muscle: Station.BRAWN_SILO,
+            Mysticality: Station.BRAIN_SILO,
+            Moxie: Station.GROIN_SILO,
+          }[myPrimestat().toString()];
+          use($item`model train set`);
+          setConfiguration([
+            Station.VIEWING_PLATFORM, // all stats
+            Station.COAL_HOPPER, // double mainstat gain
+            statStation, // main stats
+            Station.GAIN_MEAT, // meat (we don't gain meat during free banishes)
+            Station.TOWER_FIZZY, // mp regen
+            Station.TOWER_FROZEN, // hot resist (useful)
+            Station.WATER_BRIDGE, // +ML
+            Station.CANDY_FACTORY, // candies (we don't get items during free banishes)
+          ]);
+          cliExecute("set _folgerInitialConfig = true");
+        },
+        limit: { tries: 2 },
       },
     ],
   };
