@@ -7551,6 +7551,10 @@ function CSQuests() {
       completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
+      name: "Ensure prefs reset",
+      completed: () => !property_get("_folgerInitialConfig", false),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerInitialConfig = false")
+    }, {
       name: "But dad I don't want to feel lost",
       completed: () => !lib_have(template_string_$effect(csrunleg_templateObject2 || (csrunleg_templateObject2 = csrunleg_taggedTemplateLiteral(["Feeling Lost"])))),
       do: () => uneffect(template_string_$effect(csrunleg_templateObject3 || (csrunleg_templateObject3 = csrunleg_taggedTemplateLiteral(["Feeling Lost"]))))
@@ -8682,6 +8686,7 @@ function AftercoreQuest() {
         ]);
 
         (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerInitialConfig = true");
+        (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerSecondConfig = false");
       },
       limit: {
         tries: 2
