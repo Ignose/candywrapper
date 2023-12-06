@@ -478,7 +478,6 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Pre-Configure Trainset",
-        after: ["Install Trainset"],
         completed: () => get("_folgerInitialConfig", false),
         do: (): void => {
           const statStation: Station = {
