@@ -8667,7 +8667,6 @@ function AftercoreQuest() {
       }
     }, {
       name: "Pre-Configure Trainset",
-      after: ["Install Trainset"],
       completed: () => property_get("_folgerInitialConfig", false),
       do: () => {
         var statStation = {
