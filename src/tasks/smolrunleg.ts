@@ -280,6 +280,15 @@ export function SmolQuests(): Quest[] {
           do: () => cliExecute("pull all; refresh all"),
         },
         {
+          name: "Unlock Garbage Mountain",
+          completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
+          do: (): void => {
+            retrieveItem($item`one-day ticket to Dinseylandfill`);
+            use($item`one-day ticket to Dinseylandfill`);
+          },
+          tracking: "Garbo",
+        },
+        {
           name: "Sober Up",
           completed: () =>
             myInebriety() <= 15 ||
