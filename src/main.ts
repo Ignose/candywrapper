@@ -1,17 +1,34 @@
-import { gamedayToInt, print, todayToString } from "kolmafia";
+import { print, visitUrl } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
-import { CSQuests } from "./tasks/csrunleg";
+import { GarboQuest } from "./tasks/1RunGarbo";
+import { ChronoQuest } from "./tasks/2RunChrono";
+import { AscendQuest } from "./tasks/3RunAscend";
+import { CSQuests } from "./tasks/4RunCS";
+import { CSChronoQuest } from "./tasks/5RunCSChrono";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { args } from "./args";
-import { AftercoreQuest } from "./tasks/aftercoreleg";
-import { SmolQuests } from "./tasks/smolrunleg";
-import { GarboWeenQuest } from "./tasks/Garboween";
-import { AscendQuest } from "./tasks/ascend";
+import { get } from "libram";
+import { Quest } from "./tasks/structure";
 
-const version = "0.0.3";
+let checkedTimeTower = false;
 
-const dontCS = gamedayToInt() === 78 || todayToString().includes("1030");
-const halloween = gamedayToInt() === 79 || todayToString().includes("1031");
+const TimeTowerQuest: Quest = {
+    name: "Aftercore",
+    completed: () => get("timeTowerAvailable") || checkedTimeTower,
+    tasks: [
+    {
+    name: "Check Access",
+    completed: () => get("timeTowerAvailable") || checkedTimeTower,
+    do: () => {
+      visitUrl("place.php?whichplace=twitch");
+      if (!get("timeTowerAvailable")) {
+        print("The Time-Twitching Tower is currently unavailable; no rocks today");
+        checkedTimeTower = true
+          }
+        },
+      },
+    ]
+}
 
 export function main(command?: string): void {
   Args.fill(args, command);
@@ -20,27 +37,15 @@ export function main(command?: string): void {
     return;
   }
 
-  if(dontCS && args.halloween && args.cs) {
-    throw `Tomorrow is halloween, run something that lets you get steel organs!`
-  }
 
-  if(halloween && args.halloween && args.smol) {
-    throw `Today is halloween, run CS for more organ space!`
-  }
 
-  /*if (args.profits) {
-    printProfits(this.profits.all());
-    return;
-  };*/
-
-  print(`Running: candyWrapper v${version}`);
-
-  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : undefined;
-  if(runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
-
-  const tasks = halloween ?
-    getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest]) :
-    getTasks([AftercoreQuest(), AscendQuest(), ...runQuest])
+  const tasks = getTasks([
+    TimeTowerQuest,
+    get("timeTowerAvailable") ? ChronoQuest : GarboQuest,
+    get("timeTowerAvailable") ? AscendQuest : GarboQuest,
+    get("timeTowerAvailable") ? CSQuests : GarboQuest,
+    get("timeTowerAvailable") ? CSChronoQuest : GarboQuest
+  ]);
 
   if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
 

@@ -17,8 +17,7 @@ import {
 import { args } from "../args";
 import { targetPerms } from "./perm";
 
-export function AscendQuest(): Quest {
-  return {
+export const AscendQuest: Quest = {
     name: "Ascend",
     ready: () => myAdventures() === 0 && totallyDrunk(),
     completed: () => getCurrentLeg() !== 0,
@@ -31,13 +30,9 @@ export function AscendQuest(): Quest {
           const skillsToPerm = new Map();
           targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
 
-          const path = args.cs ? $path`Community Service` : args.smol ? $path`A Shrunken Adventurer am I` : undefined;
-
-          if(path === undefined) throw "You have no path defined";
-
           const moonsign = toMoonSign(args.moonsign);
           ascend({
-            path: path,
+            path: $path`Community Service`,
             playerClass: args.class,
             lifestyle: 2,
             moon: moonsign,
@@ -49,5 +44,5 @@ export function AscendQuest(): Quest {
         },
       },
     ],
-  };
-}
+};
+
