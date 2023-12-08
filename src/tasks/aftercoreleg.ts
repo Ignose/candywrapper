@@ -467,6 +467,14 @@ export function AftercoreQuest(): Quest {
         },
       },
       {
+        name: "Marble Soda!",
+        ready: () => doCS,
+        completed: () => have($item`tobiko marble soda`) || mallPrice($item`tobiko marble soda`) > get("valueOfAdventure") * 2,
+        do: (): void => {
+          retrieveItem($item`tobiko marble soda`);
+        }
+      },
+      {
         name: "Prepare for LoopCS",
         ready: () => doCS,
         completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
