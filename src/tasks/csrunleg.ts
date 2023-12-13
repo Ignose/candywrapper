@@ -114,11 +114,9 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Wardrobe-o-matic",
-          // eslint-disable-next-line libram/verify-constants
           ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
           completed: () => get("_wardrobeUsed", false),
           do: (): void => {
-            // eslint-disable-next-line libram/verify-constants
             use($item`wardrobe-o-matic`);
             cliExecute("set _wardrobeUsed = true");
           },

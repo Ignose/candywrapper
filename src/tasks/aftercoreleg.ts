@@ -7,6 +7,7 @@ import {
   getClanName,
   getWorkshed,
   guildStoreAvailable,
+  handlingChoice,
   haveEffect,
   haveEquipped,
   hippyStoneBroken,
@@ -180,19 +181,19 @@ export function AftercoreQuest(): Quest {
           !have($item`lucky gold ring`) || get("_stenchAirportToday") || get("stenchAirportAlways"),
         do: () => use($item`one-day ticket to Dinseylandfill`),
       },
-      /*{
+      {
         name: "June Cleaver",
         completed: () =>
           !have($item`June cleaver`) || get("_juneCleaverFightsLeft") > 0 || myAdventures() === 0,
         choices: {
           1467: 3, //Poetic Justice
-          1468: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Aunts not Ants
+          1468: get("_juneCleaverSkips") < 5 ? 4 : 2, //Aunts not Ants
           1469: 3, //Beware of Aligator
-          1470: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Teacher's Pet
+          1470: get("_juneCleaverSkips") < 5 ? 4 : 2, //Teacher's Pet
           1471: 1, //Lost and Found
-          1472: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 1), //Summer Days
-          1473: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 1), //Bath Time
-          1474: () => (get("_juneCleaverSkips", 0) < 5 ? 4 : 2), //Delicious Sprouts
+          1472: get("_juneCleaverSkips") < 5 ? 4 : 1, //Summer Days
+          1473: get("_juneCleaverSkips") < 5 ? 4 : 1, //Bath Time
+          1474: get("_juneCleaverSkips") < 5 ? 4 : 2, //Delicious Sprouts
           1475: 1, //Hypnotic Master
         },
         do: $location`Noob Cave`,
@@ -202,7 +203,7 @@ export function AftercoreQuest(): Quest {
         },
         outfit: () => ({ equip: $items`June cleaver` }),
         limit: undefined,
-      },*/
+      },
       {
         name: "Restore HP",
         completed: () => myHp() > 0.5 * myMaxhp(),

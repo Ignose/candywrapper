@@ -18,6 +18,7 @@ import {
   myClass,
   myHp,
   myInebriety,
+  myLevel,
   myMaxhp,
   myPrimestat,
   pvpAttacksLeft,
@@ -114,15 +115,23 @@ export function CSAftercoreQuest(): Quest {
       },
       {
         name: "SIT Course",
-        // eslint-disable-next-line libram/verify-constants
         ready: () => have($item`S.I.T. Course Completion Certificate`),
         completed: () => get("_sitCourseCompleted", false),
         choices: {
           1494: 2,
         },
         do: () =>
-          // eslint-disable-next-line libram/verify-constants
           use($item`S.I.T. Course Completion Certificate`),
+      },
+      {
+        name: "Wardrobe-o-matic",
+        ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
+        completed: () => get("_wardrobeUsed", false),
+        do: (): void => {
+          use($item`wardrobe-o-matic`);
+          cliExecute("set _wardrobeUsed = true");
+        },
+        limit: { tries: 1 },
       },
       {
         name: "Drive Observantly",
