@@ -1,4 +1,4 @@
-import { gamedayToInt, print, todayToString } from "kolmafia";
+import { print } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
 import { CSQuests } from "./tasks/csrunleg";
 import { ProfitTrackingEngine } from "./engine/engine";
@@ -7,11 +7,9 @@ import { AftercoreQuest } from "./tasks/aftercoreleg";
 import { SmolQuests } from "./tasks/smolrunleg";
 import { GarboWeenQuest } from "./tasks/Garboween";
 import { AscendQuest } from "./tasks/ascend";
+import { dontCS, halloween } from "./lib";
 
 const version = "0.0.3";
-
-const dontCS = gamedayToInt() === 78 || todayToString().includes("1030");
-const halloween = gamedayToInt() === 79 || todayToString().includes("1031");
 
 export function main(command?: string): void {
   Args.fill(args, command);

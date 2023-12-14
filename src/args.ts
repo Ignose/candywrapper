@@ -29,6 +29,27 @@ export const args = Args.create(
       setting: "",
     }),
 
+    chrono: Args.flag({
+      help: "Garbo Nobarf, then run Chrono",
+      setting: "",
+    }),
+    hobo: Args.flag({
+      help: "Garbo Nobarf, then run ezHobo",
+      setting: "",
+    }),
+    hoboclan: Args.string({
+      help: "What clan should we whitelist into for hobo farming?",
+      setting: "",
+    }),
+    crimbo: Args.flag({
+      help: "Garbo Nobarf, then run user defined crimbo script",
+      setting: "",
+    }),
+    crimboscript: Args.string({
+      help: "What script should we use for Crimbo?",
+      setting: "",
+    }),
+
     //partial run args
     actions: Args.number({
       help: "Maximum number of actions to perform, if given. Can be used to execute just a few steps at a time.",
