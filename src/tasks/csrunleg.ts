@@ -52,6 +52,7 @@ import {
 
 let pajamas = false;
 let smoke = 1;
+const offhandWorth = have($familiar`Left-Hand Man`);
 
 export function CSQuests(): Quest[] {
   return [
@@ -308,13 +309,28 @@ export function CSQuests(): Quest[] {
           },
         {
           name: "Offhand Remarkable",
-          // eslint-disable-next-line libram/verify-constants
           ready: () => have($item`august scepter`),
-          // eslint-disable-next-line libram/verify-constants
           completed: () => have($effect`Offhand Remarkable`) || get("_aug13Cast", false),
           do: () =>
-            // eslint-disable-next-line libram/verify-constants
             useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
+        },
+        {
+          name: "Alternative Offhand Remarkable",
+          ready: () => offhandWorth,
+          completed: () => have($effect`Offhand Remarkable`),
+          do: (): void => {
+            retrieveItem($item`pocket wish`);
+            cliExecute("genie effect Aug. 13th: Left/Off Hander's Day!");
+          }
+        },
+        {
+          name: "Item Cleanup",
+          // eslint-disable-next-line libram/verify-constants
+          completed: () => get("_cleanupToday", false) || args.itemcleanup === "",
+          do: (): void => {
+            cliExecute(`${args.itemcleanup}`);
+            cliExecute("set _cleanupToday = true");
+          },
         },
         {
           name: "Pajamas",
@@ -336,15 +352,6 @@ export function CSQuests(): Quest[] {
               ),
             modifier: `adventures${args.pvp ? ", 0.3 fites" : ""}`,
           }),
-        },
-        {
-          name: "Item Cleanup",
-          // eslint-disable-next-line libram/verify-constants
-          completed: () => get("_cleanupToday", false) || args.itemcleanup === "",
-          do: (): void => {
-            cliExecute(`${args.itemcleanup}`);
-            cliExecute("set _cleanupToday = true");
-          },
         },
         {
           name: "Alert-No Nightcap",
