@@ -8166,198 +8166,8 @@ function makeTonic() {
 function tonicsLeft() {
   return clamp(3 - property_get("_dnaPotionsMade"), 0, 3);
 }
-;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2022/TrainSet.js
-var TrainSet_templateObject;
-function TrainSet_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
-
-
-
-
-var item = template_string_$item(TrainSet_templateObject || (TrainSet_templateObject = TrainSet_taggedTemplateLiteral(["model train set"])));
-/**
- * Determines whether the Model Train Set is your current workshed
- *
- * @returns Whether the Model Train Set is your current workshed
- */
-function TrainSet_installed() {
-  return (0,external_kolmafia_namespaceObject.getWorkshed)() === item;
-}
-/**
- * Determines whether you `have` the model train set (or if it is installed)
- *
- * @returns Whether you `have` the model train set or it's installed
- */
-function TrainSet_have() {
-  return TrainSet_installed() || have_(item);
-}
-var Station;
-(function (Station) {
-  /**
-   * Unknown station
-   */
-  Station["UNKNOWN"] = "";
-  /**
-   * Empty station
-   */
-  Station["EMPTY"] = "empty";
-  /**
-   * Gain 800 meat
-   */
-  Station["GAIN_MEAT"] = "meat_mine";
-  /**
-   * Effect: Regenerate MP
-   */
-  Station["TOWER_FIZZY"] = "tower_fizzy";
-  /**
-   * Gain mus, mys, mox stats
-   */
-  Station["VIEWING_PLATFORM"] = "viewing_platform";
-  /**
-   * Effect: Hot resist, cold damage
-   */
-  Station["TOWER_FROZEN"] = "tower_frozen";
-  /**
-   * Effect: Stench resist, spooky damage
-   */
-  Station["SPOOKY_GRAVEYARD"] = "spooky_graveyard";
-  /**
-   * Get smut bridge part, or stats
-   */
-  Station["LOGGING_MILL"] = "logging_mill";
-  /**
-   * Get some candy
-   */
-  Station["CANDY_FACTORY"] = "candy_factory";
-  /**
-   * Double strength of next station
-   */
-  Station["COAL_HOPPER"] = "coal_hopper";
-  /**
-   * Effect: Cold resist, stench damage
-   */
-  Station["TOWER_SEWAGE"] = "tower_sewage";
-  /**
-   * Effect: Spooky resist, sleaze damage
-   */
-  Station["OIL_REFINERY"] = "oil_refinery";
-  /**
-   * Effect: Sleaze resist, hot damage
-   */
-  Station["OIL_BRIDGE"] = "oil_bridge";
-  /**
-   * Effect: Increased Monster Level
-   */
-  Station["WATER_BRIDGE"] = "water_bridge";
-  /**
-   * Get moxie stats
-   */
-  Station["GROIN_SILO"] = "groin_silo";
-  /**
-   * Get random booze
-   */
-  Station["GRAIN_SILO"] = "grain_silo";
-  /**
-   * Get mys stats
-   */
-  Station["BRAIN_SILO"] = "brain_silo";
-  /**
-   * Get muscle stats
-   */
-  Station["BRAWN_SILO"] = "brawn_silo";
-  /**
-   * Effect: 50% food drop
-   */
-  Station["PRAWN_SILO"] = "prawn_silo";
-  /**
-   * Dupe last food dropped, or gain random food
-   */
-  Station["TRACKSIDE_DINER"] = "trackside_diner";
-  /**
-   * Drop random ore, or trapper ore if known
-   */
-  Station["ORE_HOPPER"] = "ore_hopper";
-})(Station || (Station = {}));
-var trainsetEffects = new Map([[Station.TOWER_FIZZY, external_kolmafia_namespaceObject.Effect.get("Carbonated")], [Station.TOWER_FROZEN, external_kolmafia_namespaceObject.Effect.get("Frozen")], [Station.SPOOKY_GRAVEYARD, external_kolmafia_namespaceObject.Effect.get("Shivering Spine")], [Station.TOWER_SEWAGE, external_kolmafia_namespaceObject.Effect.get("Hot Soupy Garbage")], [Station.OIL_BRIDGE, external_kolmafia_namespaceObject.Effect.get("Burningly Oiled")], [Station.OIL_REFINERY, external_kolmafia_namespaceObject.Effect.get("Spookily Greasy")], [Station.WATER_BRIDGE, external_kolmafia_namespaceObject.Effect.get("Troubled Waters")], [Station.PRAWN_SILO, external_kolmafia_namespaceObject.Effect.get("Craving Prawns")]]);
-var trainsetEffectsDoubled = new Map([[Station.TOWER_FIZZY, external_kolmafia_namespaceObject.Effect.get("Double Carbonated")], [Station.TOWER_FROZEN, external_kolmafia_namespaceObject.Effect.get("Double Frozen")], [Station.SPOOKY_GRAVEYARD, external_kolmafia_namespaceObject.Effect.get("Doubly Shivering Spine")], [Station.TOWER_SEWAGE, external_kolmafia_namespaceObject.Effect.get("Double Hot Soupy Garbage")], [Station.OIL_BRIDGE, external_kolmafia_namespaceObject.Effect.get("Doubly Burningly Oiled")], [Station.OIL_REFINERY, external_kolmafia_namespaceObject.Effect.get("Doubly Spookily Greasy")], [Station.WATER_BRIDGE, external_kolmafia_namespaceObject.Effect.get("Doubly Troubled Waters")], [Station.PRAWN_SILO, external_kolmafia_namespaceObject.Effect.get("Doubly Craving Prawns")]]);
-/**
- * Returns an effect--if one exists--for a given train station
- *
- * @param station The train station to check the effect of
- * @returns The effect associated with the given station
- */
-function effect(station) {
-  var _trainsetEffects$get;
-  return (_trainsetEffects$get = trainsetEffects.get(station)) !== null && _trainsetEffects$get !== void 0 ? _trainsetEffects$get : null;
-}
-/**
- * Returns an effect--if one exists--for a given train station, assuming it's been primed by the coal station
- *
- * @param station The train station to check the doubled effect of
- * @returns The effect associated with given station, under the influence of coal
- */
-function doubledEffect(station) {
-  var _trainsetEffectsDoubl;
-  return (_trainsetEffectsDoubl = trainsetEffectsDoubled.get(station)) !== null && _trainsetEffectsDoubl !== void 0 ? _trainsetEffectsDoubl : null;
-}
-/**
- * Determines the current configuration of train stations
- *
- * @returns An 8-tuple consisting of the stations currently installed in your Model Train Set; this functions even if the Model Train Set isn't your active workshed
- */
-function cycle() {
-  return property_get("trainsetConfiguration").split(",");
-}
-/**
- * Determines how many turns until you can next configure the Model Train Set
- *
- * @returns How many turns until you can next configure the Model Train Set
- */
-function nextConfigurable() {
-  return clamp(property_get("lastTrainsetConfiguration") + 40 - property_get("trainsetPosition"), 0, 40);
-}
-/**
- * Determines whether you can currently configure your Model Train Set
- *
- * @returns Whether you can currently configure your Model Train Set
- */
-function canConfigure() {
-  return TrainSet_installed() && !nextConfigurable();
-}
-var pieces = [Station.EMPTY, Station.GAIN_MEAT, Station.TOWER_FIZZY, Station.VIEWING_PLATFORM, Station.TOWER_FROZEN, Station.SPOOKY_GRAVEYARD, Station.LOGGING_MILL, Station.CANDY_FACTORY, Station.COAL_HOPPER, Station.TOWER_SEWAGE, Station.UNKNOWN, Station.OIL_REFINERY, Station.OIL_BRIDGE, Station.WATER_BRIDGE, Station.GROIN_SILO, Station.GRAIN_SILO, Station.BRAIN_SILO, Station.BRAWN_SILO, Station.PRAWN_SILO, Station.TRACKSIDE_DINER, Station.ORE_HOPPER];
-/**
- * Converts a given station to the integer value KoL associates with them
- *
- * @param station The station in question
- * @returns The integer value KoL assigns the train station in question
- */
-function stationToInt(station) {
-  return pieces.indexOf(station);
-}
-/**
- * Sets your model train station to the given configuration, if able
- *
- * @param configuration The cycle to try to set your model train station to
- * @returns Whether your model train station matches the given configuration
- */
-function setConfiguration(configuration) {
-  if (!canConfigure()) return false;
-  (0,external_kolmafia_namespaceObject.visitUrl)("campground.php?action=workshed");
-  (0,external_kolmafia_namespaceObject.runChoice)(1, "forceoption=0".concat(configuration.map((station, index) => "&slot[".concat(index, "]=").concat(stationToInt(station))).join("")));
-  (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
-  var currentConfiguration = cycle();
-  return configuration.every((station, index) => station === currentConfiguration[index]);
-}
-/**
- * Determines the next station you expect to encounter when the Model Train Station is active
- *
- * @returns The next station you expect to encounter when the Model Train Station is active
- */
-function next() {
-  return cycle()[get("trainsetPosition") % 8];
-}
 ;// CONCATENATED MODULE: ./src/tasks/aftercoreleg.ts
-var aftercoreleg_templateObject, aftercoreleg_templateObject2, aftercoreleg_templateObject3, aftercoreleg_templateObject4, aftercoreleg_templateObject5, aftercoreleg_templateObject6, aftercoreleg_templateObject7, aftercoreleg_templateObject8, aftercoreleg_templateObject9, aftercoreleg_templateObject10, aftercoreleg_templateObject11, aftercoreleg_templateObject12, aftercoreleg_templateObject13, aftercoreleg_templateObject14, aftercoreleg_templateObject15, aftercoreleg_templateObject16, aftercoreleg_templateObject17, aftercoreleg_templateObject18, aftercoreleg_templateObject19, aftercoreleg_templateObject20, aftercoreleg_templateObject21, aftercoreleg_templateObject22, aftercoreleg_templateObject23, aftercoreleg_templateObject24, aftercoreleg_templateObject25, aftercoreleg_templateObject26, aftercoreleg_templateObject27, aftercoreleg_templateObject28, aftercoreleg_templateObject29, aftercoreleg_templateObject30, aftercoreleg_templateObject31, aftercoreleg_templateObject32, aftercoreleg_templateObject33, aftercoreleg_templateObject34, aftercoreleg_templateObject35, aftercoreleg_templateObject36, aftercoreleg_templateObject37, aftercoreleg_templateObject38, aftercoreleg_templateObject39, aftercoreleg_templateObject40, aftercoreleg_templateObject41, aftercoreleg_templateObject42, aftercoreleg_templateObject43, aftercoreleg_templateObject44, aftercoreleg_templateObject45, aftercoreleg_templateObject46, aftercoreleg_templateObject47, aftercoreleg_templateObject48, aftercoreleg_templateObject49, aftercoreleg_templateObject50, aftercoreleg_templateObject51, aftercoreleg_templateObject52, aftercoreleg_templateObject53, aftercoreleg_templateObject54, aftercoreleg_templateObject55, aftercoreleg_templateObject56, aftercoreleg_templateObject57, aftercoreleg_templateObject58, aftercoreleg_templateObject59, aftercoreleg_templateObject60, aftercoreleg_templateObject61, aftercoreleg_templateObject62, aftercoreleg_templateObject63, aftercoreleg_templateObject64, aftercoreleg_templateObject65, aftercoreleg_templateObject66, aftercoreleg_templateObject67, aftercoreleg_templateObject68, aftercoreleg_templateObject69, aftercoreleg_templateObject70, aftercoreleg_templateObject71, aftercoreleg_templateObject72, aftercoreleg_templateObject73, aftercoreleg_templateObject74, aftercoreleg_templateObject75, aftercoreleg_templateObject76, aftercoreleg_templateObject77, aftercoreleg_templateObject78, aftercoreleg_templateObject79, aftercoreleg_templateObject80, aftercoreleg_templateObject81, aftercoreleg_templateObject82, aftercoreleg_templateObject83, aftercoreleg_templateObject84, aftercoreleg_templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111, _templateObject112;
+var aftercoreleg_templateObject, aftercoreleg_templateObject2, aftercoreleg_templateObject3, aftercoreleg_templateObject4, aftercoreleg_templateObject5, aftercoreleg_templateObject6, aftercoreleg_templateObject7, aftercoreleg_templateObject8, aftercoreleg_templateObject9, aftercoreleg_templateObject10, aftercoreleg_templateObject11, aftercoreleg_templateObject12, aftercoreleg_templateObject13, aftercoreleg_templateObject14, aftercoreleg_templateObject15, aftercoreleg_templateObject16, aftercoreleg_templateObject17, aftercoreleg_templateObject18, aftercoreleg_templateObject19, aftercoreleg_templateObject20, aftercoreleg_templateObject21, aftercoreleg_templateObject22, aftercoreleg_templateObject23, aftercoreleg_templateObject24, aftercoreleg_templateObject25, aftercoreleg_templateObject26, aftercoreleg_templateObject27, aftercoreleg_templateObject28, aftercoreleg_templateObject29, aftercoreleg_templateObject30, aftercoreleg_templateObject31, aftercoreleg_templateObject32, aftercoreleg_templateObject33, aftercoreleg_templateObject34, aftercoreleg_templateObject35, aftercoreleg_templateObject36, aftercoreleg_templateObject37, aftercoreleg_templateObject38, aftercoreleg_templateObject39, aftercoreleg_templateObject40, aftercoreleg_templateObject41, aftercoreleg_templateObject42, aftercoreleg_templateObject43, aftercoreleg_templateObject44, aftercoreleg_templateObject45, aftercoreleg_templateObject46, aftercoreleg_templateObject47, aftercoreleg_templateObject48, aftercoreleg_templateObject49, aftercoreleg_templateObject50, aftercoreleg_templateObject51, aftercoreleg_templateObject52, aftercoreleg_templateObject53, aftercoreleg_templateObject54, aftercoreleg_templateObject55, aftercoreleg_templateObject56, aftercoreleg_templateObject57, aftercoreleg_templateObject58, aftercoreleg_templateObject59, aftercoreleg_templateObject60, aftercoreleg_templateObject61, aftercoreleg_templateObject62, aftercoreleg_templateObject63, aftercoreleg_templateObject64, aftercoreleg_templateObject65, aftercoreleg_templateObject66, aftercoreleg_templateObject67, aftercoreleg_templateObject68, aftercoreleg_templateObject69, aftercoreleg_templateObject70, aftercoreleg_templateObject71, aftercoreleg_templateObject72, aftercoreleg_templateObject73, aftercoreleg_templateObject74, aftercoreleg_templateObject75, aftercoreleg_templateObject76, aftercoreleg_templateObject77, aftercoreleg_templateObject78, aftercoreleg_templateObject79, aftercoreleg_templateObject80, aftercoreleg_templateObject81, aftercoreleg_templateObject82, aftercoreleg_templateObject83, aftercoreleg_templateObject84, aftercoreleg_templateObject85, _templateObject86, _templateObject87, _templateObject88, _templateObject89, _templateObject90, _templateObject91, _templateObject92, _templateObject93, _templateObject94, _templateObject95, _templateObject96, _templateObject97, _templateObject98, _templateObject99, _templateObject100, _templateObject101, _templateObject102, _templateObject103, _templateObject104, _templateObject105, _templateObject106, _templateObject107, _templateObject108, _templateObject109, _templateObject110, _templateObject111;
 function aftercoreleg_toConsumableArray(arr) { return aftercoreleg_arrayWithoutHoles(arr) || aftercoreleg_iterableToArray(arr) || aftercoreleg_unsupportedIterableToArray(arr) || aftercoreleg_nonIterableSpread(); }
 function aftercoreleg_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function aftercoreleg_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return aftercoreleg_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return aftercoreleg_arrayLikeToArray(o, minLen); }
@@ -8365,7 +8175,6 @@ function aftercoreleg_iterableToArray(iter) { if (typeof Symbol !== "undefined" 
 function aftercoreleg_arrayWithoutHoles(arr) { if (Array.isArray(arr)) return aftercoreleg_arrayLikeToArray(arr); }
 function aftercoreleg_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function aftercoreleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
-
 
 
 
@@ -8683,44 +8492,11 @@ function AftercoreQuest() {
         !lib_have(template_string_$item(_templateObject108 || (_templateObject108 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(_templateObject109 || (_templateObject109 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
         !lib_have(template_string_$item(_templateObject110 || (_templateObject110 = aftercoreleg_taggedTemplateLiteral(["borrowed time"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(_templateObject111 || (_templateObject111 = aftercoreleg_taggedTemplateLiteral(["borrowed time"])))) : undefined;
       }
-    }, {
-      name: "Pre-Configure Trainset",
-      completed: () => property_get("_folgerInitialConfig", false),
-      do: () => {
-        var statStation = {
-          Muscle: Station.BRAWN_SILO,
-          Mysticality: Station.BRAIN_SILO,
-          Moxie: Station.GROIN_SILO
-        }[(0,external_kolmafia_namespaceObject.myPrimestat)().toString()];
-        (0,external_kolmafia_namespaceObject.use)(template_string_$item(_templateObject112 || (_templateObject112 = aftercoreleg_taggedTemplateLiteral(["model train set"]))));
-        setConfiguration([Station.VIEWING_PLATFORM,
-        // all stats
-        Station.COAL_HOPPER,
-        // double mainstat gain
-        statStation,
-        // main stats
-        Station.GAIN_MEAT,
-        // meat (we don't gain meat during free banishes)
-        Station.TOWER_FIZZY,
-        // mp regen
-        Station.TOWER_FROZEN,
-        // hot resist (useful)
-        Station.WATER_BRIDGE,
-        // +ML
-        Station.CANDY_FACTORY // candies (we don't get items during free banishes)
-        ]);
-
-        (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerInitialConfig = true");
-        (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerSecondConfig = false");
-      },
-      limit: {
-        tries: 2
-      }
     }]
   };
 }
 ;// CONCATENATED MODULE: ./src/tasks/smolrunleg.ts
-var smolrunleg_templateObject, smolrunleg_templateObject2, smolrunleg_templateObject3, smolrunleg_templateObject4, smolrunleg_templateObject5, smolrunleg_templateObject6, smolrunleg_templateObject7, smolrunleg_templateObject8, smolrunleg_templateObject9, smolrunleg_templateObject10, smolrunleg_templateObject11, smolrunleg_templateObject12, smolrunleg_templateObject13, smolrunleg_templateObject14, smolrunleg_templateObject15, smolrunleg_templateObject16, smolrunleg_templateObject17, smolrunleg_templateObject18, smolrunleg_templateObject19, smolrunleg_templateObject20, smolrunleg_templateObject21, smolrunleg_templateObject22, smolrunleg_templateObject23, smolrunleg_templateObject24, smolrunleg_templateObject25, smolrunleg_templateObject26, smolrunleg_templateObject27, smolrunleg_templateObject28, smolrunleg_templateObject29, smolrunleg_templateObject30, smolrunleg_templateObject31, smolrunleg_templateObject32, smolrunleg_templateObject33, smolrunleg_templateObject34, smolrunleg_templateObject35, smolrunleg_templateObject36, smolrunleg_templateObject37, smolrunleg_templateObject38, smolrunleg_templateObject39, smolrunleg_templateObject40, smolrunleg_templateObject41, smolrunleg_templateObject42, smolrunleg_templateObject43, smolrunleg_templateObject44, smolrunleg_templateObject45, smolrunleg_templateObject46, smolrunleg_templateObject47, smolrunleg_templateObject48, smolrunleg_templateObject49, smolrunleg_templateObject50, smolrunleg_templateObject51, smolrunleg_templateObject52, smolrunleg_templateObject53, smolrunleg_templateObject54, smolrunleg_templateObject55, smolrunleg_templateObject56, smolrunleg_templateObject57, smolrunleg_templateObject58, smolrunleg_templateObject59, smolrunleg_templateObject60, smolrunleg_templateObject61, smolrunleg_templateObject62, smolrunleg_templateObject63, smolrunleg_templateObject64, smolrunleg_templateObject65, smolrunleg_templateObject66, smolrunleg_templateObject67, smolrunleg_templateObject68, smolrunleg_templateObject69, smolrunleg_templateObject70, smolrunleg_templateObject71, smolrunleg_templateObject72, smolrunleg_templateObject73, smolrunleg_templateObject74, smolrunleg_templateObject75, smolrunleg_templateObject76, smolrunleg_templateObject77, smolrunleg_templateObject78, smolrunleg_templateObject79, smolrunleg_templateObject80, smolrunleg_templateObject81, smolrunleg_templateObject82, smolrunleg_templateObject83, smolrunleg_templateObject84, smolrunleg_templateObject85, smolrunleg_templateObject86, smolrunleg_templateObject87, smolrunleg_templateObject88, smolrunleg_templateObject89, smolrunleg_templateObject90, smolrunleg_templateObject91, smolrunleg_templateObject92, smolrunleg_templateObject93, smolrunleg_templateObject94, smolrunleg_templateObject95, smolrunleg_templateObject96, smolrunleg_templateObject97, smolrunleg_templateObject98, smolrunleg_templateObject99, smolrunleg_templateObject100, smolrunleg_templateObject101, smolrunleg_templateObject102, smolrunleg_templateObject103, smolrunleg_templateObject104, smolrunleg_templateObject105, smolrunleg_templateObject106, smolrunleg_templateObject107, smolrunleg_templateObject108, smolrunleg_templateObject109, smolrunleg_templateObject110, smolrunleg_templateObject111, smolrunleg_templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134;
+var smolrunleg_templateObject, smolrunleg_templateObject2, smolrunleg_templateObject3, smolrunleg_templateObject4, smolrunleg_templateObject5, smolrunleg_templateObject6, smolrunleg_templateObject7, smolrunleg_templateObject8, smolrunleg_templateObject9, smolrunleg_templateObject10, smolrunleg_templateObject11, smolrunleg_templateObject12, smolrunleg_templateObject13, smolrunleg_templateObject14, smolrunleg_templateObject15, smolrunleg_templateObject16, smolrunleg_templateObject17, smolrunleg_templateObject18, smolrunleg_templateObject19, smolrunleg_templateObject20, smolrunleg_templateObject21, smolrunleg_templateObject22, smolrunleg_templateObject23, smolrunleg_templateObject24, smolrunleg_templateObject25, smolrunleg_templateObject26, smolrunleg_templateObject27, smolrunleg_templateObject28, smolrunleg_templateObject29, smolrunleg_templateObject30, smolrunleg_templateObject31, smolrunleg_templateObject32, smolrunleg_templateObject33, smolrunleg_templateObject34, smolrunleg_templateObject35, smolrunleg_templateObject36, smolrunleg_templateObject37, smolrunleg_templateObject38, smolrunleg_templateObject39, smolrunleg_templateObject40, smolrunleg_templateObject41, smolrunleg_templateObject42, smolrunleg_templateObject43, smolrunleg_templateObject44, smolrunleg_templateObject45, smolrunleg_templateObject46, smolrunleg_templateObject47, smolrunleg_templateObject48, smolrunleg_templateObject49, smolrunleg_templateObject50, smolrunleg_templateObject51, smolrunleg_templateObject52, smolrunleg_templateObject53, smolrunleg_templateObject54, smolrunleg_templateObject55, smolrunleg_templateObject56, smolrunleg_templateObject57, smolrunleg_templateObject58, smolrunleg_templateObject59, smolrunleg_templateObject60, smolrunleg_templateObject61, smolrunleg_templateObject62, smolrunleg_templateObject63, smolrunleg_templateObject64, smolrunleg_templateObject65, smolrunleg_templateObject66, smolrunleg_templateObject67, smolrunleg_templateObject68, smolrunleg_templateObject69, smolrunleg_templateObject70, smolrunleg_templateObject71, smolrunleg_templateObject72, smolrunleg_templateObject73, smolrunleg_templateObject74, smolrunleg_templateObject75, smolrunleg_templateObject76, smolrunleg_templateObject77, smolrunleg_templateObject78, smolrunleg_templateObject79, smolrunleg_templateObject80, smolrunleg_templateObject81, smolrunleg_templateObject82, smolrunleg_templateObject83, smolrunleg_templateObject84, smolrunleg_templateObject85, smolrunleg_templateObject86, smolrunleg_templateObject87, smolrunleg_templateObject88, smolrunleg_templateObject89, smolrunleg_templateObject90, smolrunleg_templateObject91, smolrunleg_templateObject92, smolrunleg_templateObject93, smolrunleg_templateObject94, smolrunleg_templateObject95, smolrunleg_templateObject96, smolrunleg_templateObject97, smolrunleg_templateObject98, smolrunleg_templateObject99, smolrunleg_templateObject100, smolrunleg_templateObject101, smolrunleg_templateObject102, smolrunleg_templateObject103, smolrunleg_templateObject104, smolrunleg_templateObject105, smolrunleg_templateObject106, smolrunleg_templateObject107, smolrunleg_templateObject108, smolrunleg_templateObject109, smolrunleg_templateObject110, smolrunleg_templateObject111, _templateObject112, _templateObject113, _templateObject114, _templateObject115, _templateObject116, _templateObject117, _templateObject118, _templateObject119, _templateObject120, _templateObject121, _templateObject122, _templateObject123, _templateObject124, _templateObject125, _templateObject126, _templateObject127, _templateObject128, _templateObject129, _templateObject130, _templateObject131, _templateObject132, _templateObject133, _templateObject134;
 function smolrunleg_toConsumableArray(arr) { return smolrunleg_arrayWithoutHoles(arr) || smolrunleg_iterableToArray(arr) || smolrunleg_unsupportedIterableToArray(arr) || smolrunleg_nonIterableSpread(); }
 function smolrunleg_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function smolrunleg_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return smolrunleg_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return smolrunleg_arrayLikeToArray(o, minLen); }
@@ -9039,7 +8815,7 @@ function SmolQuests() {
       name: "Turn in FunFunds",
       ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(smolrunleg_templateObject109 || (smolrunleg_templateObject109 = smolrunleg_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
       completed: () => lib_have(template_string_$item(smolrunleg_templateObject110 || (smolrunleg_templateObject110 = smolrunleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
-      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(smolrunleg_templateObject111 || (smolrunleg_templateObject111 = smolrunleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(smolrunleg_templateObject112 || (smolrunleg_templateObject112 = smolrunleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
+      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(smolrunleg_templateObject111 || (smolrunleg_templateObject111 = smolrunleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(_templateObject112 || (_templateObject112 = smolrunleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
       tracking: "Garbo"
     }, {
       name: "PvP",
