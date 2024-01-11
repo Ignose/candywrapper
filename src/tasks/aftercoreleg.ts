@@ -63,7 +63,6 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
-import { setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
