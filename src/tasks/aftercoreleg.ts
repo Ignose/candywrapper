@@ -49,6 +49,7 @@ import {
   have,
   Macro,
   set,
+  TrainSet,
   uneffect,
 } from "libram";
 import { getCurrentLeg, Leg, Quest } from "./structure";
@@ -63,9 +64,26 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
+import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
+
+const statStation: Station = {
+  Muscle: Station.BRAWN_SILO,
+  Mysticality: Station.BRAIN_SILO,
+  Moxie: Station.GROIN_SILO,
+}[myPrimestat().toString()];
+const stations = [
+  Station.COAL_HOPPER, // double mainstat gain
+  statStation, // main stats
+  Station.VIEWING_PLATFORM, // all stats
+  Station.GAIN_MEAT, // meat
+  Station.TOWER_FIZZY, // mp regen
+  Station.BRAIN_SILO, // myst stats
+  Station.WATER_BRIDGE, // +ML
+  Station.CANDY_FACTORY, // candies
+] as Cycle;
 
 export function AftercoreQuest(): Quest {
   return {
@@ -483,6 +501,21 @@ export function AftercoreQuest(): Quest {
         !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
         !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
         !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;} ,
+      },
+      {
+        name: "Let's do the trainset again",
+        completed: () => TrainSet.cycle().toString === stations.toString,
+        do: (): void => {
+          const offset = get("trainsetPosition") % 8;
+          const newStations: TrainSet.Station[] = [];
+          for (let i = 0; i < 8; i++) {
+            const newPos = (i + offset) % 8;
+            newStations[newPos] = stations[i];
+          }
+          setConfiguration(newStations as Cycle);
+          cliExecute("set _folgerInitialConfig = true");
+        },
+        limit: { tries: 5 },
       },
     ],
   };
