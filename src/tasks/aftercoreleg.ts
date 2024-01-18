@@ -512,8 +512,9 @@ export function AftercoreQuest(): Quest {
             const newPos = (i + offset) % 8;
             newStations[newPos] = stations[i];
           }
+          visitUrl("campground.php?action=workshed");
+          visitUrl("main.php");
           setConfiguration(newStations as Cycle);
-          cliExecute("set _folgerInitialConfig = true");
         },
         limit: { tries: 5 },
       },
