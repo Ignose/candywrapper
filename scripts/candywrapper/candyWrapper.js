@@ -8715,8 +8715,9 @@ function AftercoreQuest() {
           var newPos = (i + offset) % 8;
           newStations[newPos] = stations[i];
         }
+        (0,external_kolmafia_namespaceObject.visitUrl)("campground.php?action=workshed");
+        (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
         setConfiguration(newStations);
-        (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerInitialConfig = true");
       },
       limit: {
         tries: 5
