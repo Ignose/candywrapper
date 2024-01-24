@@ -31,6 +31,7 @@ import {
     Snapper,
   } from "libram";
   import { garboAverageValue, garboValue } from "../engine/profits";
+import { args } from "../args";
 
   export function haveAll(its: Item[]): boolean {
     return its.reduce((a, it) => a && have(it), true);
@@ -139,7 +140,7 @@ import {
       myFullness() < fullnessLimit() ||
       mySpleenUse() < spleenLimit() ||
       myInebriety() < inebrietyLimit() ||
-      (have($item`distention pill`) && !get("_distentionPillUsed")) ||
+      (have($item`distention pill`) && !get("_distentionPillUsed") || args.smol) ||
       (have($item`synthetic dog hair pill`) && !get("_syntheticDogHairPillUsed")) ||
       (have($item`designer sweatpants`) && get("_sweatOutSomeBoozeUsed") < 3 && get("sweat") >= 25) ||
       (have($item`mime army shotglass`) && !get("_mimeArmyShotglassUsed")) ||
