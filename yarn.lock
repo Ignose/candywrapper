@@ -2357,10 +2357,10 @@ eslint-config-prettier@^8.8.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
-eslint-plugin-libram@^0.3.5:
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.3.5.tgz#ea620df15ab09907b1deaa9658406925cf9182eb"
-  integrity sha512-s5AwKMVuMcq1SfUbNU0yFMn+5B08teZ69RTXRRq8//Fx4w+14kqIyOv0pm5VO/l33E2MZcNRsuEDqMbcsSS9Ww==
+eslint-plugin-libram@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.2.tgz#013fe258d40f9a7ba4e8c7be7835b9daf2d1aeff"
+  integrity sha512-l2SIYEfs38CeHPlMQssTCjP7QJfnfHf2yrVJm06zfU34YP5wvKtuHO8GO9OpDowndkr+dYiEnr+vEP/CfzbvIw==
   dependencies:
     html-entities "^2.4.0"
     requireindex "~1.2.0"
@@ -3144,10 +3144,10 @@ kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-kolmafia@^5.27713.0:
-  version "5.27726.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.27726.0.tgz#bceda4a5d245b76b3f45851a727607d74690c4ef"
-  integrity sha512-PNSNu8IoR37Fzn262KC8cImps+/OKHuGIPX24VCDZs3zwMCXK2AdcfhV9JyYnQWUuU/DhfMBzP21uXFOhaFcJQ==
+kolmafia@^5.27815.0:
+  version "5.27815.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.27815.0.tgz#d591a9a76ae9fd5ae469647e6606d55ca2ba0e95"
+  integrity sha512-M175RtbW2t5waudPQPXU8ypyzsme9ghi7/jY9tnCJmIrnKrvVBRcKrwCWdAs6E5WVz6DeE2YKmbTHJ2tDqqtxQ==
 
 kuler@^2.0.0:
   version "2.0.0"
@@ -3162,10 +3162,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libram@^0.8.18:
-  version "0.8.18"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.18.tgz#c160bef67029433e6f11e0a11c6abde82991c5c5"
-  integrity sha512-X7HN0EvjrS6vnrZrbtW/9GiiMAba2bnEv0y5B++KbWYYymAANZzEDD7uNPFxIUWRoIKwmWk+FTXUVIioFKAOXw==
+libram@^0.8.22:
+  version "0.8.22"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.22.tgz#d3185465653f53ec666cb2a066ed979ffd6fcbca"
+  integrity sha512-MV5o89lRx509sJpUqxZGt36b3q7/zZla6B3NaEwrxsnYrYnAXCNzkUfNwqZVHYAMit0diHAzObb4HZ2XZZRmXw==
   dependencies:
     html-entities "^2.4.0"
 
