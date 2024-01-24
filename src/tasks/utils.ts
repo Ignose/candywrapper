@@ -140,7 +140,7 @@ import { args } from "../args";
       myFullness() < fullnessLimit() ||
       mySpleenUse() < spleenLimit() ||
       myInebriety() < inebrietyLimit() ||
-      (have($item`distention pill`) && !get("_distentionPillUsed") || args.smol) ||
+      (have($item`distention pill`) && !get("_distentionPillUsed") || !args.smol) ||
       (have($item`synthetic dog hair pill`) && !get("_syntheticDogHairPillUsed")) ||
       (have($item`designer sweatpants`) && get("_sweatOutSomeBoozeUsed") < 3 && get("sweat") >= 25) ||
       (have($item`mime army shotglass`) && !get("_mimeArmyShotglassUsed")) ||
