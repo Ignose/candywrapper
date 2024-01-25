@@ -232,7 +232,7 @@ export function CSQuests(): Quest[] {
           ready: () => holiday().includes("Halloween"),
           completed: () => garboDone,
           do: (): void => {
-            cliExecute(`${args.garboascend} nodiet nobarf`);
+            cliExecute(`${args.garbo} nodiet nobarf`);
             garboDone = true;
           }
         },
