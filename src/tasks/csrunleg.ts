@@ -2,6 +2,7 @@ import {
   buy,
   cliExecute,
   drink,
+  fullnessLimit,
   getClanName,
   getWorkshed,
   haveEffect,
@@ -12,14 +13,17 @@ import {
   mallPrice,
   myAdventures,
   myAscensions,
+  myFullness,
   myInebriety,
   myLevel,
   mySign,
+  mySpleenUse,
   numericModifier,
   print,
   pvpAttacksLeft,
   retrieveItem,
   setProperty,
+  spleenLimit,
   use,
   useFamiliar,
   useSkill,
@@ -34,6 +38,7 @@ import {
   $items,
   $skill,
   AsdonMartin,
+  gameDay,
   get,
   have,
   set,
@@ -52,6 +57,7 @@ import {
 let pajamas = false;
 let smoke = 1;
 const offhandWorth = have($familiar`Left-Hand Man`);
+let garboDone = false;
 
 export function CSQuests(): Quest[] {
   return [
@@ -173,7 +179,7 @@ export function CSQuests(): Quest[] {
         {
           name: "Drive Observantly",
           completed: () =>
-            getWorkshed() !== $item`Asdon Martin keyfob` ||
+            getWorkshed() !== $item`Asdon Martin keyfob (on ring)` ||
             haveEffect($effect`Driving Observantly`) >=
               (totallyDrunk() || !have($item`Drunkula's wineglass`)
                 ? myAdventures()
@@ -194,6 +200,13 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("breakfast"),
         },
         {
+          name: "CONSUME ALL",
+          completed: () => (myFullness() >= fullnessLimit()) &&
+            (mySpleenUse() >= spleenLimit()) &&
+            (myInebriety() >= inebrietyLimit()),
+          do: () => cliExecute("consume ALL"),
+        },
+        {
           name: "Garbo",
           ready: () => !holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
@@ -206,14 +219,31 @@ export function CSQuests(): Quest[] {
           clear: "all",
           tracking: "Garbo",
         },
+        {
+          name: "CONSUME ALL",
+          ready: () => holiday().includes("Halloween"),
+          completed: () => (myFullness() >= fullnessLimit()) &&
+            (mySpleenUse() >= spleenLimit()) &&
+            (myInebriety() >= inebrietyLimit()),
+          do: () => cliExecute("consume ALL"),
+        },
+        {
+          name: "Garbo Nobarf",
+          ready: () => holiday().includes("Halloween"),
+          completed: () => garboDone,
+          do: (): void => {
+            cliExecute(`${args.garboascend} nodiet nobarf`);
+            garboDone = true;
+          }
+        },
           {
             name: "Garboween",
             ready: () => holiday().includes("Halloween"),
-            completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+            completed: () => Math.floor(myAdventures()/5) < 1,
             prepare: () => uneffect($effect`Beaten Up`),
             do: (): void => {
-                cliExecute(`${args.garbo} nodiet nobarf`);
-                cliExecute("consume ALL");
+                if(have($familiar`Trick-or-Treating Tot`)) cliExecute("familiar Trick-or-Treating Tot")
+                else if(have($familiar`Red-Nosed Snapper`)) cliExecute("familiar snapper")
                 cliExecute(`freeCandy ${myAdventures()}`);
             },
             post: () => {
@@ -224,7 +254,6 @@ export function CSQuests(): Quest[] {
             },
             clear: "all",
             tracking: "Garbo",
-            limit: { tries: 1 }, //this will run again after installing CMC, by magic
           },
         {
           name: "Turn in FunFunds",
@@ -291,7 +320,7 @@ export function CSQuests(): Quest[] {
         {
             name: "Freecandy Drunk",
             ready: () => holiday().includes("Halloween"),
-            completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+            completed: () => stooperDrunk() || (!canDiet() && Math.floor(myAdventures()/5) === 0),
             prepare: () => uneffect($effect`Beaten Up`),
             do: (): void => {
                 cliExecute(`freeCandy ${myAdventures()}`);
@@ -309,7 +338,9 @@ export function CSQuests(): Quest[] {
         {
           name: "Offhand Remarkable",
           ready: () => have($item`august scepter`),
-          completed: () => have($effect`Offhand Remarkable`) || get("_aug13Cast", false),
+          completed: () => have($effect`Offhand Remarkable`) ||
+            get("_aug13Cast", false) ||
+            (get("_augSkillsCast",0) >=5 && gameDay().getDate() !== 13),
           do: () =>
             useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },

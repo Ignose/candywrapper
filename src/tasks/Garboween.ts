@@ -3,6 +3,7 @@ import {
   availableAmount,
   buy,
   cliExecute,
+  fullnessLimit,
   getCampground,
   getClanName,
   getWorkshed,
@@ -15,13 +16,16 @@ import {
   itemAmount,
   myAdventures,
   myClass,
+  myFullness,
   myHp,
   myInebriety,
   myMaxhp,
   myPrimestat,
+  mySpleenUse,
   pvpAttacksLeft,
   restoreHp,
   retrieveItem,
+  spleenLimit,
   use,
   useFamiliar,
   useSkill,
@@ -31,7 +35,6 @@ import {
   $class,
   $coinmaster,
   $effect,
-  $effects,
   $familiar,
   $item,
   $items,
@@ -50,7 +53,6 @@ import {
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   bestFam,
-  canDiet,
   getGarden,
   maxBase,
   noML,
@@ -58,6 +60,8 @@ import {
   totallyDrunk,
 } from "./utils";
 import { args } from "../args";
+
+let garboDone = false;
 
 export function GarboWeenQuest(): Quest {
   return {
@@ -120,7 +124,7 @@ export function GarboWeenQuest(): Quest {
       {
         name: "Drive Observantly",
         completed: () =>
-          getWorkshed() !== $item`Asdon Martin keyfob` ||
+          getWorkshed() !== $item`Asdon Martin keyfob (on ring)` ||
           haveEffect($effect`Driving Observantly`) >=
             (totallyDrunk() || !have($item`Drunkula's wineglass`)
               ? myAdventures()
@@ -248,32 +252,24 @@ export function GarboWeenQuest(): Quest {
         do: () => false,
       },
       {
-        name: "Consume ALL",
-        completed: () => !canDiet(),
-        do: () => cliExecute("consume ALL VALUE = 12000"),
+        name: "CONSUME ALL",
+        completed: () => (myFullness() >= fullnessLimit()) &&
+          (mySpleenUse() >= spleenLimit()) &&
+          (myInebriety() >= inebrietyLimit()),
+        do: () => cliExecute("consume ALL"),
       },
       {
-        name: "Garboween",
-        ready: () => holiday().includes("Halloween"),
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
-        prepare: () => uneffect($effect`Beaten Up`),
+        name: "Garbo Nobarf",
+        completed: () => garboDone,
         do: (): void => {
-            cliExecute(`${args.garboascend} nodiet nobarf`);
-        },
-        post: () => {
-          if (myAdventures() === 0)
-            $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-              .filter((ef) => have(ef))
-              .forEach((ef) => uneffect(ef));
-        },
-        clear: "all",
-        tracking: "Garbo",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+          cliExecute(`${args.garboascend} nodiet nobarf`);
+          garboDone = true;
+        }
       },
       {
         name: "Freecandy time",
         ready: () => holiday().includes("Halloween"),
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+        completed: () => myAdventures()/5 < 1,
         prepare: () => uneffect($effect`Beaten Up`),
         do: (): void => {
             if(have($familiar`Trick-or-Treating Tot`)) cliExecute("familiar Trick-or-Treating Tot")
@@ -308,7 +304,7 @@ export function GarboWeenQuest(): Quest {
         name: "Super Nightcap",
         ready: () => have($item`Drunkula's wineglass`),
         completed: () => totallyDrunk(),
-        do: () => cliExecute(`CONSUME NIGHTCAP VALUE 12000`),
+        do: () => cliExecute(`CONSUME NIGHTCAP`),
       },
       {
         name: "Freecandy Drunk",
@@ -327,19 +323,6 @@ export function GarboWeenQuest(): Quest {
         ready: () => have($item`Map to Safety Shelter Grimace Prime`) && totallyDrunk(),
         completed: () => !have($item`Map to Safety Shelter Grimace Prime`) || myAdventures() === 0,
         do: () => cliExecute("grimace maps"),
-      },
-      {
-        name: "Garbo (Drunk)",
-        ready: () => have($item`Drunkula's wineglass`),
-        prepare: () => uneffect($effect`Beaten Up`),
-        completed: () => myAdventures() === 0 || holiday().includes("Halloween"),
-        do: () => cliExecute("garbo ascend"),
-        post: () =>
-          $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-            .filter((ef) => have(ef))
-            .forEach((ef) => uneffect(ef)),
-        clear: "all",
-        tracking: "Garbo",
       },
       {
         name: "Comb Beach",
