@@ -7715,7 +7715,7 @@ function CSQuests() {
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => garboDone,
       do: () => {
-        (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garboascend, " nodiet nobarf"));
+        (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garbo, " nodiet nobarf"));
         garboDone = true;
       }
     }, {
