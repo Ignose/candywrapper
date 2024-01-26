@@ -9,6 +9,7 @@ import {
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
+  Item,
   itemAmount,
   mallPrice,
   myAdventures,
@@ -200,11 +201,26 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute("breakfast"),
         },
         {
-          name: "CONSUME ALL",
-          completed: () => (myFullness() >= fullnessLimit()) &&
-            (mySpleenUse() >= spleenLimit()) &&
-            (myInebriety() >= inebrietyLimit()),
-          do: () => cliExecute("consume ALL"),
+          name: "Consume Eldritch Attunement",
+          ready: () => holiday().includes("Halloween"),
+          completed: () => have($effect`Eldritch Attunement`),
+          do: (): void => {
+            const source: Map<Item, number> = new Map([
+              [$item`eldritch elixir`, mallPrice($item`eldritch elixir`)],
+              [$item`Eldritch snap`, mallPrice($item`Eldritch snap`)],
+              [$item`eldritch mushroom pizza`, (mallPrice($item`eldritch mushroom pizza`) - .5 * mallPrice($item`eldritch mushroom`))]]);
+              let minPriceItem: Item | undefined;
+              let minPrice: number = 0;
+
+              for (const [item, price] of source) {
+                if (price < minPrice) {
+                  minPrice = price;
+                  minPriceItem = item;
+                }
+              }
+
+              cliExecute(`acquire ${minPriceItem}; use ${minPriceItem}`)
+          }
         },
         {
           name: "Garbo",
@@ -232,7 +248,7 @@ export function CSQuests(): Quest[] {
           ready: () => holiday().includes("Halloween"),
           completed: () => garboDone,
           do: (): void => {
-            cliExecute(`${args.garbo} nodiet nobarf`);
+            cliExecute(`${args.garbo} nodiet nobarf target="witchess knight"`);
             garboDone = true;
           }
         },

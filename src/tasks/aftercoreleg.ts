@@ -55,7 +55,6 @@ import {
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   bestFam,
-  canDiet,
   getGarden,
   isGoodGarboScript,
   maxBase,
@@ -352,7 +351,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Garbo",
-        completed: () => stooperDrunk() || (!canDiet() && myAdventures() === 0),
+        completed: () => stooperDrunk() ||  myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
         do: () => cliExecute(args.garboascend),
         post: () => {

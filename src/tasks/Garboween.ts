@@ -13,7 +13,9 @@ import {
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
+  Item,
   itemAmount,
+  mallPrice,
   myAdventures,
   myClass,
   myFullness,
@@ -252,6 +254,27 @@ export function GarboWeenQuest(): Quest {
         do: () => false,
       },
       {
+        name: "Consume Eldritch Attunement",
+        completed: () => have($effect`Eldritch Attunement`),
+        do: (): void => {
+          const source: Map<Item, number> = new Map([
+            [$item`eldritch elixir`, mallPrice($item`eldritch elixir`)],
+            [$item`Eldritch snap`, mallPrice($item`Eldritch snap`)],
+            [$item`eldritch mushroom pizza`, (mallPrice($item`eldritch mushroom pizza`) - .5 * mallPrice($item`eldritch mushroom`))]]);
+            let minPriceItem: Item | undefined;
+            let minPrice: number = 0;
+
+            for (const [item, price] of source) {
+              if (price < minPrice) {
+                minPrice = price;
+                minPriceItem = item;
+              }
+            }
+
+            cliExecute(`acquire ${minPriceItem}; eat ${minPriceItem}`)
+        }
+      },
+      {
         name: "CONSUME ALL",
         completed: () => (myFullness() >= fullnessLimit()) &&
           (mySpleenUse() >= spleenLimit()) &&
@@ -262,7 +285,7 @@ export function GarboWeenQuest(): Quest {
         name: "Garbo Nobarf",
         completed: () => garboDone,
         do: (): void => {
-          cliExecute(`${args.garboascend} nodiet nobarf`);
+          cliExecute(`${args.garboascend} nodiet nobarf target="witchess knight"`);
           garboDone = true;
         }
       },
