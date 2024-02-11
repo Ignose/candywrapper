@@ -1,6 +1,7 @@
 import {
   cliExecute,
   myAdventures,
+  myDaycount,
 } from "kolmafia";
 import {
   $item,
@@ -21,7 +22,7 @@ export function AscendQuest(): Quest {
   return {
     name: "Ascend",
     ready: () => myAdventures() === 0 && totallyDrunk(),
-    completed: () => getCurrentLeg() !== 0,
+    completed: () => myDaycount() === 1,
     tasks: [
       {
         name: "Do the Ascension",

@@ -16,6 +16,7 @@ import {
   mallPrice,
   myAdventures,
   myClass,
+  myDaycount,
   myHp,
   myInebriety,
   myLevel,
@@ -87,7 +88,7 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    completed: () => getCurrentLeg() > Leg.Aftercore,
+    completed: () => getCurrentLeg() > Leg.Aftercore || myDaycount() === 1,
     tasks: [
       {
         name: "Whitelist VIP Clan",
