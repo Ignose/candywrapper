@@ -8502,7 +8502,7 @@ Station.CANDY_FACTORY // candies
 function AftercoreQuest() {
   return {
     name: "Aftercore",
-    completed: () => getCurrentLeg() > Leg.Aftercore,
+    completed: () => getCurrentLeg() > Leg.Aftercore || (0,external_kolmafia_namespaceObject.myDaycount)() === 1,
     tasks: [{
       name: "Whitelist VIP Clan",
       completed: () => !args.clan || (0,external_kolmafia_namespaceObject.getClanName)().toLowerCase() === args.clan.toLowerCase(),
@@ -9892,7 +9892,7 @@ function AscendQuest() {
   return {
     name: "Ascend",
     ready: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 && totallyDrunk(),
-    completed: () => getCurrentLeg() !== 0,
+    completed: () => (0,external_kolmafia_namespaceObject.myDaycount)() === 1,
     tasks: [{
       name: "Do the Ascension",
       ready: () => lib_have(template_string_$item(tasks_ascend_templateObject || (tasks_ascend_templateObject = tasks_ascend_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(tasks_ascend_templateObject2 || (tasks_ascend_templateObject2 = tasks_ascend_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(tasks_ascend_templateObject3 || (tasks_ascend_templateObject3 = tasks_ascend_taggedTemplateLiteral(["Calzone of Legend"])))),
