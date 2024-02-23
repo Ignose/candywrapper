@@ -26,12 +26,12 @@ import {
   Macro,
   uneffect,
 } from "libram";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { getCurrentLeg, Leg, Quest } from "../structure";
 import {
   maxBase,
   stooperDrunk,
   totallyDrunk,
-} from "./utils";
+} from "../utils";
 import { args } from "../args";
 import { noBarf } from "../main";
 

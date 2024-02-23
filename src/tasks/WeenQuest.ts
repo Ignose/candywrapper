@@ -21,11 +21,11 @@ import {
   have,
   uneffect,
 } from "libram";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   stooperDrunk,
   totallyDrunk,
-} from "./utils";
+} from "../utils";
 import { args } from "../args";
 import { halloween } from "../main";
 

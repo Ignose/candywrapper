@@ -17,11 +17,11 @@ import {
   have,
 } from "libram";
 import { args } from "../args";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   doneAdventuring,
   stooperDrunk,
-} from "./utils";
+} from "../utils";
 
 let pajamas = false;
 const offhandWorth = have($familiar`Left-Hand Man`);

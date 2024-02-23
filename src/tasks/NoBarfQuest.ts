@@ -8,7 +8,7 @@ import {
   have,
   uneffect,
 } from "libram";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import { args } from "../args";
 import { halloween } from "../main";
 

@@ -1,7 +1,7 @@
 import { Args } from "grimoire-kolmafia";
 import { Item, toClass } from "kolmafia";
 import { $class, $classes, $item, $items, get } from "libram";
-import { toMoonSign } from "./tasks/utils";
+import { toMoonSign } from "./utils";
 
 export const args = Args.create(
   "CandyWrapper",

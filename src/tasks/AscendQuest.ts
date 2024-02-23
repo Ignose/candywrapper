@@ -12,13 +12,13 @@ import {
   have,
   Lifestyle,
 } from "libram";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   toMoonSign,
   totallyDrunk,
-} from "./utils";
+} from "../utils";
 import { args } from "../args";
-import { targetPerms } from "./perm";
+import { targetPerms } from "../perm";
 
 let prepared = false;
 

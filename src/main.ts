@@ -47,8 +47,6 @@ export function main(command?: string): void {
     getTasks([BreakfastQuest(), GarboQuest(), DietQuest(), NoBarfQuest(), WeenQuest(), PvPQuest(), AscendQuest(), RunQuest(),
       BreakfastQuest(), GarboQuest(), DietQuest(), NoBarfQuest(), WeenQuest(), NightCapQuest()]);
 
-  if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
-
   if (args.abort) {
     const to_abort = tasks.find((task) => task.name === args.abort);
     if (!to_abort) throw `Unable to identify task ${args.abort}`;

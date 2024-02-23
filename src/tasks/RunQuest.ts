@@ -42,9 +42,9 @@ import {
   uneffect,
 } from "libram";
 import { args } from "../args";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { getCurrentLeg, Leg, Quest } from "../structure";
 import { CombatStrategy, step } from "grimoire-kolmafia";
-import { backstageItemsDone, bestFam, haveAll, maxBase } from "./utils";
+import { backstageItemsDone, bestFam, haveAll, maxBase } from "../utils";
 
 let cleanup = false;
 let fullAftercoreCleanup = false;

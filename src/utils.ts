@@ -30,8 +30,8 @@ import {
     have,
     Snapper,
   } from "libram";
-  import { garboAverageValue, garboValue } from "../engine/profits";
-import { args } from "../args";
+  import { garboAverageValue, garboValue } from "./engine/profits";
+import { args } from "./args";
 
   export function haveAll(its: Item[]): boolean {
     return its.reduce((a, it) => a && have(it), true);

@@ -3,7 +3,7 @@ import {
   hippyStoneBroken,
   pvpAttacksLeft,
 } from "kolmafia";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 
 
 export function PvPQuest(): Quest {

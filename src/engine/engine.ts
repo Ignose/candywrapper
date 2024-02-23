@@ -1,7 +1,7 @@
 import { CombatResources, CombatStrategy, Engine } from "grimoire-kolmafia";
 import { cliExecute, Location, logprint, setAutoAttack, writeCcs } from "kolmafia";
 import { clearMaximizerCache } from "libram";
-import { getCurrentLeg, Task } from "../tasks/structure";
+import { getCurrentLeg, Task } from "../structure";
 import { printProfits, ProfitTracker } from "./profits";
 
 const grimoireCCS = "grimoire_macro";

@@ -52,7 +52,7 @@ import {
   set,
   uneffect,
 } from "libram";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { getCurrentLeg, Leg, Quest } from "../structure";
 import {
   bestFam,
   getGarden,
@@ -60,7 +60,7 @@ import {
   noML,
   stooperDrunk,
   totallyDrunk,
-} from "./utils";
+} from "../utils";
 import { args } from "../args";
 
 let garboDone = false;

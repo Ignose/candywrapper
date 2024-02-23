@@ -1,10 +1,10 @@
 import {
   cliExecute,
 } from "kolmafia";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   simpleCanDiet,
-} from "./utils";
+} from "../utils";
 import { noBarf } from "../main";
 
 export function DietQuest(): Quest {

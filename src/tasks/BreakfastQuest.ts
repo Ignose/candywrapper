@@ -43,7 +43,7 @@ import {
   set,
   uneffect,
 } from "libram";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   bestFam,
   getGarden,
@@ -52,7 +52,7 @@ import {
   noML,
   stooperDrunk,
   totallyDrunk,
-} from "./utils";
+} from "../utils";
 import { args } from "../args";
 
 let breakfastDone = false;
