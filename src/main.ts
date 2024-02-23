@@ -1,20 +1,25 @@
 import { gamedayToInt, print } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
-import { CSQuests } from "./tasks/csrunleg";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { args } from "./args";
-import { AftercoreQuest } from "./tasks/aftercoreleg";
-import { SmolQuests } from "./tasks/smolrunleg";
-import { GarboWeenQuest } from "./tasks/Garboween";
-import { AscendQuest } from "./tasks/ascend";
+import { AscendQuest } from "./tasks/AscendQuest";
+import { BreakfastQuest } from "./tasks/BreakfastQuest";
+import { GarboQuest } from "./tasks/GarboQuest";
 import { gameDay } from "libram";
+import { NoBarfQuest } from "./tasks/NoBarfQuest";
+import { DietQuest } from "./tasks/DietQuest";
+import { WeenQuest } from "./tasks/WeenQuest";
+import { PvPQuest } from "./tasks/PvPQuest";
+import { NightCapQuest } from "./tasks/NightCapQuest";
+import { RunQuest } from "./tasks/RunQuest";
 
 const version = "0.0.3";
 
 const realMonth = gameDay().getMonth();
 const realDay = gameDay().getDate();
 const dontCS = gamedayToInt() === 78 || (realMonth === 10 && realDay === 30);
-const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
+export const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
+export const noBarf = args.crimbo || args.chrono || (halloween && args.halloween)
 
 export function main(command?: string): void {
   Args.fill(args, command);
@@ -38,12 +43,9 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : undefined;
-  if(runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
-
-  const tasks = halloween ?
-    getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest]) :
-    getTasks([AftercoreQuest(), AscendQuest(), ...runQuest])
+  const tasks =
+    getTasks([BreakfastQuest(), GarboQuest(), DietQuest(), NoBarfQuest(), WeenQuest(), PvPQuest(), AscendQuest(), RunQuest(),
+      BreakfastQuest(), GarboQuest(), DietQuest(), NoBarfQuest(), WeenQuest(), NightCapQuest()]);
 
   if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
 

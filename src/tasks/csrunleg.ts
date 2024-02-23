@@ -59,6 +59,7 @@ let pajamas = false;
 let smoke = 1;
 const offhandWorth = have($familiar`Left-Hand Man`);
 let garboDone = false;
+const garboString = args.garbo;
 
 export function CSQuests(): Quest[] {
   return [
@@ -227,11 +228,12 @@ export function CSQuests(): Quest[] {
           ready: () => !holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
-          do: () => cliExecute(args.garbo),
-          post: () =>
+          do: () => cliExecute(garboString),
+          post: (): void => {
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
               .filter((ef) => have(ef))
-              .forEach((ef) => uneffect(ef)),
+              .forEach((ef) => uneffect(ef));
+          },
           clear: "all",
           tracking: "Garbo",
         },

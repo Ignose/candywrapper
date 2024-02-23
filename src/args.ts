@@ -22,10 +22,17 @@ export const args = Args.create(
     }),
     cs: Args.flag({
       help: "Ascend into and run CS.",
+      default: false,
       setting: "",
     }),
     smol: Args.flag({
       help: "Ascend into and run smol.",
+      default: false,
+      setting: "",
+    }),
+    gyou: Args.flag({
+      help: "Ascend into and run grey you.",
+      default: false,
       setting: "",
     }),
 
@@ -99,6 +106,10 @@ export const args = Args.create(
       help: "The command that will do your smol run for you. Include any arguments desired.",
       default: "loopsmol",
     }),
+    gyouscript: Args.string({
+      help: "The command that will do your Grey You run for you. Include any arguments desired.",
+      default: "loopgyou",
+    }),
     pulls: Args.items({
       help: "A list of items to pull at the start of the smol run.",
       default: [
@@ -123,6 +134,32 @@ export const args = Args.create(
     halloween: Args.flag(
       {
         help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
+        default: true
+      }
+    ),
+    crimbo: Args.flag(
+      {
+        help: "Should we run Crimbo instead of fullday Garbo?",
+        default: true
+      }
+    ),
+    crimboscript: Args.string({
+      help: "What script should we use to run crimbo?",
+      default: "",
+    }),
+    chrono: Args.flag(
+      {
+        help: "Should we run Chrono instead of fullday Garbo?",
+        default: true
+      }
+    ),
+    chronoscript: Args.string({
+      help: "What script should we use to run chrono?",
+      default: "",
+    }),
+    tip: Args.flag(
+      {
+        help: "Tip the creators by sending up smoke (if available)?",
         default: true
       }
     ),

@@ -135,6 +135,13 @@ import { args } from "../args";
     return fams.find((fam) => have(fam));
   }
 
+  export function simpleCanDiet(): boolean {
+    return (
+      myFullness() < fullnessLimit() ||
+      mySpleenUse() < spleenLimit() ||
+      myInebriety() < inebrietyLimit())
+  }
+
   export function canDiet(): boolean {
     return (
       myFullness() < fullnessLimit() ||
