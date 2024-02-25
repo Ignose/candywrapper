@@ -65,6 +65,7 @@ import {
   bestFam,
   canDiet,
   doneAdventuring,
+  findCheapRun,
   haveAll,
   maxBase,
   stooperDrunk,
@@ -91,7 +92,7 @@ export function howManySausagesCouldIEat() {
 
 function firstWorkshed() {
   return (
-    $items`model train set, Asdon Martin keyfob, cold medicine cabinet, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
+    $items`model train set, Asdon Martin keyfob (on ring), cold medicine cabinet, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
       (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
     ) || $item`none`
   );
@@ -101,11 +102,11 @@ function altWorkshed() {
   switch (ws) {
     case $item`model train set`:
       return (
-        $items`cold medicine cabinet, Asdon Martin keyfob, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
+        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
           (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
         ) || ws
       );
-    case $item`Asdon Martin keyfob`:
+    case $item`Asdon Martin keyfob (on ring)`:
       return (
         $items`cold medicine cabinet, model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
           (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
@@ -113,19 +114,19 @@ function altWorkshed() {
       );
     case $item`cold medicine cabinet`:
       return (
-        $items`Asdon Martin keyfob, model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic, warbear induction oven, snow machine`.find(
+        $items`Asdon Martin keyfob (on ring), model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic, warbear induction oven, snow machine`.find(
           (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
         ) || ws
       );
     case $item`Little Geneticist DNA-Splicing Lab`:
       return (
-        $items`cold medicine cabinet, Asdon Martin keyfob, model train set, portable Mayo Clinic`.find(
+        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), model train set, portable Mayo Clinic`.find(
           (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
         ) || ws
       );
     case $item`portable Mayo Clinic`:
       return (
-        $items`cold medicine cabinet, model train set, Asdon Martin keyfob, Little Geneticist DNA-Splicing Lab`.find(
+        $items`cold medicine cabinet, model train set, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab`.find(
           (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
         ) || ws
       );
@@ -211,6 +212,22 @@ export function SmolQuests(): Quest[] {
           completed: () => get("_empathyReady", false),
           do: (): void => {
             cliExecute("maximize MP; set _empathyReady = true");
+          },
+        },
+        {
+          name: "Prepare Comma",
+          ready: () => have($familiar`Comma Chameleon`) && !have($familiar`Frumious Bandersnatch`) && !have($familiar`Pair of Stomping Boots`),
+          completed: () => have(findCheapRun()),
+          do: (): void => {
+            const it = findCheapRun();
+            if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
+              if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
+              cliExecute(`pull ${it}`);
+            useFamiliar($familiar`Comma Chameleon`);
+            visitUrl(
+              `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
+            );
+            }
           },
         },
         {

@@ -12,7 +12,6 @@ import {
   haveEquipped,
   hippyStoneBroken,
   inebrietyLimit,
-  Item,
   itemAmount,
   mallPrice,
   myAdventures,
@@ -57,6 +56,7 @@ import {
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   bestFam,
+  findCheapRun,
   getGarden,
   isGoodGarboScript,
   maxBase,
@@ -70,26 +70,7 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
 
-const commaValue = new Map([
-  [$item`stomp box`, mallPrice($item`stomp box`)],
-  [$item`aquaviolet jub-jub bird`, mallPrice($item`aquaviolet jub-jub bird`)],
-  [$item`charpuce jub-jub bird`, mallPrice($item`charpuce jub-jub bird`)],
-  [$item`crimsilion jub-jub bird`, mallPrice($item`crimsilion jub-jub bird`)]
-])
 
-function findCheapRun(): Item {
-  let minItem: Item = $item`stomp box`;
-  let minValue = -1;
-
-  for (const [item, value] of commaValue) {
-    if (value < minValue) {
-      minValue = value;
-      minItem = item;
-      }
-  }
-
-  return minItem;
-}
 
 const statStation: Station = {
   Muscle: Station.BRAWN_SILO,
