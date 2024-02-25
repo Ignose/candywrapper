@@ -8923,7 +8923,10 @@ function SmolQuests() {
     tasks: [{
       name: "Whitelist VIP Clan",
       completed: () => !args.clan || (0,external_kolmafia_namespaceObject.getClanName)().toLowerCase() === args.clan.toLowerCase(),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan))
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan)),
+      choices: {
+        1507: 1
+      }
     }, {
       name: "Prep Fireworks Shop",
       completed: () => !lib_have(template_string_$item(smolrunleg_templateObject19 || (smolrunleg_templateObject19 = smolrunleg_taggedTemplateLiteral(["Clan VIP Lounge key"])))) || property_get("_goorboFireworksPrepped", false),
@@ -9195,7 +9198,7 @@ function SmolQuests() {
     }, {
       name: "Garbo",
       ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
-      completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 && !canDiet() || stooperDrunk(),
+      completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || stooperDrunk(),
       prepare: () => uneffect(template_string_$effect(smolrunleg_templateObject111 || (smolrunleg_templateObject111 = smolrunleg_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garbo),
       post: () => $effects(smolrunleg_templateObject112 || (smolrunleg_templateObject112 = smolrunleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
@@ -9974,6 +9977,9 @@ function AscendQuest() {
           }
         });
         (0,external_kolmafia_namespaceObject.cliExecute)("refresh all");
+      },
+      choices: {
+        1507: 1
       }
     }]
   };
