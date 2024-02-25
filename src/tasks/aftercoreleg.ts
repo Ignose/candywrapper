@@ -12,6 +12,7 @@ import {
   haveEquipped,
   hippyStoneBroken,
   inebrietyLimit,
+  Item,
   itemAmount,
   mallPrice,
   myAdventures,
@@ -68,6 +69,27 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
+
+const commaValue = new Map([
+  [$item`stomp box`, mallPrice($item`stomp box`)],
+  [$item`aquaviolet jub-jub bird`, mallPrice($item`aquaviolet jub-jub bird`)],
+  [$item`charpuce jub-jub bird`, mallPrice($item`charpuce jub-jub bird`)],
+  [$item`crimsilion jub-jub bird`, mallPrice($item`crimsilion jub-jub bird`)]
+])
+
+function findCheapRun(): Item {
+  let minItem: Item = $item`stomp box`;
+  let minValue = -1;
+
+  for (const [item, value] of commaValue) {
+    if (value < minValue) {
+      minValue = value;
+      minItem = item;
+      }
+  }
+
+  return minItem;
+}
 
 const statStation: Station = {
   Muscle: Station.BRAWN_SILO,
@@ -490,6 +512,24 @@ export function AftercoreQuest(): Quest {
         completed: () => have($item`tobiko marble soda`) || mallPrice($item`tobiko marble soda`) > get("valueOfAdventure") * 2,
         do: (): void => {
           retrieveItem($item`tobiko marble soda`);
+        }
+      },
+      {
+        name: "Cheap Comma Run Setup",
+        ready: () => doSmol,
+        completed: (): boolean => {
+          if(findCheapRun() === null) return true;
+          if(!have($familiar`Comma Chameleon`)) return true;
+          if(have($familiar`Frumious Bandersnatch`) || have($familiar`Pair of Stomping Boots`)) return true;
+          if($items`aquaviolet jub-jub bird, charpuce jub-jub bird, crimsilion jub-jub bird, stomp box`.find((f) =>
+          have(f))) return true;
+          if(findCheapRun() !== null){
+            if(mallPrice(findCheapRun()) > 8 * get("valueOfAdventure")) return true;
+          }
+          return false;
+        },
+        do: (): void => {
+          retrieveItem(findCheapRun());
         }
       },
       {
