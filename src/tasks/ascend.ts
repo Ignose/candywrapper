@@ -48,6 +48,9 @@ export function AscendQuest(): Quest {
             });
           cliExecute("refresh all");
         },
+        choices: {
+          1507:1
+        },
       },
     ],
   };

@@ -63,7 +63,6 @@ import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
-  canDiet,
   doneAdventuring,
   findCheapRun,
   haveAll,
@@ -145,6 +144,9 @@ export function SmolQuests(): Quest[] {
           name: "Whitelist VIP Clan",
           completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
           do: () => cliExecute(`/whitelist ${args.clan}`),
+          choices: {
+            1507:1
+          },
         },
         {
           name: "Prep Fireworks Shop",
@@ -527,7 +529,7 @@ export function SmolQuests(): Quest[] {
         {
           name: "Garbo",
           ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
+          completed: () => (myAdventures() === 0) || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(args.garbo),
           post: () =>
