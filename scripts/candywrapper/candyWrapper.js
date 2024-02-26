@@ -8502,9 +8502,9 @@ function aftercoreleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = st
 
 
 
-
 var doSmol = args.smol ? true : false;
 var doCS = args.cs ? true : false;
+var jobsDone = false;
 var statStation = {
   Muscle: Station.BRAWN_SILO,
   Mysticality: Station.BRAIN_SILO,
@@ -8530,7 +8530,7 @@ Station.CANDY_FACTORY // candies
 function AftercoreQuest() {
   return {
     name: "Aftercore",
-    completed: () => getCurrentLeg() > Leg.Aftercore || (0,external_kolmafia_namespaceObject.myDaycount)() === 1,
+    completed: () => jobsDone || (0,external_kolmafia_namespaceObject.myDaycount)() === 1,
     tasks: [{
       name: "Whitelist VIP Clan",
       completed: () => !args.clan || (0,external_kolmafia_namespaceObject.getClanName)().toLowerCase() === args.clan.toLowerCase(),
@@ -8869,6 +8869,12 @@ function AftercoreQuest() {
       limit: {
         tries: 5
       }
+    }, {
+      name: "Job's Done",
+      completed: () => jobsDone,
+      do: () => {
+        jobsDone = true;
+      }
     }]
   };
 }
@@ -8889,6 +8895,7 @@ function smolrunleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = stri
 
 var smolrunleg_pajamas = false;
 var smolrunleg_smoke = 1;
+var commaSetupDone = false;
 var checkMelange = property_get("valueOfAdventure") * 45 > (0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(smolrunleg_templateObject || (smolrunleg_templateObject = smolrunleg_taggedTemplateLiteral(["spice melange"])))) && !lib_have(template_string_$item(smolrunleg_templateObject2 || (smolrunleg_templateObject2 = smolrunleg_taggedTemplateLiteral(["designer sweatpants"]))));
 function howManySausagesCouldIEat() {
   if (!lib_have(template_string_$item(smolrunleg_templateObject3 || (smolrunleg_templateObject3 = smolrunleg_taggedTemplateLiteral(["Kramco Sausage-o-Matic\u2122"]))))) return 0;
@@ -8982,7 +8989,7 @@ function SmolQuests() {
     }, {
       name: "Prepare Comma",
       ready: () => lib_have(template_string_$familiar(smolrunleg_templateObject27 || (smolrunleg_templateObject27 = smolrunleg_taggedTemplateLiteral(["Comma Chameleon"])))) && !lib_have(template_string_$familiar(smolrunleg_templateObject28 || (smolrunleg_templateObject28 = smolrunleg_taggedTemplateLiteral(["Frumious Bandersnatch"])))) && !lib_have(template_string_$familiar(smolrunleg_templateObject29 || (smolrunleg_templateObject29 = smolrunleg_taggedTemplateLiteral(["Pair of Stomping Boots"])))),
-      completed: () => lib_have(findCheapRun()),
+      completed: () => commaSetupDone,
       do: () => {
         var it = findCheapRun();
         if (!lib_have(it) && !property_get("_roninStoragePulls").includes((0,external_kolmafia_namespaceObject.toInt)(it).toString())) {
@@ -8990,6 +8997,7 @@ function SmolQuests() {
           (0,external_kolmafia_namespaceObject.cliExecute)("pull ".concat(it));
           (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(smolrunleg_templateObject30 || (smolrunleg_templateObject30 = smolrunleg_taggedTemplateLiteral(["Comma Chameleon"]))));
           (0,external_kolmafia_namespaceObject.visitUrl)("inv_equip.php?which=2&action=equip&whichitem=".concat((0,external_kolmafia_namespaceObject.toInt)(it), "&pwd"));
+          commaSetupDone = true;
         }
       }
     }, {
@@ -9947,7 +9955,6 @@ function tasks_ascend_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = st
 
 
 
-
 function AscendQuest() {
   return {
     name: "Ascend",
@@ -9956,7 +9963,7 @@ function AscendQuest() {
     tasks: [{
       name: "Do the Ascension",
       ready: () => lib_have(template_string_$item(tasks_ascend_templateObject || (tasks_ascend_templateObject = tasks_ascend_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(tasks_ascend_templateObject2 || (tasks_ascend_templateObject2 = tasks_ascend_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(tasks_ascend_templateObject3 || (tasks_ascend_templateObject3 = tasks_ascend_taggedTemplateLiteral(["Calzone of Legend"])))),
-      completed: () => getCurrentLeg() >= Leg.Run,
+      completed: () => (0,external_kolmafia_namespaceObject.myDaycount)() === 1,
       //Change this
       do: () => {
         var skillsToPerm = new Map();
