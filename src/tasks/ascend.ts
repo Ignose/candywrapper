@@ -10,7 +10,7 @@ import {
   have,
   Lifestyle,
 } from "libram";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { Quest } from "./structure";
 import {
   toMoonSign,
   totallyDrunk,
@@ -27,7 +27,7 @@ export function AscendQuest(): Quest {
       {
         name: "Do the Ascension",
         ready: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
-        completed: () => getCurrentLeg() >= Leg.Run, //Change this
+        completed: () => myDaycount() === 1, //Change this
         do: (): void => {
           const skillsToPerm = new Map();
           targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));

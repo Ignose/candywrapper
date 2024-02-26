@@ -53,7 +53,7 @@ import {
   TrainSet,
   uneffect,
 } from "libram";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { Quest } from "./structure";
 import {
   bestFam,
   findCheapRun,
@@ -70,7 +70,7 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
 
-
+let jobsDone = false;
 
 const statStation: Station = {
   Muscle: Station.BRAWN_SILO,
@@ -91,7 +91,7 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    completed: () => getCurrentLeg() > Leg.Aftercore || myDaycount() === 1,
+    completed: () => jobsDone || myDaycount() === 1,
     tasks: [
       {
         name: "Whitelist VIP Clan",
@@ -538,6 +538,13 @@ export function AftercoreQuest(): Quest {
           setConfiguration(newStations as Cycle);
         },
         limit: { tries: 5 },
+      },
+      {
+        name: "Job's Done",
+        completed: () => jobsDone,
+        do: (): void => {
+        jobsDone = true;
+        },
       },
     ],
   };

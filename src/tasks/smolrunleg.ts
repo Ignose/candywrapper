@@ -73,6 +73,7 @@ import {
 
 let pajamas = false;
 let smoke = 1;
+let commaSetupDone = false;
 const checkMelange =
   get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
   !have($item`designer sweatpants`);
@@ -219,7 +220,7 @@ export function SmolQuests(): Quest[] {
         {
           name: "Prepare Comma",
           ready: () => have($familiar`Comma Chameleon`) && !have($familiar`Frumious Bandersnatch`) && !have($familiar`Pair of Stomping Boots`),
-          completed: () => have(findCheapRun()),
+          completed: () => commaSetupDone,
           do: (): void => {
             const it = findCheapRun();
             if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
@@ -229,6 +230,7 @@ export function SmolQuests(): Quest[] {
             visitUrl(
               `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
             );
+            commaSetupDone = true;
             }
           },
         },
