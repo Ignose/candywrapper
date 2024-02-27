@@ -233,6 +233,7 @@ export function SmolQuests(): Quest[] {
             visitUrl(
               `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
             );
+            visitUrl("charpane.php");
             commaSetupDone = true;
             cliExecute("set _commaRunDone = true")
             }
