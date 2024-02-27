@@ -9986,9 +9986,11 @@ function AscendQuest() {
           }
         });
         (0,external_kolmafia_namespaceObject.cliExecute)("refresh all");
-      },
-      choices: {
-        1507: 1
+        (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
+        if (args.smol) {
+          while ((0,external_kolmafia_namespaceObject.handlingChoice)()) (0,external_kolmafia_namespaceObject.runChoice)(1);
+        }
+        ;
       }
     }]
   };
