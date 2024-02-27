@@ -1,7 +1,10 @@
 import {
   cliExecute,
+  handlingChoice,
   myAdventures,
   myDaycount,
+  runChoice,
+  visitUrl,
 } from "kolmafia";
 import {
   $item,
@@ -47,9 +50,11 @@ export function AscendQuest(): Quest {
             permOptions: { permSkills: skillsToPerm, neverAbort: false },
             });
           cliExecute("refresh all");
-        },
-        choices: {
-          1507:1
+          visitUrl("main.php");
+          if(args.smol) {
+            while (handlingChoice())
+              runChoice(1)
+            };
         },
       },
     ],
