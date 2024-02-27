@@ -8989,7 +8989,7 @@ function SmolQuests() {
     }, {
       name: "Prepare Comma",
       ready: () => lib_have(template_string_$familiar(smolrunleg_templateObject27 || (smolrunleg_templateObject27 = smolrunleg_taggedTemplateLiteral(["Comma Chameleon"])))) && !lib_have(template_string_$familiar(smolrunleg_templateObject28 || (smolrunleg_templateObject28 = smolrunleg_taggedTemplateLiteral(["Frumious Bandersnatch"])))) && !lib_have(template_string_$familiar(smolrunleg_templateObject29 || (smolrunleg_templateObject29 = smolrunleg_taggedTemplateLiteral(["Pair of Stomping Boots"])))),
-      completed: () => commaSetupDone,
+      completed: () => commaSetupDone || property_get("commaFamiliar", "") === "Pair of Stomping Boots" || property_get("commaFamiliar", "") === "Frumious Bandersnatch" || property_get("_commaRunDone", false),
       do: () => {
         var it = findCheapRun();
         if (!lib_have(it) && !property_get("_roninStoragePulls").includes((0,external_kolmafia_namespaceObject.toInt)(it).toString())) {
@@ -8998,6 +8998,7 @@ function SmolQuests() {
           (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(smolrunleg_templateObject30 || (smolrunleg_templateObject30 = smolrunleg_taggedTemplateLiteral(["Comma Chameleon"]))));
           (0,external_kolmafia_namespaceObject.visitUrl)("inv_equip.php?which=2&action=equip&whichitem=".concat((0,external_kolmafia_namespaceObject.toInt)(it), "&pwd"));
           commaSetupDone = true;
+          (0,external_kolmafia_namespaceObject.cliExecute)("set _commaRunDone = true");
         }
       }
     }, {
