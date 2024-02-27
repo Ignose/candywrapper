@@ -220,7 +220,10 @@ export function SmolQuests(): Quest[] {
         {
           name: "Prepare Comma",
           ready: () => have($familiar`Comma Chameleon`) && !have($familiar`Frumious Bandersnatch`) && !have($familiar`Pair of Stomping Boots`),
-          completed: () => commaSetupDone,
+          completed: () => commaSetupDone
+            || get("commaFamiliar", "") === "Pair of Stomping Boots"
+            || get("commaFamiliar", "") === "Frumious Bandersnatch"
+            || get("_commaRunDone", false),
           do: (): void => {
             const it = findCheapRun();
             if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
@@ -231,6 +234,7 @@ export function SmolQuests(): Quest[] {
               `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
             );
             commaSetupDone = true;
+            cliExecute("set _commaRunDone = true")
             }
           },
         },
