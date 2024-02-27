@@ -515,7 +515,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Prepare for LoopCS",
-        ready: () => doCS,
+        ready: () => doCS || doSmol,
         completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
         do: (): void => {
         !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
