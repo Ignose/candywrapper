@@ -8844,7 +8844,7 @@ function AftercoreQuest() {
       }
     }, {
       name: "Prepare for LoopCS",
-      ready: () => doCS,
+      ready: () => doCS || doSmol,
       completed: () => lib_have(template_string_$item(_templateObject105 || (_templateObject105 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(_templateObject106 || (_templateObject106 = aftercoreleg_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(_templateObject107 || (_templateObject107 = aftercoreleg_taggedTemplateLiteral(["Calzone of Legend"])))),
       do: () => {
         !lib_have(template_string_$item(_templateObject108 || (_templateObject108 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(_templateObject109 || (_templateObject109 = aftercoreleg_taggedTemplateLiteral(["Pizza of Legend"])))) : undefined;
