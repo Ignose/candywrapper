@@ -8997,6 +8997,7 @@ function SmolQuests() {
           (0,external_kolmafia_namespaceObject.cliExecute)("pull ".concat(it));
           (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(smolrunleg_templateObject30 || (smolrunleg_templateObject30 = smolrunleg_taggedTemplateLiteral(["Comma Chameleon"]))));
           (0,external_kolmafia_namespaceObject.visitUrl)("inv_equip.php?which=2&action=equip&whichitem=".concat((0,external_kolmafia_namespaceObject.toInt)(it), "&pwd"));
+          (0,external_kolmafia_namespaceObject.visitUrl)("charpane.php");
           commaSetupDone = true;
           (0,external_kolmafia_namespaceObject.cliExecute)("set _commaRunDone = true");
         }
