@@ -91,7 +91,7 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    completed: () => jobsDone || myDaycount() === 1,
+    completed: () => (myAdventures() === 0 && totallyDrunk() && have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`)) || myDaycount() ===1,
     tasks: [
       {
         name: "Whitelist VIP Clan",
@@ -515,7 +515,6 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Prepare for LoopCS",
-        ready: () => doCS || doSmol,
         completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
         do: (): void => {
         !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
