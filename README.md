@@ -7,7 +7,7 @@ A Looping script, optimized for Halloween looping protection.
 To install the script, use the following command in the KoLMafia CLI.
 
 ```text
-git checkout https://github.com/Ignose/FolgerCS.git release
+git checkout https://github.com/Ignose/candywrapper.git release
 ```
 
 
