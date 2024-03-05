@@ -377,6 +377,7 @@ export function CSQuests(): Quest[] {
             cliExecute(`${args.itemcleanup}`);
             cliExecute("set _cleanupToday = true");
           },
+          tracking: "Item Cleanup",
         },
         {
           name: "Pajamas",

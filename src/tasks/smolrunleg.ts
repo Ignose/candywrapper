@@ -3,7 +3,6 @@ import {
   buy,
   buyUsingStorage,
   cliExecute,
-  closetAmount,
   drink,
   eat,
   Effect,
@@ -27,14 +26,12 @@ import {
   numericModifier,
   print,
   pullsRemaining,
-  putCloset,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
   retrieveItem,
   setProperty,
   storageAmount,
-  takeCloset,
   toInt,
   use,
   useFamiliar,
@@ -611,6 +608,16 @@ export function SmolQuests(): Quest[] {
             useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },
         {
+          name: "Item Cleanup",
+          // eslint-disable-next-line libram/verify-constants
+          completed: () => get("_cleanupToday", false) || args.itemcleanup === "",
+          do: (): void => {
+            cliExecute(`${args.itemcleanup}`);
+            cliExecute("set _cleanupToday = true");
+          },
+          tracking: "Item Cleanup",
+        },
+        {
           name: "Pajamas",
           completed: () => have($item`burning cape`),
           acquire: [
@@ -630,13 +637,6 @@ export function SmolQuests(): Quest[] {
               ),
             modifier: `adventures${args.pvp ? ", 0.3 fites" : ""}`,
           }),
-        },
-        {
-          name: "Summon Soap Knife",
-          completed: () => !have($skill`That's Not a Knife`) || get("_discoKnife"),
-          prepare: () => putCloset(itemAmount($item`soap knife`), $item`soap knife`),
-          do: () => useSkill($skill`That's Not a Knife`),
-          post: () => takeCloset(closetAmount($item`soap knife`), $item`soap knife`),
         },
         {
           name: "Alert-No Nightcap",
