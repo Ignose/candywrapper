@@ -4,6 +4,7 @@ import {
     gamedayToInt,
     gametimeToInt,
     getCloset,
+    getShop,
     getStorage,
     historicalAge,
     historicalPrice,
@@ -351,7 +352,7 @@ import {
     ]);
 
     const result = Session.current();
-    for (const inventoryFunc of [getCloset, getStorage]) {
+    for (const inventoryFunc of [getCloset, getStorage, getShop]) {
       for (const [itemStr, quantity] of Object.entries(inventoryFunc())) {
         const item = toItem(itemStr);
         const mappedItem = itemMappings.get(item) ?? item;

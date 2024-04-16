@@ -2358,9 +2358,9 @@ eslint-config-prettier@^8.8.0:
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
 eslint-plugin-libram@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.2.tgz#013fe258d40f9a7ba4e8c7be7835b9daf2d1aeff"
-  integrity sha512-l2SIYEfs38CeHPlMQssTCjP7QJfnfHf2yrVJm06zfU34YP5wvKtuHO8GO9OpDowndkr+dYiEnr+vEP/CfzbvIw==
+  version "0.4.5"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.5.tgz#792cc47eef9fc5e32c550cd4ce515a03f0ab02ae"
+  integrity sha512-ST5J8liK4io73wraAnTGbf37wbLoNAUhgq7eyDPcX58zv5rI7zCGC8IxtRc18GIKE3dQf9CgZlcK9ZOrwsG6oA==
   dependencies:
     html-entities "^2.4.0"
     requireindex "~1.2.0"
@@ -2850,9 +2850,9 @@ hasown@^2.0.0:
     function-bind "^1.1.2"
 
 html-entities@^2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.4.0.tgz#edd0cee70402584c8c76cc2c0556db09d1f45061"
-  integrity sha512-igBTJcNNNhvZFRtm8uA6xMY6xYleeDwn3PeBCkDz7tHttv4F2hsDI2aPgNERWzvRcNYHNT3ymRaQzllmXj4YsQ==
+  version "2.5.2"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.5.2.tgz#201a3cf95d3a15be7099521620d19dfb4f65359f"
+  integrity sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==
 
 human-signals@^2.1.0:
   version "2.1.0"
@@ -3163,9 +3163,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 libram@^0.8.22:
-  version "0.8.22"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.22.tgz#d3185465653f53ec666cb2a066ed979ffd6fcbca"
-  integrity sha512-MV5o89lRx509sJpUqxZGt36b3q7/zZla6B3NaEwrxsnYrYnAXCNzkUfNwqZVHYAMit0diHAzObb4HZ2XZZRmXw==
+  version "0.8.27"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.27.tgz#cd672fdc4e7455311e1605fb23fccdb2aaf9986a"
+  integrity sha512-Xw043wV31pTSGMOep163g+4zHX/R7iwKxjvntvPvA0CbcQQtNii/4YtqVwatUOqLHuze/fta1m5EKwkCbsU63w==
   dependencies:
     html-entities "^2.4.0"
 

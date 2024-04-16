@@ -7,6 +7,7 @@ import {
   eat,
   Effect,
   equip,
+  familiarWeight,
   fullnessLimit,
   getClanName,
   getProperty,
@@ -49,6 +50,7 @@ import {
   $items,
   $location,
   $skill,
+  AprilingBandHelmet,
   clamp,
   get,
   have,
@@ -294,7 +296,7 @@ export function SmolQuests(): Quest[] {
       ],
     },
     {
-      name: "Post-Grey You Aftercore",
+      name: "Post-SMOL Aftercore",
       ready: () => myDaycount() === 1 && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
@@ -334,13 +336,20 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Wardrobe-o-matic",
-          // eslint-disable-next-line libram/verify-constants
           ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
           completed: () => get("_wardrobeUsed", false),
           do: (): void => {
-            // eslint-disable-next-line libram/verify-constants
             use($item`wardrobe-o-matic`);
             cliExecute("set _wardrobeUsed = true");
+          },
+          limit: { tries: 1 },
+        },
+        {
+          name: "Apriling Part 1",
+          ready: () => AprilingBandHelmet.canChangeSong(),
+          completed: () => have($effect`Apriling Band Celebration Bop`),
+          do: (): void => {
+            AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`)
           },
           limit: { tries: 1 },
         },
@@ -616,6 +625,29 @@ export function SmolQuests(): Quest[] {
             cliExecute("set _cleanupToday = true");
           },
           tracking: "Item Cleanup",
+        },
+        {
+          name: "Apriling Part 2",
+          ready: () => AprilingBandHelmet.canJoinSection(),
+          completed: () => !AprilingBandHelmet.canPlay($item`Apriling band piccolo`),
+          do: (): void => {
+            AprilingBandHelmet.joinSection($item`Apriling band piccolo`);
+            if(AprilingBandHelmet.canJoinSection()) {
+              AprilingBandHelmet.joinSection($item`Apriling band saxophone`);
+              AprilingBandHelmet.play($item`Apriling band saxophone`);
+            }
+            if(have($familiar`Grey Goose`))
+              useFamiliar($familiar`Grey Goose`);
+            else if(have($familiar`Chest Mimic`))
+              useFamiliar($familiar`Chest Mimic`);
+            else if(have($familiar`Pocket Professor`) && familiarWeight($familiar`Pocket Professor`) < 20)
+              useFamiliar($familiar`Pocket Professor`);
+            else if(have($familiar`Comma Chameleon`))
+              useFamiliar($familiar`Comma Chameleon`);
+            while($item`Apriling band piccolo`.dailyusesleft > 0 && have($item`Apriling band piccolo`))
+              AprilingBandHelmet.play($item`Apriling band piccolo`);
+          },
+          limit: { tries: 1 },
         },
         {
           name: "Pajamas",

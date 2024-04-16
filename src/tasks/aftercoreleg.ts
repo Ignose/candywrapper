@@ -43,6 +43,7 @@ import {
   $phylum,
   $skill,
   $stat,
+  AprilingBandHelmet,
   AsdonMartin,
   DNALab,
   get,
@@ -110,6 +111,15 @@ export function AftercoreQuest(): Quest {
         name: "Breakfast",
         completed: () => get("breakfastCompleted"),
         do: () => cliExecute("breakfast"),
+      },
+      {
+        name: "Apriling",
+        ready: () => AprilingBandHelmet.canChangeSong(),
+        completed: () => have($effect`Apriling Band Celebration Bop`),
+        do: (): void => {
+          AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`)
+        },
+        limit: { tries: 1 },
       },
       {
         name: "Harvest Garden",
