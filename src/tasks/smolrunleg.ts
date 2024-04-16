@@ -606,14 +606,12 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Offhand Remarkable",
-          // eslint-disable-next-line libram/verify-constants
-          ready: () => have($item`August Scepter`),
+          ready: () => have($item`august scepter`),
           completed: () =>
             !have($skill`Aug. 13th: Left/Off Hander's Day!`) ||
             have($effect`Offhand Remarkable`) ||
             get("_aug13Cast", false),
           do: () =>
-            // eslint-disable-next-line libram/verify-constants
             useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },
         {
