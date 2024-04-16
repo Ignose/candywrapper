@@ -9465,12 +9465,9 @@ function SmolQuests() {
       }
     }, {
       name: "Offhand Remarkable",
-      // eslint-disable-next-line libram/verify-constants
-      ready: () => lib_have(template_string_$item(_templateObject125 || (_templateObject125 = smolrunleg_taggedTemplateLiteral(["August Scepter"])))),
+      ready: () => lib_have(template_string_$item(_templateObject125 || (_templateObject125 = smolrunleg_taggedTemplateLiteral(["august scepter"])))),
       completed: () => !lib_have(template_string_$skill(_templateObject126 || (_templateObject126 = smolrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"])))) || lib_have(template_string_$effect(_templateObject127 || (_templateObject127 = smolrunleg_taggedTemplateLiteral(["Offhand Remarkable"])))) || property_get("_aug13Cast", false),
-      do: () =>
-      // eslint-disable-next-line libram/verify-constants
-      (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(_templateObject128 || (_templateObject128 = smolrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
+      do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(_templateObject128 || (_templateObject128 = smolrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
     }, {
       name: "Item Cleanup",
       // eslint-disable-next-line libram/verify-constants
