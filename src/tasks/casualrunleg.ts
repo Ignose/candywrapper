@@ -4,7 +4,6 @@ import {
   buyUsingStorage,
   cliExecute,
   drink,
-  eat,
   Effect,
   equip,
   familiarWeight,
@@ -15,7 +14,6 @@ import {
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
-  mallPrice,
   myAdventures,
   myAscensions,
   myDaycount,
@@ -26,7 +24,6 @@ import {
   mySign,
   numericModifier,
   print,
-  pullsRemaining,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
@@ -74,9 +71,6 @@ import {
 let pajamas = false;
 let smoke = 1;
 let commaSetupDone = false;
-const checkMelange =
-  get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
-  !have($item`designer sweatpants`);
 
 export function howManySausagesCouldIEat() {
   if (!have($item`Kramco Sausage-o-Matic™`)) return 0;
@@ -135,10 +129,10 @@ function altWorkshed() {
   }
 }
 
-export function SmolQuests(): Quest[] {
+export function CasualQuests(): Quest[] {
   return [
     {
-      name: "Smol Run",
+      name: "Casual Run",
       completed: () => getCurrentLeg() !== Leg.Run || get("kingLiberated", false),
       tasks: [
         {
@@ -157,21 +151,6 @@ export function SmolQuests(): Quest[] {
             visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
             set("_goorboFireworksPrepped", true);
           },
-        },
-        {
-          name: "Pre-Pulls",
-          completed: () =>
-            pullsRemaining() === 0 ||
-            !args.pulls.find(
-              (it) => !have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())
-            ), //can't find a pull that (we dont have and it hasn't been pulled today)
-          do: () =>
-            args.pulls.forEach((it) => {
-              if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
-                if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
-                cliExecute(`pull ${it}`);
-              }
-            }),
         },
         {
           name: "LGR Seed",
@@ -256,31 +235,7 @@ export function SmolQuests(): Quest[] {
         {
           name: "Run",
           completed: () => step("questL13Final") > 11,
-          do: () => cliExecute(args.smolscript),
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "drink",
-          ready: () =>
-            step("questL13Final") > 11 &&
-            (have($item`designer sweatpants`) || checkMelange) &&
-            have($skill`Drinking to Drink`) &&
-            storageAmount($item`synthetic dog hair pill`) >= 1,
-          completed: () => myInebriety() >= 2,
-          do: (): void => {
-            if (have($skill`The Ode to Booze`)) useSkill($skill`The Ode to Booze`);
-            drink($item`astral pilsner`, 1);
-          },
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "Sausages",
-          completed: () => howManySausagesCouldIEat() === 0,
-          do: (): void => {
-            eat($item`magical sausage`, howManySausagesCouldIEat());
-          },
+          do: () => cliExecute(args.casualscript),
           clear: "all",
           tracking: "Run",
         },
@@ -296,15 +251,10 @@ export function SmolQuests(): Quest[] {
       ],
     },
     {
-      name: "Post-SMOL Aftercore",
+      name: "Post-casual Aftercore",
       ready: () => myDaycount() === 1 && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
-        {
-          name: "Pull All",
-          completed: () => get("lastEmptiedStorage") === myAscensions(),
-          do: () => cliExecute("pull all; refresh all"),
-        },
         {
           name: "Unlock Garbage Mountain",
           completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
@@ -313,26 +263,6 @@ export function SmolQuests(): Quest[] {
             use($item`one-day ticket to Dinseylandfill`);
           },
           tracking: "Garbo",
-        },
-        {
-          name: "Sober Up",
-          completed: () =>
-            myInebriety() <= 15 ||
-            get("_mimeArmyShotglassUsed") ||
-            get("_sweatOutSomeBoozeUsed", 0) === 3,
-          do: (): void => {
-            if (checkMelange) {
-              cliExecute("acquire spice melange; use spice melange");
-            }
-            while (get("_sweatOutSomeBoozeUsed", 0) < 3) {
-              useSkill($skill`Sweat Out Some Booze`);
-            }
-            if (!get("_sobrieTeaUsed", false)) {
-              retrieveItem($item`cuppa Sobrie tea`);
-              use($item`cuppa Sobrie tea`);
-            }
-            use($item`synthetic dog hair pill`);
-          },
         },
         {
           name: "Wardrobe-o-matic",

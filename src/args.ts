@@ -28,6 +28,10 @@ export const args = Args.create(
       help: "Ascend into and run smol.",
       setting: "",
     }),
+    casual: Args.flag({
+      help: "Ascend into and run casual.",
+      setting: "",
+    }),
 
     //partial run args
     actions: Args.number({
@@ -98,6 +102,10 @@ export const args = Args.create(
     smolscript: Args.string({
       help: "The command that will do your smol run for you. Include any arguments desired.",
       default: "loopsmol",
+    }),
+    casualscript: Args.string({
+      help: "The command that will do your smol run for you. Include any arguments desired.",
+      default: "",
     }),
     pulls: Args.items({
       help: "A list of items to pull at the start of the smol run.",

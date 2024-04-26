@@ -73,7 +73,7 @@ const doCS = args.cs ? true : false;
 
 let jobsDone = false;
 
-const statStation: Station = {
+const statStation: Station =  {
   Muscle: Station.BRAWN_SILO,
   Mysticality: Station.BRAIN_SILO,
   Moxie: Station.GROIN_SILO,

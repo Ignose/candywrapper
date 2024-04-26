@@ -35,7 +35,8 @@ export function AscendQuest(): Quest {
           const skillsToPerm = new Map();
           targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
 
-          const path = args.cs ? $path`Community Service` : args.smol ? $path`A Shrunken Adventurer am I` : undefined;
+          const path = args.cs ? $path`Community Service` : args.smol ? $path`A Shrunken Adventurer am I` : args.casual ? $path.none : undefined;
+          const lifestyle = args.casual ? 1 : 2;
 
           if(path === undefined) throw "You have no path defined";
 
@@ -43,7 +44,7 @@ export function AscendQuest(): Quest {
           ascend({
             path: path,
             playerClass: args.class,
-            lifestyle: 2,
+            lifestyle: lifestyle,
             moon: moonsign,
             consumable: $item`astral six-pack`,
             pet: args.astralpet === $item`none` ? undefined : args.astralpet,
