@@ -9535,12 +9535,7 @@ function SmolQuests() {
   }];
 }
 ;// CONCATENATED MODULE: ./src/tasks/Garboween.ts
-var Garboween_templateObject, Garboween_templateObject2, Garboween_templateObject3, Garboween_templateObject4, Garboween_templateObject5, Garboween_templateObject6, Garboween_templateObject7, Garboween_templateObject8, Garboween_templateObject9, Garboween_templateObject10, Garboween_templateObject11, Garboween_templateObject12, Garboween_templateObject13, Garboween_templateObject14, Garboween_templateObject15, Garboween_templateObject16, Garboween_templateObject17, Garboween_templateObject18, Garboween_templateObject19, Garboween_templateObject20, Garboween_templateObject21, Garboween_templateObject22, Garboween_templateObject23, Garboween_templateObject24, Garboween_templateObject25, Garboween_templateObject26, Garboween_templateObject27, Garboween_templateObject28, Garboween_templateObject29, Garboween_templateObject30, Garboween_templateObject31, Garboween_templateObject32, Garboween_templateObject33, Garboween_templateObject34, Garboween_templateObject35, Garboween_templateObject36, Garboween_templateObject37, Garboween_templateObject38, Garboween_templateObject39, Garboween_templateObject40, Garboween_templateObject41, Garboween_templateObject42, Garboween_templateObject43, Garboween_templateObject44, Garboween_templateObject45, Garboween_templateObject46, Garboween_templateObject47, Garboween_templateObject48, Garboween_templateObject49, Garboween_templateObject50, Garboween_templateObject51, Garboween_templateObject52, Garboween_templateObject53, Garboween_templateObject54, Garboween_templateObject55, Garboween_templateObject56, Garboween_templateObject57, Garboween_templateObject58, Garboween_templateObject59, Garboween_templateObject60, Garboween_templateObject61, Garboween_templateObject62, Garboween_templateObject63, Garboween_templateObject64, Garboween_templateObject65, Garboween_templateObject66, Garboween_templateObject67, Garboween_templateObject68, Garboween_templateObject69, Garboween_templateObject70, Garboween_templateObject71, Garboween_templateObject72, Garboween_templateObject73, Garboween_templateObject74, Garboween_templateObject75;
-function Garboween_slicedToArray(arr, i) { return Garboween_arrayWithHoles(arr) || Garboween_iterableToArrayLimit(arr, i) || Garboween_unsupportedIterableToArray(arr, i) || Garboween_nonIterableRest(); }
-function Garboween_nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function Garboween_iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
-function Garboween_arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-function Garboween_createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = Garboween_unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+var Garboween_templateObject, Garboween_templateObject2, Garboween_templateObject3, Garboween_templateObject4, Garboween_templateObject5, Garboween_templateObject6, Garboween_templateObject7, Garboween_templateObject8, Garboween_templateObject9, Garboween_templateObject10, Garboween_templateObject11, Garboween_templateObject12, Garboween_templateObject13, Garboween_templateObject14, Garboween_templateObject15, Garboween_templateObject16, Garboween_templateObject17, Garboween_templateObject18, Garboween_templateObject19, Garboween_templateObject20, Garboween_templateObject21, Garboween_templateObject22, Garboween_templateObject23, Garboween_templateObject24, Garboween_templateObject25, Garboween_templateObject26, Garboween_templateObject27, Garboween_templateObject28, Garboween_templateObject29, Garboween_templateObject30, Garboween_templateObject31, Garboween_templateObject32, Garboween_templateObject33, Garboween_templateObject34, Garboween_templateObject35, Garboween_templateObject36, Garboween_templateObject37, Garboween_templateObject38, Garboween_templateObject39, Garboween_templateObject40, Garboween_templateObject41, Garboween_templateObject42, Garboween_templateObject43, Garboween_templateObject44, Garboween_templateObject45, Garboween_templateObject46, Garboween_templateObject47, Garboween_templateObject48, Garboween_templateObject49, Garboween_templateObject50, Garboween_templateObject51, Garboween_templateObject52, Garboween_templateObject53, Garboween_templateObject54, Garboween_templateObject55, Garboween_templateObject56, Garboween_templateObject57, Garboween_templateObject58, Garboween_templateObject59, Garboween_templateObject60, Garboween_templateObject61, Garboween_templateObject62, Garboween_templateObject63, Garboween_templateObject64, Garboween_templateObject65, Garboween_templateObject66, Garboween_templateObject67;
 function Garboween_toConsumableArray(arr) { return Garboween_arrayWithoutHoles(arr) || Garboween_iterableToArray(arr) || Garboween_unsupportedIterableToArray(arr) || Garboween_nonIterableSpread(); }
 function Garboween_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function Garboween_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return Garboween_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return Garboween_arrayLikeToArray(o, minLen); }
@@ -9703,32 +9698,6 @@ function GarboWeenQuest() {
       })),
       do: () => false
     }, {
-      name: "Consume Eldritch Attunement",
-      completed: () => lib_have(template_string_$effect(Garboween_templateObject44 || (Garboween_templateObject44 = Garboween_taggedTemplateLiteral(["Eldritch Attunement"])))),
-      do: () => {
-        var source = new Map([[template_string_$item(Garboween_templateObject45 || (Garboween_templateObject45 = Garboween_taggedTemplateLiteral(["eldritch elixir"]))), (0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(Garboween_templateObject46 || (Garboween_templateObject46 = Garboween_taggedTemplateLiteral(["eldritch elixir"]))))], [template_string_$item(Garboween_templateObject47 || (Garboween_templateObject47 = Garboween_taggedTemplateLiteral(["Eldritch snap"]))), (0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(Garboween_templateObject48 || (Garboween_templateObject48 = Garboween_taggedTemplateLiteral(["Eldritch snap"]))))], [template_string_$item(Garboween_templateObject49 || (Garboween_templateObject49 = Garboween_taggedTemplateLiteral(["eldritch mushroom pizza"]))), (0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(Garboween_templateObject50 || (Garboween_templateObject50 = Garboween_taggedTemplateLiteral(["eldritch mushroom pizza"])))) - .5 * (0,external_kolmafia_namespaceObject.mallPrice)(template_string_$item(Garboween_templateObject51 || (Garboween_templateObject51 = Garboween_taggedTemplateLiteral(["eldritch mushroom"]))))]]);
-        var minPriceItem;
-        var minPrice = 0;
-        var _iterator = Garboween_createForOfIteratorHelper(source),
-          _step;
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var _step$value = Garboween_slicedToArray(_step.value, 2),
-              item = _step$value[0],
-              price = _step$value[1];
-            if (price < minPrice) {
-              minPrice = price;
-              minPriceItem = item;
-            }
-          }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
-        }
-        (0,external_kolmafia_namespaceObject.cliExecute)("acquire ".concat(minPriceItem, "; eat ").concat(minPriceItem));
-      }
-    }, {
       name: "CONSUME ALL",
       completed: () => (0,external_kolmafia_namespaceObject.myFullness)() >= (0,external_kolmafia_namespaceObject.fullnessLimit)() && (0,external_kolmafia_namespaceObject.mySpleenUse)() >= (0,external_kolmafia_namespaceObject.spleenLimit)() && (0,external_kolmafia_namespaceObject.myInebriety)() >= (0,external_kolmafia_namespaceObject.inebrietyLimit)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("consume ALL")
@@ -9743,9 +9712,9 @@ function GarboWeenQuest() {
       name: "Freecandy time",
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() / 5 < 1,
-      prepare: () => uneffect(template_string_$effect(Garboween_templateObject52 || (Garboween_templateObject52 = Garboween_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(Garboween_templateObject44 || (Garboween_templateObject44 = Garboween_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => {
-        if (lib_have(template_string_$familiar(Garboween_templateObject53 || (Garboween_templateObject53 = Garboween_taggedTemplateLiteral(["Trick-or-Treating Tot"]))))) (0,external_kolmafia_namespaceObject.cliExecute)("familiar Trick-or-Treating Tot");else if (lib_have(template_string_$familiar(Garboween_templateObject54 || (Garboween_templateObject54 = Garboween_taggedTemplateLiteral(["Red-Nosed Snapper"]))))) (0,external_kolmafia_namespaceObject.cliExecute)("familiar snapper");
+        if (lib_have(template_string_$familiar(Garboween_templateObject45 || (Garboween_templateObject45 = Garboween_taggedTemplateLiteral(["Trick-or-Treating Tot"]))))) (0,external_kolmafia_namespaceObject.cliExecute)("familiar Trick-or-Treating Tot");else if (lib_have(template_string_$familiar(Garboween_templateObject46 || (Garboween_templateObject46 = Garboween_taggedTemplateLiteral(["Red-Nosed Snapper"]))))) (0,external_kolmafia_namespaceObject.cliExecute)("familiar snapper");
         (0,external_kolmafia_namespaceObject.cliExecute)("freecandy ".concat((0,external_kolmafia_namespaceObject.myAdventures)()));
       },
       clear: "all",
@@ -9755,30 +9724,30 @@ function GarboWeenQuest() {
       } //this will run again after installing CMC, by magic
     }, {
       name: "Do Pizza",
-      completed: () => lib_have(template_string_$item(Garboween_templateObject55 || (Garboween_templateObject55 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(Garboween_templateObject56 || (Garboween_templateObject56 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(Garboween_templateObject57 || (Garboween_templateObject57 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))),
+      completed: () => lib_have(template_string_$item(Garboween_templateObject47 || (Garboween_templateObject47 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) && lib_have(template_string_$item(Garboween_templateObject48 || (Garboween_templateObject48 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) && lib_have(template_string_$item(Garboween_templateObject49 || (Garboween_templateObject49 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))),
       do: () => {
-        !lib_have(template_string_$item(Garboween_templateObject58 || (Garboween_templateObject58 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject59 || (Garboween_templateObject59 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) : undefined;
-        !lib_have(template_string_$item(Garboween_templateObject60 || (Garboween_templateObject60 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject61 || (Garboween_templateObject61 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) : undefined;
-        !lib_have(template_string_$item(Garboween_templateObject62 || (Garboween_templateObject62 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject63 || (Garboween_templateObject63 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
+        !lib_have(template_string_$item(Garboween_templateObject50 || (Garboween_templateObject50 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject51 || (Garboween_templateObject51 = Garboween_taggedTemplateLiteral(["Pizza of Legend"])))) : undefined;
+        !lib_have(template_string_$item(Garboween_templateObject52 || (Garboween_templateObject52 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject53 || (Garboween_templateObject53 = Garboween_taggedTemplateLiteral(["Deep Dish of Legend"])))) : undefined;
+        !lib_have(template_string_$item(Garboween_templateObject54 || (Garboween_templateObject54 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))) ? (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(Garboween_templateObject55 || (Garboween_templateObject55 = Garboween_taggedTemplateLiteral(["Calzone of Legend"])))) : undefined;
       }
     }, {
       name: "Stooper",
-      ready: () => (0,external_kolmafia_namespaceObject.myInebriety)() === (0,external_kolmafia_namespaceObject.inebrietyLimit)() && lib_have(template_string_$item(Garboween_templateObject64 || (Garboween_templateObject64 = Garboween_taggedTemplateLiteral(["tiny stillsuit"])))) && property_get("familiarSweat") >= 300,
-      completed: () => !lib_have(template_string_$familiar(Garboween_templateObject65 || (Garboween_templateObject65 = Garboween_taggedTemplateLiteral(["Stooper"])))) || stooperDrunk(),
+      ready: () => (0,external_kolmafia_namespaceObject.myInebriety)() === (0,external_kolmafia_namespaceObject.inebrietyLimit)() && lib_have(template_string_$item(Garboween_templateObject56 || (Garboween_templateObject56 = Garboween_taggedTemplateLiteral(["tiny stillsuit"])))) && property_get("familiarSweat") >= 300,
+      completed: () => !lib_have(template_string_$familiar(Garboween_templateObject57 || (Garboween_templateObject57 = Garboween_taggedTemplateLiteral(["Stooper"])))) || stooperDrunk(),
       do: () => {
-        (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(Garboween_templateObject66 || (Garboween_templateObject66 = Garboween_taggedTemplateLiteral(["Stooper"]))));
+        (0,external_kolmafia_namespaceObject.useFamiliar)(template_string_$familiar(Garboween_templateObject58 || (Garboween_templateObject58 = Garboween_taggedTemplateLiteral(["Stooper"]))));
         (0,external_kolmafia_namespaceObject.cliExecute)("drink stillsuit distillate");
       }
     }, {
       name: "Super Nightcap",
-      ready: () => lib_have(template_string_$item(Garboween_templateObject67 || (Garboween_templateObject67 = Garboween_taggedTemplateLiteral(["Drunkula's wineglass"])))),
+      ready: () => lib_have(template_string_$item(Garboween_templateObject59 || (Garboween_templateObject59 = Garboween_taggedTemplateLiteral(["Drunkula's wineglass"])))),
       completed: () => totallyDrunk(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("CONSUME NIGHTCAP")
     }, {
       name: "Freecandy Drunk",
       ready: () => (0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => Math.floor((0,external_kolmafia_namespaceObject.myAdventures)() / 5) === 0,
-      prepare: () => uneffect(template_string_$effect(Garboween_templateObject68 || (Garboween_templateObject68 = Garboween_taggedTemplateLiteral(["Beaten Up"])))),
+      prepare: () => uneffect(template_string_$effect(Garboween_templateObject60 || (Garboween_templateObject60 = Garboween_taggedTemplateLiteral(["Beaten Up"])))),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("freeCandy ".concat((0,external_kolmafia_namespaceObject.myAdventures)()));
       },
@@ -9789,19 +9758,19 @@ function GarboWeenQuest() {
       } //this will run again after installing CMC, by magic
     }, {
       name: "Grimace Maps",
-      ready: () => lib_have(template_string_$item(Garboween_templateObject69 || (Garboween_templateObject69 = Garboween_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) && totallyDrunk(),
-      completed: () => !lib_have(template_string_$item(Garboween_templateObject70 || (Garboween_templateObject70 = Garboween_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
+      ready: () => lib_have(template_string_$item(Garboween_templateObject61 || (Garboween_templateObject61 = Garboween_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) && totallyDrunk(),
+      completed: () => !lib_have(template_string_$item(Garboween_templateObject62 || (Garboween_templateObject62 = Garboween_taggedTemplateLiteral(["Map to Safety Shelter Grimace Prime"])))) || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("grimace maps")
     }, {
       name: "Comb Beach",
-      ready: () => lib_have(template_string_$item(Garboween_templateObject71 || (Garboween_templateObject71 = Garboween_taggedTemplateLiteral(["Beach Comb"])))) && totallyDrunk(),
+      ready: () => lib_have(template_string_$item(Garboween_templateObject63 || (Garboween_templateObject63 = Garboween_taggedTemplateLiteral(["Beach Comb"])))) && totallyDrunk(),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("combo ".concat(11 - property_get("_freeBeachWalksUsed") + (0,external_kolmafia_namespaceObject.myAdventures)()))
     }, {
       name: "Turn in FunFunds",
-      ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(Garboween_templateObject72 || (Garboween_templateObject72 = Garboween_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
-      completed: () => lib_have(template_string_$item(Garboween_templateObject73 || (Garboween_templateObject73 = Garboween_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
-      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(Garboween_templateObject74 || (Garboween_templateObject74 = Garboween_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(Garboween_templateObject75 || (Garboween_templateObject75 = Garboween_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
+      ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(Garboween_templateObject64 || (Garboween_templateObject64 = Garboween_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
+      completed: () => lib_have(template_string_$item(Garboween_templateObject65 || (Garboween_templateObject65 = Garboween_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
+      do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(Garboween_templateObject66 || (Garboween_templateObject66 = Garboween_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(Garboween_templateObject67 || (Garboween_templateObject67 = Garboween_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
       tracking: "Garbo"
     }, {
       name: "PvP",
