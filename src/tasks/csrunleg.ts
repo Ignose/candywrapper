@@ -10,7 +10,6 @@ import {
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
-  Item,
   itemAmount,
   mallPrice,
   myAdventures,
@@ -201,28 +200,6 @@ export function CSQuests(): Quest[] {
           name: "Breakfast",
           completed: () => get("breakfastCompleted"),
           do: () => cliExecute("breakfast"),
-        },
-        {
-          name: "Consume Eldritch Attunement",
-          ready: () => holiday().includes("Halloween"),
-          completed: () => have($effect`Eldritch Attunement`),
-          do: (): void => {
-            const source: Map<Item, number> = new Map([
-              [$item`eldritch elixir`, mallPrice($item`eldritch elixir`)],
-              [$item`Eldritch snap`, mallPrice($item`Eldritch snap`)],
-              [$item`eldritch mushroom pizza`, (mallPrice($item`eldritch mushroom pizza`) - .5 * mallPrice($item`eldritch mushroom`))]]);
-              let minPriceItem: Item | undefined;
-              let minPrice: number = 0;
-
-              for (const [item, price] of source) {
-                if (price < minPrice) {
-                  minPrice = price;
-                  minPriceItem = item;
-                }
-              }
-
-              cliExecute(`acquire ${minPriceItem}; use ${minPriceItem}`)
-          }
         },
         {
           name: "Garbo",
