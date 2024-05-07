@@ -3163,9 +3163,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 libram@^0.8.22:
-  version "0.8.27"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.27.tgz#cd672fdc4e7455311e1605fb23fccdb2aaf9986a"
-  integrity sha512-Xw043wV31pTSGMOep163g+4zHX/R7iwKxjvntvPvA0CbcQQtNii/4YtqVwatUOqLHuze/fta1m5EKwkCbsU63w==
+  version "0.8.33"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.8.33.tgz#5f37ad4fc1dec72dbdf2a3c86b06e0574a36881c"
+  integrity sha512-CeCous2DnzjfU0H0NDgSibMamjxFV1OfwN1l2+7DeDmgTnfiiMnsd7nbt4sNvJGmUvRqneGq8jtc0zgFu8fn+A==
   dependencies:
     html-entities "^2.4.0"
 

@@ -22,6 +22,7 @@ import {
   myLevel,
   myMaxhp,
   myPrimestat,
+  print,
   pvpAttacksLeft,
   restoreHp,
   restoreMp,
@@ -72,6 +73,7 @@ const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
 
 let jobsDone = false;
+let skipSoda = false;
 
 const statStation: Station =  {
   Muscle: Station.BRAWN_SILO,
@@ -130,6 +132,21 @@ export function AftercoreQuest(): Quest {
         do: () => cliExecute("garden pick"),
         tracking: "Dailies",
         limit: { tries: 3 },
+      },
+      {
+        name: "Use Mayam",
+        // eslint-disable-next-line libram/verify-constants
+        ready: () => have($item`Mayam Calendar`),
+        completed: () =>
+          ["yam4", "explosion", "clock"].every((sym) => get("_mayamSymbolsUsed").includes(sym)),
+        do: () => {
+          if($familiar`Chest Mimic`.experience < 450)
+            useFamiliar($familiar`Chest Mimic`);
+          else useFamiliar($familiar`Grey Goose`)
+          cliExecute("mayam rings vessel yam cheese explosion");
+          cliExecute("mayam rings yam meat eyepatch yam");
+          cliExecute("mayam rings fur bottle wall clock");
+        },
       },
       {
         name: "Plant Grass",
@@ -500,9 +517,14 @@ export function AftercoreQuest(): Quest {
       {
         name: "Marble Soda!",
         ready: () => doCS,
-        completed: () => have($item`tobiko marble soda`) || mallPrice($item`tobiko marble soda`) > get("valueOfAdventure") * 2,
+        completed: () => have($item`tobiko marble soda`) || skipSoda,
         do: (): void => {
-          retrieveItem($item`tobiko marble soda`);
+          if(mallPrice($item`tobiko marble soda`) < get("valueOfAdventure") * 2)
+            retrieveItem($item`tobiko marble soda`);
+          else {
+            print(`Soda is too expensive, mallprice is ${mallPrice($item`tobiko marble soda`)}`);
+            skipSoda = true;
+          }
         }
       },
       {
