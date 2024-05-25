@@ -64,7 +64,7 @@ export function AscendQuest(): Quest {
             });
           cliExecute("refresh all");
           visitUrl("main.php");
-          if(args.smol) {
+          if(args.smol || args.robot) {
             while (handlingChoice())
               runChoice(1)
             };
