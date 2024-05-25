@@ -7,6 +7,7 @@ import {
   visitUrl,
 } from "kolmafia";
 import {
+  $class,
   $item,
   $path,
   ascend,
@@ -50,10 +51,11 @@ export function AscendQuest(): Quest {
           if(path === undefined) throw "You have no path defined";
 
           const moonsign = args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
+          const myClass = args.robot ? $class`Pastamancer` : args.class;
 
           ascend({
             path: path,
-            playerClass: args.class,
+            playerClass: myClass,
             lifestyle: lifestyle,
             moon: moonsign,
             consumable: $item`astral six-pack`,
