@@ -10176,7 +10176,7 @@ function targetPerms() {
   return pOptions.slice(0, maxQty);
 }
 ;// CONCATENATED MODULE: ./src/tasks/ascend.ts
-var tasks_ascend_templateObject, tasks_ascend_templateObject2, tasks_ascend_templateObject3, tasks_ascend_templateObject4, tasks_ascend_templateObject5, tasks_ascend_templateObject6, tasks_ascend_templateObject7, tasks_ascend_templateObject8;
+var tasks_ascend_templateObject, tasks_ascend_templateObject2, tasks_ascend_templateObject3, tasks_ascend_templateObject4, tasks_ascend_templateObject5, tasks_ascend_templateObject6, tasks_ascend_templateObject7, tasks_ascend_templateObject8, tasks_ascend_templateObject9;
 function tasks_ascend_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
@@ -10200,13 +10200,14 @@ function AscendQuest() {
         var lifestyle = args.casual ? 1 : 2;
         if (path === undefined) throw "You have no path defined";
         var moonsign = args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
+        var myClass = args.robot ? $class(tasks_ascend_templateObject7 || (tasks_ascend_templateObject7 = tasks_ascend_taggedTemplateLiteral(["Pastamancer"]))) : args.class;
         ascend({
           path: path,
-          playerClass: args.class,
+          playerClass: myClass,
           lifestyle: lifestyle,
           moon: moonsign,
-          consumable: template_string_$item(tasks_ascend_templateObject7 || (tasks_ascend_templateObject7 = tasks_ascend_taggedTemplateLiteral(["astral six-pack"]))),
-          pet: args.astralpet === template_string_$item(tasks_ascend_templateObject8 || (tasks_ascend_templateObject8 = tasks_ascend_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet,
+          consumable: template_string_$item(tasks_ascend_templateObject8 || (tasks_ascend_templateObject8 = tasks_ascend_taggedTemplateLiteral(["astral six-pack"]))),
+          pet: args.astralpet === template_string_$item(tasks_ascend_templateObject9 || (tasks_ascend_templateObject9 = tasks_ascend_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet,
           permOptions: {
             permSkills: skillsToPerm,
             neverAbort: false
