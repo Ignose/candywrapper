@@ -10215,7 +10215,7 @@ function AscendQuest() {
         });
         (0,external_kolmafia_namespaceObject.cliExecute)("refresh all");
         (0,external_kolmafia_namespaceObject.visitUrl)("main.php");
-        if (args.smol) {
+        if (args.smol || args.robot) {
           while ((0,external_kolmafia_namespaceObject.handlingChoice)()) (0,external_kolmafia_namespaceObject.runChoice)(1);
         }
         ;
