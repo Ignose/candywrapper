@@ -32,6 +32,10 @@ export const args = Args.create(
       help: "Ascend into and run casual.",
       setting: "",
     }),
+    robot: Args.flag({
+      help: "Ascend into and run You, Robot.",
+      setting: "",
+    }),
 
     //partial run args
     actions: Args.number({
@@ -104,7 +108,11 @@ export const args = Args.create(
       default: "loopsmol",
     }),
     casualscript: Args.string({
-      help: "The command that will do your smol run for you. Include any arguments desired.",
+      help: "The command that will do your casual run for you. Include any arguments desired.",
+      default: "",
+    }),
+    robotscript: Args.string({
+      help: "The command that will do your You, Robot run for you. Include any arguments desired.",
       default: "",
     }),
     pulls: Args.items({

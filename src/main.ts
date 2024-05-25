@@ -9,6 +9,7 @@ import { GarboWeenQuest } from "./tasks/Garboween";
 import { AscendQuest } from "./tasks/ascend";
 import { gameDay } from "libram";
 import { CasualQuests } from "./tasks/casualrunleg";
+import { RobotQuests } from "./tasks/robotrunleg";
 
 const version = "0.0.3";
 
@@ -39,7 +40,7 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : args.casual ? CasualQuests() : undefined;
+  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : args.casual ? CasualQuests() : args.robot ? RobotQuests() : undefined;
   if(runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
 
   const tasks = halloween ?
