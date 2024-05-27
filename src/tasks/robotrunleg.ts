@@ -158,15 +158,6 @@ export function RobotQuests(): Quest[] {
           tracking: "Garbo",
         },
         {
-          name: "Install First Workshed",
-          ready: () => have(firstWorkshed()),
-          completed: () =>
-            firstWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() !== $item`none`,
-          do: () => use(firstWorkshed()),
-        },
-        {
           name: "Break Stone",
           completed: () => hippyStoneBroken() || !args.pvp,
           do: (): void => {
