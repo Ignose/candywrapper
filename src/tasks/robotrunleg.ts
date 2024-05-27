@@ -158,15 +158,6 @@ export function RobotQuests(): Quest[] {
           tracking: "Garbo",
         },
         {
-          name: "Install First Workshed",
-          ready: () => have(firstWorkshed()),
-          completed: () =>
-            firstWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() !== $item`none`,
-          do: () => use(firstWorkshed()),
-        },
-        {
           name: "Break Stone",
           completed: () => hippyStoneBroken() || !args.pvp,
           do: (): void => {
@@ -193,7 +184,7 @@ export function RobotQuests(): Quest[] {
       ],
     },
     {
-      name: "Post-SMOL Aftercore",
+      name: "Post-Robot Aftercore",
       ready: () => myDaycount() === 1 && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
@@ -201,6 +192,15 @@ export function RobotQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
+        },
+        {
+          name: "Install First Workshed",
+          ready: () => have(firstWorkshed()),
+          completed: () =>
+            firstWorkshed() === $item`none` ||
+            get("_workshedItemUsed") ||
+            getWorkshed() !== $item`none`,
+          do: () => use(firstWorkshed()),
         },
         {
           name: "Unlock Garbage Mountain",
@@ -251,15 +251,6 @@ export function RobotQuests(): Quest[] {
             get("moonTuned") ||
             mySign().toLowerCase() === "wombat",
           do: () => cliExecute("spoon wombat"),
-        },
-        {
-          name: "Install Alternate Workshed",
-          ready: () => have(altWorkshed()),
-          completed: () =>
-            altWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() === altWorkshed(),
-          do: () => use(altWorkshed()),
         },
         {
           name: "Gold Wedding Ring",
