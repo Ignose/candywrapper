@@ -73,43 +73,6 @@ function firstWorkshed() {
     ) || $item`none`
   );
 }
-function altWorkshed() {
-  const ws = getWorkshed();
-  switch (ws) {
-    case $item`model train set`:
-      return (
-        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-        ) || ws
-      );
-    case $item`Asdon Martin keyfob (on ring)`:
-      return (
-        $items`cold medicine cabinet, model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-        ) || ws
-      );
-    case $item`cold medicine cabinet`:
-      return (
-        $items`Asdon Martin keyfob (on ring), model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic, warbear induction oven, snow machine`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-        ) || ws
-      );
-    case $item`Little Geneticist DNA-Splicing Lab`:
-      return (
-        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), model train set, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-        ) || ws
-      );
-    case $item`portable Mayo Clinic`:
-      return (
-        $items`cold medicine cabinet, model train set, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
-        ) || ws
-      );
-    default:
-      return $item`none`;
-  }
-}
 
 export function RobotQuests(): Quest[] {
   return [

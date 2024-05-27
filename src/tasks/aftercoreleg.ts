@@ -457,6 +457,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Grimace Maps",
+        ready: () => !have($item`Drunkula's wineglass`),
         completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
         do: () => cliExecute("grimace maps"),
         limit: { tries: 30 },
