@@ -231,6 +231,17 @@ export function RobotQuests(): Quest[] {
           do: () => cliExecute("breakfast"),
         },
         {
+          name: "Drink Pre-Steel Organ",
+          ready: () =>
+            myAdventures() < 25,
+          completed: () =>
+            get("_mimeArmyShotglassUsed") || !have($item`mime army shotglass`),
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => drink(1, $item`astral pilsner`),
+        },
+        {
           name: "Laugh Floor",
           completed: () =>
             have($skill`Liver of Steel`) ||
