@@ -4,7 +4,6 @@ import {
     gamedayToInt,
     gametimeToInt,
     getCloset,
-    getShop,
     getStorage,
     historicalAge,
     historicalPrice,

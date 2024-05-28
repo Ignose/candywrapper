@@ -143,6 +143,7 @@ export function RobotQuests(): Quest[] {
             visitUrl("place.php?whichplace=nstower&action=ns_11_prism");
           },
           clear: "all",
+          tracking: "Ignore",
         },
       ],
     },
