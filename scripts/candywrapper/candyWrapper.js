@@ -9283,7 +9283,8 @@ function SmolQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=nstower&action=ns_11_prism");
       },
-      clear: "all"
+      clear: "all",
+      tracking: "Ignore"
     }]
   }, {
     name: "Post-SMOL Aftercore",
@@ -10695,7 +10696,8 @@ function RobotQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=nstower&action=ns_11_prism");
       },
-      clear: "all"
+      clear: "all",
+      tracking: "Ignore"
     }]
   }, {
     name: "Post-Robot Aftercore",
