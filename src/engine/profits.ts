@@ -251,6 +251,11 @@ import {
         this.reset();
         return;
       }
+      // Fix for Leaves/Source/Witchess
+      if (tag.includes("Ignore")) {
+        this.reset();
+        return;
+      }
 
       // Pulled items are tracked oddly in the Session
       // (they are included in the Session diff by default)
