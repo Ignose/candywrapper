@@ -11,6 +11,7 @@ import {
   $item,
   $path,
   ascend,
+  CursedMonkeyPaw,
   have,
   Lifestyle,
 } from "libram";
@@ -51,7 +52,8 @@ export function AscendQuest(): Quest {
           if(path === undefined) throw "You have no path defined";
 
           const moonsign = args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
-          const myClass = args.robot ? $class`Pastamancer` : args.class;
+          const canRobotNonMon = CursedMonkeyPaw.have() && have($item`genie bottle`);
+          const myClass = args.robot && !canRobotNonMon ? $class`Pastamancer` : args.class;
 
           ascend({
             path: path,
