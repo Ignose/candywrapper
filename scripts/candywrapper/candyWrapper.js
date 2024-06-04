@@ -10168,6 +10168,141 @@ function prepareAscension() {
     }
   }
 }
+;// CONCATENATED MODULE: ./node_modules/libram/dist/resources/2023/CursedMonkeyPaw.js
+var CursedMonkeyPaw_templateObject;
+function CursedMonkeyPaw_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+
+
+
+
+
+var CursedMonkeyPaw_item = template_string_$item(CursedMonkeyPaw_templateObject || (CursedMonkeyPaw_templateObject = CursedMonkeyPaw_taggedTemplateLiteral(["cursed monkey's paw"])));
+/**
+ * @returns Whether or not we currently `have` the cursed monkey's paw
+ */
+function CursedMonkeyPaw_have() {
+  return lib_have(CursedMonkeyPaw_item);
+}
+/**
+ * @returns The number of monkey paw wishes we have remaining
+ */
+function wishes() {
+  return clamp(5 - get("_monkeyPawWishesUsed"), 0, 5);
+}
+/**
+ * @param filters An optional object optionally consisting of filtering functions to shrink down the pool of wishable items
+ * @param filters.location A filtering function to remove locations from the pool of wishable targets.
+ * @param filters.monster A filtering function to remove monsters from the pool of wishable targets.
+ * @param filters.drop A filtering function to remove item drops from the pool of wishable targets.
+ * @returns A set of all items we expect to be able to wish; this doesn't actually constitute all items
+ */
+function wishableItems() {
+  var filters = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+  return new Set(flat(Location.all().filter(l => {
+    var _filters$location, _filters$location2;
+    return canAdventure(l) && ((_filters$location = (_filters$location2 = filters.location) === null || _filters$location2 === void 0 ? void 0 : _filters$location2.call(filters, l)) !== null && _filters$location !== void 0 ? _filters$location : true);
+  }).map(l => getMonsters(l).filter(m => {
+    var _filters$monster, _filters$monster2;
+    return m.copyable && ((_filters$monster = (_filters$monster2 = filters.monster) === null || _filters$monster2 === void 0 ? void 0 : _filters$monster2.call(filters, m)) !== null && _filters$monster !== void 0 ? _filters$monster : true);
+  }).map(m => itemDropsArray(m).filter(_ref => {
+    var _filters$drop, _filters$drop2;
+    var type = _ref.type,
+      rate = _ref.rate,
+      drop = _ref.drop;
+    return !drop.quest && (type !== "c" || rate >= 1) && ( // Remove random roll drops
+    (_filters$drop = (_filters$drop2 = filters.drop) === null || _filters$drop2 === void 0 ? void 0 : _filters$drop2.call(filters, {
+      type,
+      rate,
+      drop
+    })) !== null && _filters$drop !== void 0 ? _filters$drop : true);
+  }).map(_ref2 => {
+    var drop = _ref2.drop;
+    return drop;
+  })))));
+}
+var INVALID_CHARACTERS = /[^a-z\d -]/g;
+var _unwishableEffects;
+function unwishableEffects() {
+  // This is the set of all names of genie-wishable effects, split into the maximal substrings we can actually submit
+  var names = Effect.all().filter(e => !e.attributes.includes("nohookah")).map(e => {
+    var name = e.name.toLowerCase();
+    return {
+      name,
+      splitName: name.split(INVALID_CHARACTERS)
+    };
+  });
+  return names.filter(_ref3 => {
+    var name = _ref3.name,
+      splitName = _ref3.splitName;
+    return (
+      // Any effect that doesn't contain an INVALID_CHARACTER is fine
+      splitName.length > 1 &&
+      // To be unwishable, there can't be any substrings that uniquely match a genie-wishable effect
+      splitName.every(s =>
+      // So we check every maximal substring against every one of our genie-wishable effects, excluding the effect we're currently looking at
+      // if one of the substrings matches a substring associated with another effect, we're screwed.
+      names.some(_ref4 => {
+        var n = _ref4.name;
+        return n !== name && n.includes(s);
+      }))
+    );
+  }).map(_ref5 => {
+    var name = _ref5.name;
+    return toEffect(name);
+  });
+}
+/**
+ * @returns An Array consisting of all genie-wishable Effects that are not Monkey-wishable
+ */
+function getUnwishableEffects() {
+  var _unwishableEffects2;
+  return (_unwishableEffects2 = _unwishableEffects) !== null && _unwishableEffects2 !== void 0 ? _unwishableEffects2 : _unwishableEffects = unwishableEffects();
+}
+/**
+ * Decides if we expect that a given Item or Effect can be wished for.
+ * May be slow for Effects;
+ *
+ * @param wish The Item or Effect in question
+ * @returns Whether we expect it can be wished for
+ */
+function isWishable(wish) {
+  if (wish instanceof Item) {
+    return wishableItems().has(wish);
+  } else {
+    if (wish.attributes.includes("nohookah")) return false;
+    if (!wish.name.match(/[.,']/)) return true;
+    return !getUnwishableEffects().includes(wish);
+  }
+}
+/**
+ * Wish for a given Item or Effect.
+ * If it's an item, will `prepareForAdventure`; if an item is available in multiple locations this will pick the first one.
+ *
+ * @param wish The Item or Effect to wish for
+ * @returns Whether we succeeded in this endeavor
+ */
+function wishFor(wish) {
+  if (wishes() <= 0) return false;
+  if (wish instanceof Effect) return monkeyPaw(wish);
+  var locations = Location.all().filter(l => canAdventure(l) && getMonsters(l).some(m => m.copyable && itemDropsArray(m).some(_ref6 => {
+    var drop = _ref6.drop;
+    return drop === wish;
+  })));
+  try {
+    if (locations.length) {
+      cliExecute("checkpoint");
+      prepareForAdventure(locations[0]);
+    }
+    var result = monkeyPaw(wish);
+    if (!result) {
+      logger.debug("Failed to monkeyPaw wish for ".concat(wish, "; assumed it was available in locations ").concat(locations.join(", ")));
+    }
+    return result;
+  } finally {
+    if (locations.length) cliExecute("outfit checkpoint");
+  }
+}
 ;// CONCATENATED MODULE: ./src/tasks/perm.ts
 
 
@@ -10183,7 +10318,7 @@ function targetPerms() {
   return pOptions.slice(0, maxQty);
 }
 ;// CONCATENATED MODULE: ./src/tasks/ascend.ts
-var tasks_ascend_templateObject, tasks_ascend_templateObject2, tasks_ascend_templateObject3, tasks_ascend_templateObject4, tasks_ascend_templateObject5, tasks_ascend_templateObject6, tasks_ascend_templateObject7, tasks_ascend_templateObject8, tasks_ascend_templateObject9;
+var tasks_ascend_templateObject, tasks_ascend_templateObject2, tasks_ascend_templateObject3, tasks_ascend_templateObject4, tasks_ascend_templateObject5, tasks_ascend_templateObject6, tasks_ascend_templateObject7, tasks_ascend_templateObject8, tasks_ascend_templateObject9, ascend_templateObject10;
 function tasks_ascend_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 
@@ -10207,14 +10342,15 @@ function AscendQuest() {
         var lifestyle = args.casual ? 1 : 2;
         if (path === undefined) throw "You have no path defined";
         var moonsign = args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
-        var myClass = args.robot ? $class(tasks_ascend_templateObject7 || (tasks_ascend_templateObject7 = tasks_ascend_taggedTemplateLiteral(["Pastamancer"]))) : args.class;
+        var canRobotNonMon = CursedMonkeyPaw_have() && lib_have(template_string_$item(tasks_ascend_templateObject7 || (tasks_ascend_templateObject7 = tasks_ascend_taggedTemplateLiteral(["genie bottle"]))));
+        var myClass = args.robot && !canRobotNonMon ? $class(tasks_ascend_templateObject8 || (tasks_ascend_templateObject8 = tasks_ascend_taggedTemplateLiteral(["Pastamancer"]))) : args.class;
         ascend({
           path: path,
           playerClass: myClass,
           lifestyle: lifestyle,
           moon: moonsign,
-          consumable: template_string_$item(tasks_ascend_templateObject8 || (tasks_ascend_templateObject8 = tasks_ascend_taggedTemplateLiteral(["astral six-pack"]))),
-          pet: args.astralpet === template_string_$item(tasks_ascend_templateObject9 || (tasks_ascend_templateObject9 = tasks_ascend_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet,
+          consumable: template_string_$item(tasks_ascend_templateObject9 || (tasks_ascend_templateObject9 = tasks_ascend_taggedTemplateLiteral(["astral six-pack"]))),
+          pet: args.astralpet === template_string_$item(ascend_templateObject10 || (ascend_templateObject10 = tasks_ascend_taggedTemplateLiteral(["none"]))) ? undefined : args.astralpet,
           permOptions: {
             permSkills: skillsToPerm,
             neverAbort: false
