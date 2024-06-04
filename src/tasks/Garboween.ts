@@ -83,6 +83,11 @@ function myOutfit(setupFight: boolean): OutfitSpec {
   };
 }
 
+function ballsMacro(): Macro {
+  if (get("_monsterHabitatsFightsLeft") === 0 && get("_monsterHabitatsRecalled") < 3) return Macro.trySkill($skill`Recall Facts: Monster Habitats`).trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`);
+  return Macro.trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`);
+}
+
 const macrosUsed = () => !have($item`waffle`) && (!have($item`Powerful Glove`) || get("_powerfulGloveBatteryPowerUsed") >= 95) && (!have($skill`Macrometeorite`) || $skill`Macrometeorite`.dailylimit <=0);
 
 export function GarboWeenQuest(): Quest {
@@ -350,7 +355,7 @@ export function GarboWeenQuest(): Quest {
         combat: new CombatStrategy().macro(
           Macro.trySkill($skill`Emit Matter Duplicating Drones`)
             .if_($monster`crate`, Macro.tryItem($item`waffle`).trySkill($skill`CHEAT CODE: Replace Enemy`).trySkill($skill`Macrometeorite`))
-            .if_($monster`Witchess Knight`, Macro.trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`))
+            .if_($monster`Witchess Knight`, ballsMacro())
             .if_(
               $monster`Eldritch Tentacle`,
               Macro.trySkill($skill`Emit Matter Duplicating Drones`).attack()
