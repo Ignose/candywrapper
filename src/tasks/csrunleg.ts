@@ -147,6 +147,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "Smoke em if you got em",
+          ready: () => get("getawayCampsiteUnlocked"),
           completed: () => !have($item`stick of firewood`) || smoke >= 10,
           do: (): void => {
             if(mallPrice($item`stick of firewood`) <= 200)

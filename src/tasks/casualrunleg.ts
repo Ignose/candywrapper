@@ -1,7 +1,6 @@
 import { CombatStrategy, step } from "grimoire-kolmafia";
 import {
   buy,
-  buyUsingStorage,
   cliExecute,
   drink,
   Effect,
@@ -9,7 +8,6 @@ import {
   familiarWeight,
   fullnessLimit,
   getClanName,
-  getProperty,
   getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
@@ -30,7 +28,6 @@ import {
   retrieveItem,
   setProperty,
   storageAmount,
-  toInt,
   use,
   useFamiliar,
   useSkill,
@@ -61,7 +58,6 @@ import {
   backstageItemsDone,
   bestFam,
   doneAdventuring,
-  findCheapRun,
   haveAll,
   maxBase,
   stooperDrunk,
@@ -70,7 +66,6 @@ import {
 
 let pajamas = false;
 let smoke = 1;
-let commaSetupDone = false;
 
 export function howManySausagesCouldIEat() {
   if (!have($item`Kramco Sausage-o-Matic™`)) return 0;
@@ -194,28 +189,6 @@ export function CasualQuests(): Quest[] {
           completed: () => get("_empathyReady", false),
           do: (): void => {
             cliExecute("maximize MP; set _empathyReady = true");
-          },
-        },
-        {
-          name: "Prepare Comma",
-          ready: () => have($familiar`Comma Chameleon`) && !have($familiar`Frumious Bandersnatch`) && !have($familiar`Pair of Stomping Boots`),
-          completed: () => commaSetupDone ||
-            getProperty("commaFamiliar") === "Pair of Stomping Boots" ||
-            getProperty("commaFamiliar") === "Frumious Bandersnatch" ||
-            get("_commaRunDone", false),
-          do: (): void => {
-            const it = findCheapRun();
-            if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
-              if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
-              cliExecute(`pull ${it}`);
-            useFamiliar($familiar`Comma Chameleon`);
-            visitUrl(
-              `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
-            );
-            visitUrl("charpane.php");
-            commaSetupDone = true;
-            cliExecute("set _commaRunDone = true")
-            }
           },
         },
         {
@@ -521,6 +494,7 @@ export function CasualQuests(): Quest[] {
         },
         {
           name: "Smoke em if you got em",
+          ready: () => get("getawayCampsiteUnlocked"),
           completed: () => !have($item`stick of firewood`),
           do: (): void => {
             while (have($item`stick of firewood`)) {

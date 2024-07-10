@@ -58,7 +58,6 @@ import {
 import { Quest } from "./structure";
 import {
   bestFam,
-  findCheapRun,
   getGarden,
   isGoodGarboScript,
   maxBase,
@@ -526,24 +525,6 @@ export function AftercoreQuest(): Quest {
             print(`Soda is too expensive, mallprice is ${mallPrice($item`tobiko marble soda`)}`);
             skipSoda = true;
           }
-        }
-      },
-      {
-        name: "Cheap Comma Run Setup",
-        ready: () => doSmol,
-        completed: (): boolean => {
-          if(findCheapRun() === null) return true;
-          if(!have($familiar`Comma Chameleon`)) return true;
-          if(have($familiar`Frumious Bandersnatch`) || have($familiar`Pair of Stomping Boots`)) return true;
-          if($items`aquaviolet jub-jub bird, charpuce jub-jub bird, crimsilion jub-jub bird, stomp box`.find((f) =>
-          have(f))) return true;
-          if(findCheapRun() !== null){
-            if(mallPrice(findCheapRun()) > 8 * get("valueOfAdventure")) return true;
-          }
-          return false;
-        },
-        do: (): void => {
-          retrieveItem(findCheapRun());
         }
       },
       {
