@@ -1,8 +1,9 @@
-import { CombatStrategy } from "grimoire-kolmafia";
+import { CombatStrategy, OutfitSpec } from "grimoire-kolmafia";
 import {
   availableAmount,
   buy,
   cliExecute,
+  eat,
   fullnessLimit,
   getCampground,
   getClanName,
@@ -16,6 +17,7 @@ import {
   itemAmount,
   myAdventures,
   myClass,
+  myFamiliar,
   myFullness,
   myHp,
   myInebriety,
@@ -24,6 +26,7 @@ import {
   mySpleenUse,
   pvpAttacksLeft,
   restoreHp,
+  restoreMp,
   retrieveItem,
   spleenLimit,
   use,
@@ -39,9 +42,11 @@ import {
   $item,
   $items,
   $location,
+  $monster,
   $phylum,
   $skill,
   AsdonMartin,
+  CombatLoversLocket,
   DNALab,
   get,
   getTodaysHolidayWanderers,
@@ -63,6 +68,28 @@ import { args } from "../args";
 
 let garboDone = false;
 
+function myOutfit(setupFight: boolean): OutfitSpec {
+  return {
+    weapon: have($item`June cleaver`) ? $item`June cleaver` : undefined,
+    hat: $item`Daylight Shavings Helmet`,
+    offhand: setupFight ? $item`latte lovers member's mug` : $item`can of mixed everything`,
+    acc1: $item`lucky gold ring`,
+    acc2: $item`mafia thumb ring`,
+    acc3: $item`spring shoes`,
+    pants: get("sweat") < 100 ? $item`designer sweatpants` : $item`pantogram pants`,
+    familiar: get("gooseDronesRemaining") >= 6 ? $familiar`Cookbookbat` : $familiar`Grey Goose`,
+    famequip: myFamiliar() === $familiar`Grey Goose` ? $item`tiny stillsuit` : $item`tiny rake`,
+    modifier: `familiar exp`,
+  };
+}
+
+function ballsMacro(): Macro {
+  if (get("_monsterHabitatsFightsLeft") === 0 && get("_monsterHabitatsRecalled") < 3) return Macro.trySkill($skill`Recall Facts: Monster Habitats`).trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`);
+  return Macro.trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`);
+}
+
+const macrosUsed = () => !have($item`waffle`) && (!have($item`Powerful Glove`) || get("_powerfulGloveBatteryPowerUsed") >= 95) && (!have($skill`Macrometeorite`) || $skill`Macrometeorite`.dailylimit <=0);
+
 export function GarboWeenQuest(): Quest {
   return {
     name: "Aftercore",
@@ -75,9 +102,12 @@ export function GarboWeenQuest(): Quest {
         do: () => cliExecute(`/whitelist ${args.clan}`),
       },
       {
-        name: "Acquire Carpe",
-        completed: () => !args.carpe|| have($item`carpe`),
-        do: () => cliExecute("acquire carpe"),
+        name: "LGR Seed",
+        ready: () =>
+          have($item`lucky gold ring`) && have($item`one-day ticket to Dinseylandfill`),
+        completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
+        do: () => use($item`one-day ticket to Dinseylandfill`),
+        tracking: "Garbo",
       },
       {
         name: "Prep Fireworks Shop",
@@ -252,11 +282,106 @@ export function GarboWeenQuest(): Quest {
         do: () => false,
       },
       {
+        name: "Acquire Familiar XP",
+        completed: () => have($effect`Feeling Fancy`) || myFullness() + 2 >= fullnessLimit(),
+        do: (): void => {
+          retrieveItem($item`roasted vegetable focaccia`);
+          eat($item`roasted vegetable focaccia`);
+        },
+        limit: { tries: 1 },
+      },
+      {
+        name: "Sniff and Run",
+        prepare: () => restoreMp(200),
+        completed: () => get("olfactedMonster") === $monster`crate`,
+        do: $location`Noob Cave`,
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Transcendent Olfaction`)
+            .trySkill($skill`Gallapagosian Mating Call`)
+            .trySkill($skill`Offer Latte to Opponent`)
+            .trySkill($skill`Emit Matter Duplicating Drones`)
+            .trySkill($skill`Spring Away`)
+        ),
+        outfit: myOutfit(false),
+        limit: { tries: 1 },
+      },
+      {
+        name: "Grab a free fight",
+        ready: () => have($effect`Feeling Fancy`),
+        completed: () =>
+          !have($item`waffle`) ||
+          get("_monsterHabitatsRecalled") >= 3 ||
+          (get("_monsterHabitatsMonster") === $monster`Witchess Knight` &&
+            get("_monsterHabitatsFightsLeft") > 0),
+        do: (): void => {
+          CombatLoversLocket.reminisce($monster`Witchess Knight`,"");
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Recall Facts: Monster Habitats`)
+            .trySkill($skill`Emit Matter Duplicating Drones`)
+            .trySkillRepeat($skill`Lunging Thrust-Smack`)
+        ),
+        outfit: myOutfit(false),
+        limit: { tries: 1 },
+      },
+      {
+        name: "Finish Buffing Up",
+        ready: () => get("_monsterHabitatsMonster") === $monster`Witchess Knight`,
+        completed: () => have($effect`Eldritch Attunement`),
+        do: (): void => {
+          retrieveItem($item`eldritch mushroom pizza`);
+          eat($item`eldritch mushroom pizza`);
+        },
+        limit: { tries: 1 },
+      },
+      {
         name: "CONSUME ALL",
         completed: () => (myFullness() >= fullnessLimit()) &&
           (mySpleenUse() >= spleenLimit()) &&
           (myInebriety() >= inebrietyLimit()),
-        do: () => cliExecute("consume ALL"),
+        do: () => cliExecute("consume ALL VALUE=0"),
+      },
+      {
+        name: "Summon Waffles",
+        completed: () => !have($item`august scepter`) || get("_augSkillsCast") < 5 || $skill`Aug. 24th: Waffle Day!`.dailylimit <= 0,
+        do: () => useSkill($skill`Aug. 24th: Waffle Day!`),
+      },
+      {
+        name: "Use Macros",
+        completed: () =>
+          macrosUsed() ||
+          (get("_monsterHabitatsFightsLeft") === 0 && get("_monsterHabitatsRecalled") === 3),
+        do: $location`Noob Cave`,
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Emit Matter Duplicating Drones`)
+            .if_($monster`crate`, Macro.tryItem($item`waffle`).trySkill($skill`CHEAT CODE: Replace Enemy`).trySkill($skill`Macrometeorite`))
+            .if_($monster`Witchess Knight`, ballsMacro())
+            .if_(
+              $monster`Eldritch Tentacle`,
+              Macro.trySkill($skill`Emit Matter Duplicating Drones`).attack()
+            )
+            .attack()
+        ),
+        outfit: myOutfit(false),
+        limit: {tries: 250 }
+      },
+      {
+        name: "Use Backups",
+        completed: () =>
+          !have($item`backup camera`) || get("_backUpUses") <= 11,
+        do: $location`Noob Cave`,
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Emit Matter Duplicating Drones`)
+            .if_($monster`crate`, Macro.trySkill($skill`Back-Up to your Last Enemy`))
+            .if_($monster`Witchess Knight`, Macro.trySkill($skill`Emit Matter Duplicating Drones`).trySkillRepeat($skill`Lunging Thrust-Smack`))
+            .if_(
+              $monster`Eldritch Tentacle`,
+              Macro.trySkill($skill`Emit Matter Duplicating Drones`).attack()
+            )
+            .attack()
+        ),
+        outfit: myOutfit(false),
+        limit: {tries: 11 }
       },
       {
         name: "Garbo Nobarf",
@@ -350,3 +475,4 @@ export function GarboWeenQuest(): Quest {
     ],
   };
 }
+

@@ -10,7 +10,6 @@ import {
   familiarWeight,
   fullnessLimit,
   getClanName,
-  getProperty,
   getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
@@ -64,7 +63,6 @@ import {
   backstageItemsDone,
   bestFam,
   doneAdventuring,
-  findCheapRun,
   haveAll,
   maxBase,
   stooperDrunk,
@@ -73,8 +71,8 @@ import {
 
 let pajamas = false;
 let smoke = 1;
-let commaSetupDone = false;
-const checkMelange =
+
+const checkMelange = () =>
   get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
   !have($item`designer sweatpants`);
 
@@ -218,28 +216,6 @@ export function SmolQuests(): Quest[] {
           },
         },
         {
-          name: "Prepare Comma",
-          ready: () => have($familiar`Comma Chameleon`) && !have($familiar`Frumious Bandersnatch`) && !have($familiar`Pair of Stomping Boots`),
-          completed: () => commaSetupDone ||
-            getProperty("commaFamiliar") === "Pair of Stomping Boots" ||
-            getProperty("commaFamiliar") === "Frumious Bandersnatch" ||
-            get("_commaRunDone", false),
-          do: (): void => {
-            const it = findCheapRun();
-            if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
-              if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
-              cliExecute(`pull ${it}`);
-            useFamiliar($familiar`Comma Chameleon`);
-            visitUrl(
-              `inv_equip.php?which=2&action=equip&whichitem=${toInt(it)}&pwd`
-            );
-            visitUrl("charpane.php");
-            commaSetupDone = true;
-            cliExecute("set _commaRunDone = true")
-            }
-          },
-        },
-        {
           name: "Stillsuit Prep",
           completed: () => itemAmount($item`tiny stillsuit`) === 0,
           do: () =>
@@ -264,7 +240,7 @@ export function SmolQuests(): Quest[] {
           name: "drink",
           ready: () =>
             step("questL13Final") > 11 &&
-            (have($item`designer sweatpants`) || checkMelange) &&
+            (have($item`designer sweatpants`) || checkMelange()) &&
             have($skill`Drinking to Drink`) &&
             storageAmount($item`synthetic dog hair pill`) >= 1,
           completed: () => myInebriety() >= 2,
@@ -322,7 +298,7 @@ export function SmolQuests(): Quest[] {
             get("_mimeArmyShotglassUsed") ||
             get("_sweatOutSomeBoozeUsed", 0) === 3,
           do: (): void => {
-            if (checkMelange) {
+            if (checkMelange()) {
               cliExecute("acquire spice melange; use spice melange");
             }
             while (get("_sweatOutSomeBoozeUsed", 0) < 3) {
@@ -592,6 +568,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Smoke em if you got em",
+          ready: () => get("getawayCampsiteUnlocked"),
           completed: () => !have($item`stick of firewood`),
           do: (): void => {
             while (have($item`stick of firewood`)) {

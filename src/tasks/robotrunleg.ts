@@ -73,6 +73,8 @@ function firstWorkshed() {
     ) || $item`none`
   );
 }
+const sasqBonus = (.5 * 30 * 1000) / get("valueOfAdventure");
+const ratskinBonus = (.3 * 40 * 1000) / get("valueOfAdventure");
 
 export function RobotQuests(): Quest[] {
   return [
@@ -231,7 +233,7 @@ export function RobotQuests(): Quest[] {
           do: () => cliExecute("breakfast"),
         },
         {
-          name: "Drink Pre-Steel Organ",
+          name: "Emergency Drink",
           ready: () =>
             myAdventures() < 25,
           completed: () =>
@@ -239,7 +241,28 @@ export function RobotQuests(): Quest[] {
           prepare: () => {
             if (have($item`astral six-pack`)) use($item`astral six-pack`);
           },
-          do: () => drink(1, $item`astral pilsner`),
+          do: () => {
+            while(myAdventures() < 25) {
+              drink(1, $item`astral pilsner`);
+            }
+          },
+        },
+        {
+          name: "Emergency Drink Part 2",
+          ready: () =>
+            myAdventures() === 0 && myInebriety() < 11,
+          completed: () =>
+            myAdventures() > 0 || myInebriety() >= 11,
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => {
+            while(myAdventures() < 25) {
+              useSkill($skill`The Ode to Booze`);
+              drink(1, $item`astral pilsner`);
+            }
+          },
+          limit: { tries: 6 },
         },
         {
           name: "Laugh Floor",
@@ -434,6 +457,7 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "Smoke em if you got em",
+          ready: () => get("getawayCampsiteUnlocked"),
           completed: () => !have($item`stick of firewood`),
           do: (): void => {
             while (have($item`stick of firewood`)) {
@@ -509,7 +533,7 @@ export function RobotQuests(): Quest[] {
               $familiars`Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose`.find(
                 (fam) => have(fam)
               ),
-            modifier: `adventures${args.pvp ? ", 0.3 fites" : ""}`,
+            modifier: `adventures ${sasqBonus} bonus Sasq™ watch, ${ratskinBonus} bonus ratskin pajama pants ${args.pvp ? ", 0.3 fites" : ""}`,
           }),
         },
         {
@@ -518,7 +542,7 @@ export function RobotQuests(): Quest[] {
           completed: () => stooperDrunk(),
           do: (): void => {
             const targetAdvs = 100 - numericModifier("adventures");
-            print("smol completed, but did not overdrink.", "red");
+            print("robot completed, but did not overdrink.", "red");
             if (targetAdvs < myAdventures() && targetAdvs > 0)
               print(
                 `Rerun with fewer than ${targetAdvs} adventures for smol to handle your diet`,

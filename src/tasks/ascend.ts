@@ -51,8 +51,9 @@ export function AscendQuest(): Quest {
 
           if(path === undefined) throw "You have no path defined";
 
-          const moonsign = args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
+
           const canRobotNonMon = CursedMonkeyPaw.have() && have($item`genie bottle`);
+          const moonsign = args.robot && canRobotNonMon ? toMoonSign("mongoose") : args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
           const myClass = args.robot && !canRobotNonMon ? $class`Pastamancer` : args.class;
 
           ascend({
