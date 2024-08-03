@@ -2,7 +2,6 @@ import {
   buy,
   cliExecute,
   drink,
-  familiarWeight,
   fullnessLimit,
   getClanName,
   getWorkshed,
@@ -38,7 +37,6 @@ import {
   $item,
   $items,
   $skill,
-  AprilingBandHelmet,
   AsdonMartin,
   gameDay,
   get,
@@ -46,15 +44,11 @@ import {
   set,
   uneffect,
 } from "libram";
+
 import { args } from "../args";
+
 import { getCurrentLeg, Leg, Quest } from "./structure";
-import {
-  canDiet,
-  doneAdventuring,
-  getGarden,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+import { canDiet, doneAdventuring, getGarden, stooperDrunk, totallyDrunk } from "./utils";
 
 let pajamas = false;
 let smoke = 1;
@@ -65,9 +59,7 @@ export function CSQuests(): Quest[] {
   return [
     {
       name: "Community Service Run",
-      completed: () =>
-        getCurrentLeg() !== Leg.Run ||
-        get("kingLiberated"),
+      completed: () => getCurrentLeg() !== Leg.Run || get("kingLiberated"),
       tasks: [
         {
           name: "Whitelist VIP Clan",
@@ -115,7 +107,7 @@ export function CSQuests(): Quest[] {
         {
           name: "Clear citizen",
           completed: () => get("_citizenZone", "") !== "Madness Bakery",
-          do: (): void =>{
+          do: (): void => {
             uneffect($effect`Citizen of a Zone`);
             cliExecute(`set _citizenZone = ""`);
           },
@@ -127,9 +119,8 @@ export function CSQuests(): Quest[] {
           completed: () =>
             ["yam4", "explosion", "clock"].every((sym) => get("_mayamSymbolsUsed").includes(sym)),
           do: () => {
-            if($familiar`Chest Mimic`.experience < 450)
-              useFamiliar($familiar`Chest Mimic`);
-            else useFamiliar($familiar`Grey Goose`)
+            if ($familiar`Chest Mimic`.experience < 450) useFamiliar($familiar`Chest Mimic`);
+            else useFamiliar($familiar`Grey Goose`);
             cliExecute("mayam rings vessel yam cheese explosion");
             cliExecute("mayam rings yam meat eyepatch yam");
             cliExecute("mayam rings fur bottle wall clock");
@@ -150,21 +141,22 @@ export function CSQuests(): Quest[] {
           ready: () => get("getawayCampsiteUnlocked"),
           completed: () => !have($item`stick of firewood`) || smoke >= 10,
           do: (): void => {
-            if(mallPrice($item`stick of firewood`) <= 200)
-              buy($item`stick of firewood`, 10);
-            while(have($item`stick of firewood`)) {
-              setProperty("choiceAdventure1394",`1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`);
-              use(1,$item`campfire smoke`);
-              print(`Smoked ${smoke} firewoods!`)
+            if (mallPrice($item`stick of firewood`) <= 200) buy($item`stick of firewood`, 10);
+            while (have($item`stick of firewood`)) {
+              setProperty(
+                "choiceAdventure1394",
+                `1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`,
+              );
+              use(1, $item`campfire smoke`);
+              print(`Smoked ${smoke} firewoods!`);
               smoke = smoke + 1;
             }
-            if(mallPrice($item`stick of firewood`) <= 200)
-              buy($item`stick of firewood`, 1);
-          }
+            if (mallPrice($item`stick of firewood`) <= 200) buy($item`stick of firewood`, 1);
+          },
         },
         {
           name: "Acquire Carpe",
-          completed: () => !args.carpe|| have($item`carpe`),
+          completed: () => !args.carpe || have($item`carpe`),
           do: () => cliExecute("acquire carpe"),
         },
         {
@@ -208,7 +200,7 @@ export function CSQuests(): Quest[] {
               totallyDrunk() || !have($item`Drunkula's wineglass`)
                 ? myAdventures()
                 : myAdventures() + 60,
-              false
+              false,
             ),
           limit: { tries: 5 },
         },
@@ -233,9 +225,10 @@ export function CSQuests(): Quest[] {
         {
           name: "CONSUME ALL",
           ready: () => holiday().includes("Halloween"),
-          completed: () => (myFullness() >= fullnessLimit()) &&
-            (mySpleenUse() >= spleenLimit()) &&
-            (myInebriety() >= inebrietyLimit()),
+          completed: () =>
+            myFullness() >= fullnessLimit() &&
+            mySpleenUse() >= spleenLimit() &&
+            myInebriety() >= inebrietyLimit(),
           do: () => cliExecute("consume ALL"),
         },
         {
@@ -245,27 +238,28 @@ export function CSQuests(): Quest[] {
           do: (): void => {
             cliExecute(`${args.garbo} nodiet nobarf target="witchess knight"`);
             garboDone = true;
-          }
-        },
-          {
-            name: "Garboween",
-            ready: () => holiday().includes("Halloween"),
-            completed: () => Math.floor(myAdventures()/5) < 1,
-            prepare: () => uneffect($effect`Beaten Up`),
-            do: (): void => {
-                if(have($familiar`Trick-or-Treating Tot`)) cliExecute("familiar Trick-or-Treating Tot")
-                else if(have($familiar`Red-Nosed Snapper`)) cliExecute("familiar snapper")
-                cliExecute(`freeCandy ${myAdventures()}`);
-            },
-            post: () => {
-              if (myAdventures() === 0)
-                $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-                  .filter((ef) => have(ef))
-                  .forEach((ef) => uneffect(ef));
-            },
-            clear: "all",
-            tracking: "Garbo",
           },
+        },
+        {
+          name: "Garboween",
+          ready: () => holiday().includes("Halloween"),
+          completed: () => Math.floor(myAdventures() / 5) < 1,
+          prepare: () => uneffect($effect`Beaten Up`),
+          do: (): void => {
+            if (have($familiar`Trick-or-Treating Tot`))
+              cliExecute("familiar Trick-or-Treating Tot");
+            else if (have($familiar`Red-Nosed Snapper`)) cliExecute("familiar snapper");
+            cliExecute(`freeCandy ${myAdventures()}`);
+          },
+          post: () => {
+            if (myAdventures() === 0)
+              $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+                .filter((ef) => have(ef))
+                .forEach((ef) => uneffect(ef));
+          },
+          clear: "all",
+          tracking: "Garbo",
+        },
         {
           name: "Turn in FunFunds",
           ready: () => get("_stenchAirportToday") && itemAmount($item`FunFunds™`) >= 20,
@@ -305,55 +299,61 @@ export function CSQuests(): Quest[] {
         {
           name: "Do Pizza",
           ready: () => doneAdventuring(),
-          completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
+          completed: () =>
+            have($item`Pizza of Legend`) &&
+            have($item`Deep Dish of Legend`) &&
+            have($item`Calzone of Legend`),
           do: (): void => {
-          !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
-          !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
-          !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;} ,
+            !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`) : undefined;
+            !have($item`Deep Dish of Legend`)
+              ? retrieveItem($item`Deep Dish of Legend`)
+              : undefined;
+            !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
+          },
         },
         {
           name: "Plant Garden",
           ready: () =>
             doneAdventuring() &&
             !!$items`packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth`.find(
-              (it) => have(it)
+              (it) => have(it),
             ),
           completed: () => getGarden() !== $item`packet of tall grass seeds`,
           do: () => {
             use(
               $items`packet of rock seeds, packet of thanksgarden seeds, Peppermint Pip Packet, packet of winter seeds, packet of beer seeds, packet of pumpkin seeds, packet of dragon's teeth`.find(
-                (it) => have(it)
-              ) || $item`none`
+                (it) => have(it),
+              ) || $item`none`,
             );
             cliExecute("garden pick");
           },
         },
         {
-            name: "Freecandy Drunk",
-            ready: () => holiday().includes("Halloween"),
-            completed: () => stooperDrunk() || (!canDiet() && Math.floor(myAdventures()/5) === 0),
-            prepare: () => uneffect($effect`Beaten Up`),
-            do: (): void => {
-                cliExecute(`freeCandy ${myAdventures()}`);
-            },
-            post: () => {
-              if (myAdventures() === 0)
-                $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
-                  .filter((ef) => have(ef))
-                  .forEach((ef) => uneffect(ef));
-            },
-            clear: "all",
-            tracking: "Garbo",
-            limit: { tries: 1 }, //this will run again after installing CMC, by magic
+          name: "Freecandy Drunk",
+          ready: () => holiday().includes("Halloween"),
+          completed: () => stooperDrunk() || (!canDiet() && Math.floor(myAdventures() / 5) === 0),
+          prepare: () => uneffect($effect`Beaten Up`),
+          do: (): void => {
+            cliExecute(`freeCandy ${myAdventures()}`);
           },
+          post: () => {
+            if (myAdventures() === 0)
+              $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
+                .filter((ef) => have(ef))
+                .forEach((ef) => uneffect(ef));
+          },
+          clear: "all",
+          tracking: "Garbo",
+          limit: { tries: 1 }, //this will run again after installing CMC, by magic
+        },
         {
           name: "Offhand Remarkable",
           ready: () => have($item`august scepter`),
-          completed: () => have($effect`Offhand Remarkable`) ||
+          completed: () =>
+            have($effect`Offhand Remarkable`) ||
             get("_aug13Cast", false) ||
-            (get("_augSkillsCast",0) >=5 && gameDay().getDate() !== 13),
-          do: () =>
-            useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
+            (get("_augSkillsCast", 0) >= 5 && gameDay().getDate() !== 13),
+          do: () => useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },
         {
           name: "Alternative Offhand Remarkable",
@@ -362,7 +362,7 @@ export function CSQuests(): Quest[] {
           do: (): void => {
             retrieveItem($item`pocket wish`);
             cliExecute("genie effect Aug. 13th: Left/Off Hander's Day!");
-          }
+          },
         },
         {
           name: "Item Cleanup",
@@ -375,29 +375,6 @@ export function CSQuests(): Quest[] {
           tracking: "Item Cleanup",
         },
         {
-          name: "Apriling Part 2",
-          ready: () => AprilingBandHelmet.canJoinSection(),
-          completed: () => !AprilingBandHelmet.canPlay($item`Apriling band piccolo`),
-          do: (): void => {
-            AprilingBandHelmet.joinSection($item`Apriling band piccolo`);
-            if(AprilingBandHelmet.canJoinSection()) {
-              AprilingBandHelmet.joinSection($item`Apriling band saxophone`);
-              AprilingBandHelmet.play($item`Apriling band saxophone`);
-            }
-            if(have($familiar`Grey Goose`))
-              useFamiliar($familiar`Grey Goose`);
-            else if(have($familiar`Chest Mimic`))
-              useFamiliar($familiar`Chest Mimic`);
-            else if(have($familiar`Pocket Professor`) && familiarWeight($familiar`Pocket Professor`) < 20)
-              useFamiliar($familiar`Pocket Professor`);
-            else if(have($familiar`Comma Chameleon`))
-              useFamiliar($familiar`Comma Chameleon`);
-            while($item`Apriling band piccolo`.dailyusesleft > 0 && have($item`Apriling band piccolo`))
-              AprilingBandHelmet.play($item`Apriling band piccolo`);
-          },
-          limit: { tries: 1 },
-        },
-        {
           name: "Pajamas",
           completed: () => have($item`burning cape`),
           acquire: [
@@ -408,7 +385,7 @@ export function CSQuests(): Quest[] {
             if (have($item`clockwork maid`)) {
               use($item`clockwork maid`);
             }
-            cliExecute("maximize adv, switch disembodied hand, -switch left-hand man")
+            cliExecute("maximize adv, switch disembodied hand, -switch left-hand man");
             pajamas = true;
           },
         },
@@ -422,7 +399,7 @@ export function CSQuests(): Quest[] {
             if (targetAdvs < myAdventures() && targetAdvs > 0)
               print(
                 `Rerun with fewer than ${targetAdvs} adventures for candyWrapper to handle your diet`,
-                "red"
+                "red",
               );
             else print("Something went wrong.", "red");
           },

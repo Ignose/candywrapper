@@ -55,6 +55,10 @@ import {
   TrainSet,
   uneffect,
 } from "libram";
+import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
+
+import { args } from "../args";
+
 import { Quest } from "./structure";
 import {
   bestFam,
@@ -65,8 +69,6 @@ import {
   stooperDrunk,
   totallyDrunk,
 } from "./utils";
-import { args } from "../args";
-import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -74,7 +76,7 @@ const doCS = args.cs ? true : false;
 let jobsDone = false;
 let skipSoda = false;
 
-const statStation: Station =  {
+const statStation: Station = {
   Muscle: Station.BRAWN_SILO,
   Mysticality: Station.BRAIN_SILO,
   Moxie: Station.GROIN_SILO,
@@ -93,12 +95,27 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    completed: () => (myAdventures() === 0 && totallyDrunk() && have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`)) || myDaycount() ===1,
+    completed: () =>
+      (myAdventures() === 0 &&
+        totallyDrunk() &&
+        have($item`Pizza of Legend`) &&
+        have($item`Deep Dish of Legend`) &&
+        have($item`Calzone of Legend`)) ||
+      myDaycount() === 1,
     tasks: [
       {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
+      },
+      {
+        name: "Get Floundry item",
+        ready: () => have($item`Clan VIP Lounge key`) && !args.carpe,
+        completed: () => get("_floundryItemCreated"),
+        do: (): void => {
+          retrieveItem($item`carpe`);
+        },
+        limit: { tries: 1 },
       },
       {
         name: "Prep Fireworks Shop",
@@ -118,7 +135,7 @@ export function AftercoreQuest(): Quest {
         ready: () => AprilingBandHelmet.canChangeSong(),
         completed: () => have($effect`Apriling Band Celebration Bop`),
         do: (): void => {
-          AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`)
+          AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`);
         },
         limit: { tries: 1 },
       },
@@ -139,9 +156,8 @@ export function AftercoreQuest(): Quest {
         completed: () =>
           ["yam4", "explosion", "clock"].every((sym) => get("_mayamSymbolsUsed").includes(sym)),
         do: () => {
-          if($familiar`Chest Mimic`.experience < 450)
-            useFamiliar($familiar`Chest Mimic`);
-          else useFamiliar($familiar`Grey Goose`)
+          if ($familiar`Chest Mimic`.experience < 450) useFamiliar($familiar`Chest Mimic`);
+          else useFamiliar($familiar`Grey Goose`);
           cliExecute("mayam rings vessel yam cheese explosion");
           cliExecute("mayam rings yam meat eyepatch yam");
           cliExecute("mayam rings fur bottle wall clock");
@@ -181,7 +197,7 @@ export function AftercoreQuest(): Quest {
             totallyDrunk() || !have($item`Drunkula's wineglass`)
               ? myAdventures()
               : myAdventures() + 60,
-            false
+            false,
           ),
         limit: { tries: 5 },
       },
@@ -205,7 +221,7 @@ export function AftercoreQuest(): Quest {
               .tryItem($item`porquoise-handled sixgun`)
               .trySkill($skill`Sing Along`)
               .attack()
-              .repeat()
+              .repeat(),
           ),
       },
       {
@@ -288,19 +304,20 @@ export function AftercoreQuest(): Quest {
             .trySkill($skill`Feel Pride`)
             .tryItem(...$items`shard of double-ice, gas can`)
             .attack()
-            .repeat()
+            .repeat(),
         ),
         tracking: "Leveling",
       },
       {
         name: "Unlock Guild",
         ready: () =>
-          (myClass() === $class`Seal Clubber` &&
-            Math.min(
-              ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-                availableAmount(it)
-              )
-            ) < 20) && doSmol,
+          myClass() === $class`Seal Clubber` &&
+          Math.min(
+            ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
+              availableAmount(it),
+            ),
+          ) < 20 &&
+          doSmol,
         completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
         do: () => cliExecute("guild"),
         choices: {
@@ -333,20 +350,20 @@ export function AftercoreQuest(): Quest {
                 .externalIf(
                   have($skill`Curse of Weaksauce`),
                   Macro.trySkill($skill`Curse of Weaksauce`),
-                  Macro.tryItem($item`electronics kit`)
+                  Macro.tryItem($item`electronics kit`),
                 )
                 .tryItem($item`porquoise-handled sixgun`)
                 .trySkill($skill`Sing Along`)
                 .attack()
                 .repeat(),
-            getTodaysHolidayWanderers()
+            getTodaysHolidayWanderers(),
           )
           .macro(() =>
             Macro.step("pickpocket")
               .trySkill($skill`Sing Along`)
               .tryItem($item`porquoise-handled sixgun`)
               .attack()
-              .repeat()
+              .repeat(),
           ),
       },
       {
@@ -370,8 +387,8 @@ export function AftercoreQuest(): Quest {
         completed: () =>
           Math.min(
             ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-              availableAmount(it)
-            )
+              availableAmount(it),
+            ),
           ) >= 40,
         acquire: $items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) => ({
           item: it,
@@ -381,7 +398,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Garbo",
-        completed: () => stooperDrunk() ||  myAdventures() === 0,
+        completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
         do: () => cliExecute(args.garboascend),
         post: () => {
@@ -435,10 +452,10 @@ export function AftercoreQuest(): Quest {
                 Macro.trySkill($skill`Furious Wallop`)
                   .trySkill($skill`Summer Siesta`)
                   .trySkill($skill`Throw Shield`)
-                  .trySkill($skill`Precision Shot`)
+                  .trySkill($skill`Precision Shot`),
               )
               .attack()
-              .repeat()
+              .repeat(),
           ),
         limit: { tries: 30 },
       },
@@ -510,7 +527,7 @@ export function AftercoreQuest(): Quest {
             mallPrice($item`Ol' Scratch's salad fork`) < 200000
           )
             cliExecute(
-              "acquire Pizza of Legend; acquire Frosty's frosty mug; acquire Ol' Scratch's salad fork"
+              "acquire Pizza of Legend; acquire Frosty's frosty mug; acquire Ol' Scratch's salad fork",
             );
         },
       },
@@ -519,22 +536,26 @@ export function AftercoreQuest(): Quest {
         ready: () => doCS,
         completed: () => have($item`tobiko marble soda`) || skipSoda,
         do: (): void => {
-          if(mallPrice($item`tobiko marble soda`) < get("valueOfAdventure") * 2)
+          if (mallPrice($item`tobiko marble soda`) < get("valueOfAdventure") * 2)
             retrieveItem($item`tobiko marble soda`);
           else {
             print(`Soda is too expensive, mallprice is ${mallPrice($item`tobiko marble soda`)}`);
             skipSoda = true;
           }
-        }
+        },
       },
       {
         name: "Prepare for LoopCS",
-        completed: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
+        completed: () =>
+          have($item`Pizza of Legend`) &&
+          have($item`Deep Dish of Legend`) &&
+          have($item`Calzone of Legend`),
         do: (): void => {
-        !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`): undefined;
-        !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
-        !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
-        !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;} ,
+          !have($item`Pizza of Legend`) ? retrieveItem($item`Pizza of Legend`) : undefined;
+          !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
+          !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
+          !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
+        },
       },
       {
         name: "Let's do the trainset again",
@@ -556,7 +577,7 @@ export function AftercoreQuest(): Quest {
         name: "Job's Done",
         completed: () => jobsDone,
         do: (): void => {
-        jobsDone = true;
+          jobsDone = true;
         },
       },
     ],
