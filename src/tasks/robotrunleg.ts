@@ -5,7 +5,6 @@ import {
   cliExecute,
   drink,
   Effect,
-  familiarWeight,
   getClanName,
   getWorkshed,
   hippyStoneBroken,
@@ -17,6 +16,7 @@ import {
   myInebriety,
   myLevel,
   myMaxhp,
+  myRobotEnergy,
   mySign,
   numericModifier,
   print,
@@ -25,6 +25,7 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
+  round,
   setProperty,
   storageAmount,
   toInt,
@@ -51,16 +52,20 @@ import {
   set,
   uneffect,
 } from "libram";
+
 import { args } from "../args";
+
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
   doneAdventuring,
   haveAll,
+  isChronoWorthIt,
   maxBase,
   stooperDrunk,
   totallyDrunk,
+  YouRobot,
 } from "./utils";
 
 let pajamas = false;
@@ -69,12 +74,16 @@ let smoke = 1;
 function firstWorkshed() {
   return (
     $items`model train set, Asdon Martin keyfob (on ring), cold medicine cabinet, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-      (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0
+      (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
     ) || $item`none`
   );
 }
-const sasqBonus = (.5 * 30 * 1000) / get("valueOfAdventure");
-const ratskinBonus = (.3 * 40 * 1000) / get("valueOfAdventure");
+const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
+const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
+const chronolithDebug1 = () =>
+  (YouRobot.expectedChronolithCost() - myRobotEnergy()) / YouRobot.expectedEnergyNextCollect();
+const chronolithDebug2 = () => (chronolithDebug1() <= 1 ? 0 : round(chronolithDebug1()));
+const chronolithDebug3 = () => myAdventures() - chronolithDebug2() >= 0;
 
 export function RobotQuests(): Quest[] {
   return [
@@ -87,8 +96,17 @@ export function RobotQuests(): Quest[] {
           completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
           do: () => cliExecute(`/whitelist ${args.clan}`),
           choices: {
-            1507:1
+            1507: 1,
           },
+        },
+        {
+          name: "Get Floundry item",
+          ready: () => have($item`Clan VIP Lounge key`) && !args.carpe,
+          completed: () => get("_floundryItemCreated"),
+          do: (): void => {
+            retrieveItem($item`carpe`);
+          },
+          limit: { tries: 1 },
         },
         {
           name: "Prep Fireworks Shop",
@@ -104,7 +122,7 @@ export function RobotQuests(): Quest[] {
           completed: () =>
             pullsRemaining() === 0 ||
             !args.pulls.find(
-              (it) => !have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())
+              (it) => !have(it) && !get("_roninStoragePulls").includes(toInt(it).toString()),
             ), //can't find a pull that (we dont have and it hasn't been pulled today)
           do: () =>
             args.pulls.forEach((it) => {
@@ -135,6 +153,25 @@ export function RobotQuests(): Quest[] {
           completed: () => step("questL13Final") > 11,
           do: () => cliExecute(args.robotscript),
           clear: "all",
+          tracking: "Run",
+        },
+        {
+          name: "ChronoLith",
+          prepare: (): void => {
+            print(`Current Robot Energy is ${myRobotEnergy()}.`);
+            print(`Next chronolith costs ${YouRobot.expectedChronolithCost()}`);
+            print(`It would cost ${chronolithDebug2()} adventures to gain 10 adventures`);
+            print(`Is this possible with current adventures? ${chronolithDebug3()}`);
+          },
+          completed: () => !isChronoWorthIt(),
+          do: (): void => {
+            while (isChronoWorthIt()) {
+              while (YouRobot.energy() < YouRobot.expectedChronolithCost()) {
+                YouRobot.doCollectEnergy();
+              }
+              YouRobot.doChronolith();
+            }
+          },
           tracking: "Run",
         },
         {
@@ -192,7 +229,7 @@ export function RobotQuests(): Quest[] {
           ready: () => AprilingBandHelmet.canChangeSong(),
           completed: () => have($effect`Apriling Band Celebration Bop`),
           do: (): void => {
-            AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`)
+            AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`);
           },
           limit: { tries: 1 },
         },
@@ -234,30 +271,26 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "Emergency Drink",
-          ready: () =>
-            myAdventures() < 25,
-          completed: () =>
-            get("_mimeArmyShotglassUsed") || !have($item`mime army shotglass`),
+          ready: () => myAdventures() < 25,
+          completed: () => get("_mimeArmyShotglassUsed") || !have($item`mime army shotglass`),
           prepare: () => {
             if (have($item`astral six-pack`)) use($item`astral six-pack`);
           },
           do: () => {
-            while(myAdventures() < 25) {
+            while (myAdventures() < 25) {
               drink(1, $item`astral pilsner`);
             }
           },
         },
         {
           name: "Emergency Drink Part 2",
-          ready: () =>
-            myAdventures() === 0 && myInebriety() < 11,
-          completed: () =>
-            myAdventures() > 0 || myInebriety() >= 11,
+          ready: () => myAdventures() === 0 && myInebriety() < 11,
+          completed: () => myAdventures() > 0 || myInebriety() >= 11,
           prepare: () => {
             if (have($item`astral six-pack`)) use($item`astral six-pack`);
           },
           do: () => {
-            while(myAdventures() < 25) {
+            while (myAdventures() < 25) {
               useSkill($skill`The Ode to Booze`);
               drink(1, $item`astral pilsner`);
             }
@@ -284,7 +317,7 @@ export function RobotQuests(): Quest[] {
               cliExecute("refresh effects");
             }
             $effects`Smooth Movements, The Sonata of Sneakiness, Darkened Photons, Shifted Phase`.forEach(
-              (ef: Effect) => cliExecute(`uneffect ${ef}`)
+              (ef: Effect) => cliExecute(`uneffect ${ef}`),
             );
             restoreHp(0.75 * myMaxhp());
             restoreMp(20);
@@ -299,7 +332,7 @@ export function RobotQuests(): Quest[] {
               .tryItem($item`train whistle`)
               .tryItem($item`porquoise-handled sixgun`)
               .attack()
-              .repeat()
+              .repeat(),
           ),
           limit: { tries: 15 },
         },
@@ -321,7 +354,7 @@ export function RobotQuests(): Quest[] {
               cliExecute("refresh effects");
             }
             $effects`Musk of the Moose, Carlweather's Cantata of Confrontation, Hooooooooonk!`.forEach(
-              (ef: Effect) => cliExecute(`uneffect ${ef}`)
+              (ef: Effect) => cliExecute(`uneffect ${ef}`),
             );
             restoreHp(0.75 * myMaxhp());
             restoreMp(20);
@@ -336,7 +369,7 @@ export function RobotQuests(): Quest[] {
               .tryItem($item`train whistle`)
               .tryItem($item`porquoise-handled sixgun`)
               .attack()
-              .repeat()
+              .repeat(),
           ),
           limit: { tries: 15 },
         },
@@ -362,18 +395,18 @@ export function RobotQuests(): Quest[] {
           do: (): void => {
             cliExecute(
               `panda arena Bognort ${$items`giant marshmallow, gin-soaked blotter paper`.find((a) =>
-                have(a)
-              )}`
+                have(a),
+              )}`,
             );
             cliExecute(
               `panda arena Stinkface ${$items`beer-scented teddy bear, gin-soaked blotter paper`.find(
-                (a) => have(a)
-              )}`
+                (a) => have(a),
+              )}`,
             );
             cliExecute(
               `panda arena Flargwurm ${$items`booze-soaked cherry, sponge cake`.find((a) =>
-                have(a)
-              )}`
+                have(a),
+              )}`,
             );
             cliExecute(`panda arena Jim ${$items`comfy pillow, sponge cake`.find((a) => have(a))}`);
           },
@@ -409,7 +442,7 @@ export function RobotQuests(): Quest[] {
         {
           name: "Garbo",
           ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          completed: () => (myAdventures() === 0) || stooperDrunk(),
+          completed: () => myAdventures() === 0 || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(args.garbo),
           post: () =>
@@ -463,7 +496,7 @@ export function RobotQuests(): Quest[] {
             while (have($item`stick of firewood`)) {
               setProperty(
                 "choiceAdventure1394",
-                `1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`
+                `1&message=${smoke} Thanks Seraphiii for writing Candywrapper!`,
               );
               use(1, $item`campfire smoke`);
               print(`Smoked ${smoke} firewoods!`);
@@ -478,8 +511,7 @@ export function RobotQuests(): Quest[] {
             !have($skill`Aug. 13th: Left/Off Hander's Day!`) ||
             have($effect`Offhand Remarkable`) ||
             get("_aug13Cast", false),
-          do: () =>
-            useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
+          do: () => useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         },
         {
           name: "Item Cleanup",
@@ -491,29 +523,6 @@ export function RobotQuests(): Quest[] {
           },
           clear: "all",
           tracking: "Item Cleanup",
-        },
-        {
-          name: "Apriling Part 2",
-          ready: () => AprilingBandHelmet.canJoinSection(),
-          completed: () => !AprilingBandHelmet.canPlay($item`Apriling band piccolo`),
-          do: (): void => {
-            AprilingBandHelmet.joinSection($item`Apriling band piccolo`);
-            if(AprilingBandHelmet.canJoinSection()) {
-              AprilingBandHelmet.joinSection($item`Apriling band saxophone`);
-              AprilingBandHelmet.play($item`Apriling band saxophone`);
-            }
-            if(have($familiar`Grey Goose`))
-              useFamiliar($familiar`Grey Goose`);
-            else if(have($familiar`Chest Mimic`))
-              useFamiliar($familiar`Chest Mimic`);
-            else if(have($familiar`Pocket Professor`) && familiarWeight($familiar`Pocket Professor`) < 20)
-              useFamiliar($familiar`Pocket Professor`);
-            else if(have($familiar`Comma Chameleon`))
-              useFamiliar($familiar`Comma Chameleon`);
-            while($item`Apriling band piccolo`.dailyusesleft > 0 && have($item`Apriling band piccolo`))
-              AprilingBandHelmet.play($item`Apriling band piccolo`);
-          },
-          limit: { tries: 1 },
         },
         {
           name: "Pajamas",
@@ -531,9 +540,11 @@ export function RobotQuests(): Quest[] {
           outfit: () => ({
             familiar:
               $familiars`Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose`.find(
-                (fam) => have(fam)
+                (fam) => have(fam),
               ),
-            modifier: `adventures ${sasqBonus} bonus Sasq™ watch, ${ratskinBonus} bonus ratskin pajama pants ${args.pvp ? ", 0.3 fites" : ""}`,
+            modifier: `adventures ${sasqBonus} bonus Sasq™ watch, ${ratskinBonus} bonus ratskin pajama pants ${
+              args.pvp ? ", 0.3 fites" : ""
+            }`,
           }),
         },
         {
@@ -546,7 +557,7 @@ export function RobotQuests(): Quest[] {
             if (targetAdvs < myAdventures() && targetAdvs > 0)
               print(
                 `Rerun with fewer than ${targetAdvs} adventures for smol to handle your diet`,
-                "red"
+                "red",
               );
             else print("Something went wrong.", "red");
           },

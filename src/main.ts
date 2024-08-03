@@ -1,15 +1,17 @@
-import { gamedayToInt, print } from "kolmafia";
 import { Args, getTasks } from "grimoire-kolmafia";
-import { CSQuests } from "./tasks/csrunleg";
-import { ProfitTrackingEngine } from "./engine/engine";
-import { args } from "./args";
-import { AftercoreQuest } from "./tasks/aftercoreleg";
-import { SmolQuests } from "./tasks/smolrunleg";
-import { GarboWeenQuest } from "./tasks/Garboween";
-import { AscendQuest } from "./tasks/ascend";
+import { gamedayToInt, print } from "kolmafia";
 import { gameDay } from "libram";
+
+import { args } from "./args";
+import { ProfitTrackingEngine } from "./engine/engine";
+import { GarboWeenQuest } from "./tasks/Garboween";
+import { AftercoreQuest } from "./tasks/aftercoreleg";
+import { AscendQuest } from "./tasks/ascend";
 import { CasualQuests } from "./tasks/casualrunleg";
+import { CSQuests } from "./tasks/csrunleg";
 import { RobotQuests } from "./tasks/robotrunleg";
+import { SmolQuests } from "./tasks/smolrunleg";
+import { deleteJunkKmails } from "./tasks/utils";
 
 const version = "0.0.3";
 
@@ -25,12 +27,12 @@ export function main(command?: string): void {
     return;
   }
 
-  if(dontCS && args.halloween && args.cs) {
-    throw `Tomorrow is halloween, run something that lets you get steel organs!`
+  if (dontCS && args.halloween && args.cs) {
+    throw `Tomorrow is halloween, run something that lets you get steel organs!`;
   }
 
-  if(halloween && args.halloween && args.smol) {
-    throw `Today is halloween, run CS for more organ space!`
+  if (halloween && args.halloween && args.smol) {
+    throw `Today is halloween, run CS for more organ space!`;
   }
 
   /*if (args.profits) {
@@ -40,14 +42,22 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  const runQuest = args.cs ? CSQuests() : args.smol ? SmolQuests() : args.casual ? CasualQuests() : args.robot ? RobotQuests() : undefined;
-  if(runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
+  const runQuest = args.cs
+    ? CSQuests()
+    : args.smol
+    ? SmolQuests()
+    : args.casual
+    ? CasualQuests()
+    : args.robot
+    ? RobotQuests()
+    : undefined;
+  if (runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
 
-  const tasks = halloween ?
-    getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest]) :
-    getTasks([AftercoreQuest(), AscendQuest(), ...runQuest])
+  const tasks = halloween
+    ? getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest])
+    : getTasks([AftercoreQuest(), AscendQuest(), ...runQuest]);
 
-  if(tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
+  if (tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
 
   if (args.abort) {
     const to_abort = tasks.find((task) => task.name === args.abort);
@@ -65,9 +75,8 @@ export function main(command?: string): void {
     if (task) {
       print(`Next: ${task.name}`, "blue");
     }
-
   } finally {
     engine.destruct();
   }
+  deleteJunkKmails();
 }
-
