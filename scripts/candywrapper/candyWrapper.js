@@ -7435,6 +7435,9 @@ function isChronoWorthIt() {
   }
   return currentEnergy >= YouRobot.expectedChronolithCost() && futureAdventures + 9 > currentAdventures;
 }
+var realMonth = gameDay().getMonth();
+var realDay = gameDay().getDate();
+var halloween = (0,external_kolmafia_namespaceObject.gamedayToInt)() === 79 || realMonth === 10 && realDay === 31;
 ;// CONCATENATED MODULE: ./src/args.ts
 var args_templateObject, args_templateObject2, args_templateObject3, args_templateObject4, args_templateObject5, args_templateObject6;
 function args_toConsumableArray(arr) { return args_arrayWithoutHoles(arr) || args_iterableToArray(arr) || args_unsupportedIterableToArray(arr) || args_nonIterableSpread(); }
@@ -10311,6 +10314,7 @@ function robotrunleg_taggedTemplateLiteral(strings, raw) { if (!raw) { raw = str
 
 
 
+
 var robotrunleg_pajamas = false;
 var robotrunleg_smoke = 1;
 function robotrunleg_firstWorkshed() {
@@ -10592,6 +10596,11 @@ function RobotQuests() {
       ready: () => lib_have(template_string_$item(robotrunleg_templateObject82 || (robotrunleg_templateObject82 = robotrunleg_taggedTemplateLiteral(["steel margarita"])))),
       completed: () => lib_have(template_string_$skill(robotrunleg_templateObject83 || (robotrunleg_templateObject83 = robotrunleg_taggedTemplateLiteral(["Liver of Steel"])))),
       do: () => (0,external_kolmafia_namespaceObject.drink)(1, template_string_$item(robotrunleg_templateObject84 || (robotrunleg_templateObject84 = robotrunleg_taggedTemplateLiteral(["steel margarita"]))))
+    }, {
+      name: "GarboWeen",
+      ready: () => halloween,
+      completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || stooperDrunk(),
+      do: () => GarboWeenQuest()
     }, {
       name: "Garbo",
       ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
@@ -11138,12 +11147,8 @@ function main_arrayLikeToArray(arr, len) { if (len == null || len > arr.length) 
 
 
 
-
 var version = "0.0.3";
-var realMonth = gameDay().getMonth();
-var realDay = gameDay().getDate();
 var dontCS = (0,external_kolmafia_namespaceObject.gamedayToInt)() === 78 || realMonth === 10 && realDay === 30;
-var halloween = (0,external_kolmafia_namespaceObject.gamedayToInt)() === 79 || realMonth === 10 && realDay === 31;
 function main(command) {
   Args.fill(args, command);
   if (args.help) {
