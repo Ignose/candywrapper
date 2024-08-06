@@ -55,11 +55,13 @@ import {
 
 import { args } from "../args";
 
+import { GarboWeenQuest } from "./Garboween";
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
   doneAdventuring,
+  halloween,
   haveAll,
   isChronoWorthIt,
   maxBase,
@@ -438,6 +440,12 @@ export function RobotQuests(): Quest[] {
           ready: () => have($item`steel margarita`),
           completed: () => have($skill`Liver of Steel`),
           do: () => drink(1, $item`steel margarita`),
+        },
+        {
+          name: "GarboWeen",
+          ready: () => halloween,
+          completed: () => myAdventures() === 0 || stooperDrunk(),
+          do: () => GarboWeenQuest(),
         },
         {
           name: "Garbo",

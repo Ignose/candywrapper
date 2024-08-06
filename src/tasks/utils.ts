@@ -4,6 +4,7 @@ import {
   Effect,
   Familiar,
   fullnessLimit,
+  gamedayToInt,
   getCampground,
   inebrietyLimit,
   Item,
@@ -30,6 +31,7 @@ import {
   $item,
   $items,
   $phylum,
+  gameDay,
   get,
   getBanishedMonsters,
   have,
@@ -325,3 +327,7 @@ export function isChronoWorthIt(): boolean {
     currentEnergy >= YouRobot.expectedChronolithCost() && futureAdventures + 9 > currentAdventures
   );
 }
+
+export const realMonth = gameDay().getMonth();
+export const realDay = gameDay().getDate();
+export const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
