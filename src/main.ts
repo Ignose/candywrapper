@@ -1,6 +1,5 @@
 import { Args, getTasks } from "grimoire-kolmafia";
 import { gamedayToInt, print } from "kolmafia";
-import { gameDay } from "libram";
 
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
@@ -11,14 +10,11 @@ import { CasualQuests } from "./tasks/casualrunleg";
 import { CSQuests } from "./tasks/csrunleg";
 import { RobotQuests } from "./tasks/robotrunleg";
 import { SmolQuests } from "./tasks/smolrunleg";
-import { deleteJunkKmails } from "./tasks/utils";
+import { deleteJunkKmails, halloween, realDay, realMonth } from "./tasks/utils";
 
 const version = "0.0.3";
 
-const realMonth = gameDay().getMonth();
-const realDay = gameDay().getDate();
 const dontCS = gamedayToInt() === 78 || (realMonth === 10 && realDay === 30);
-const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
 
 export function main(command?: string): void {
   Args.fill(args, command);
