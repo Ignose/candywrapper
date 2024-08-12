@@ -16,7 +16,6 @@ import {
   myInebriety,
   myLevel,
   myMaxhp,
-  myRobotEnergy,
   mySign,
   numericModifier,
   print,
@@ -25,7 +24,6 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
-  round,
   setProperty,
   storageAmount,
   toInt,
@@ -63,11 +61,9 @@ import {
   doneAdventuring,
   halloween,
   haveAll,
-  isChronoWorthIt,
   maxBase,
   stooperDrunk,
   totallyDrunk,
-  YouRobot,
 } from "./utils";
 
 let pajamas = false;
@@ -82,10 +78,6 @@ function firstWorkshed() {
 }
 const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
 const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
-const chronolithDebug1 = () =>
-  (YouRobot.expectedChronolithCost() - myRobotEnergy()) / YouRobot.expectedEnergyNextCollect();
-const chronolithDebug2 = () => (chronolithDebug1() <= 1 ? 0 : round(chronolithDebug1()));
-const chronolithDebug3 = () => myAdventures() - chronolithDebug2() >= 0;
 
 export function RobotQuests(): Quest[] {
   return [
@@ -155,25 +147,6 @@ export function RobotQuests(): Quest[] {
           completed: () => step("questL13Final") > 11,
           do: () => cliExecute(args.robotscript),
           clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "ChronoLith",
-          prepare: (): void => {
-            print(`Current Robot Energy is ${myRobotEnergy()}.`);
-            print(`Next chronolith costs ${YouRobot.expectedChronolithCost()}`);
-            print(`It would cost ${chronolithDebug2()} adventures to gain 10 adventures`);
-            print(`Is this possible with current adventures? ${chronolithDebug3()}`);
-          },
-          completed: () => !isChronoWorthIt(),
-          do: (): void => {
-            while (isChronoWorthIt()) {
-              while (YouRobot.energy() < YouRobot.expectedChronolithCost()) {
-                YouRobot.doCollectEnergy();
-              }
-              YouRobot.doChronolith();
-            }
-          },
           tracking: "Run",
         },
         {

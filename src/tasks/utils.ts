@@ -15,11 +15,9 @@ import {
   myFamiliar,
   myFullness,
   myInebriety,
-  myRobotEnergy,
   mySpleenUse,
   print,
   retrieveItem,
-  round,
   spleenLimit,
   urlEncode,
   use,
@@ -282,50 +280,6 @@ export function deleteJunkKmails() {
 
     print("Failed to delete kmail.", "red");
   });
-}
-
-export class YouRobot {
-  static energy(): number {
-    return myRobotEnergy();
-  }
-
-  static doCollectEnergy(): void {
-    visitUrl("place.php?whichplace=scrapheap&action=sh_getpower");
-  }
-
-  static expectedEnergyNextCollect(): number {
-    const raw = (25 + get("youRobotPoints")) * 0.85 ** get("_energyCollected");
-    return round(raw);
-  }
-
-  static doChronolith(): void {
-    visitUrl("place.php?whichplace=scrapheap&action=sh_chronobo");
-  }
-
-  static expectedChronolithCost(): number {
-    return get("_chronolithNextCost");
-  }
-}
-
-export function isChronoWorthIt(): boolean {
-  const currentAdventures = myAdventures();
-  let futureAdventures = currentAdventures;
-  let currentEnergy = YouRobot.energy();
-  let numEnergyCollects = 0;
-
-  while (futureAdventures > 0) {
-    futureAdventures -= 1;
-    currentEnergy += Math.round(YouRobot.expectedEnergyNextCollect() * 0.85 ** numEnergyCollects);
-    numEnergyCollects += 1;
-
-    if (currentEnergy >= YouRobot.expectedChronolithCost()) {
-      break;
-    }
-  }
-
-  return (
-    currentEnergy >= YouRobot.expectedChronolithCost() && futureAdventures + 9 > currentAdventures
-  );
 }
 
 export const realMonth = gameDay().getMonth();
