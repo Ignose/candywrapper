@@ -1,6 +1,7 @@
 import { Args } from "grimoire-kolmafia";
 import { Item, toClass } from "kolmafia";
 import { $class, $classes, $item, $items, get } from "libram";
+
 import { toMoonSign } from "./tasks/utils";
 
 export const args = Args.create(
@@ -46,24 +47,26 @@ export const args = Args.create(
     }),
     //configuration args
     pvp: Args.flag({ help: "If true, break hippy stone and do pvp.", default: false }),
+    pvpTarget: Args.string({
+      help: "When doing PvP, what should we fight for? fame, loot or flowers?",
+      default: "flowers",
+    }),
     astralpet: Args.custom(
       {
         help: "Choose the astral pet you want to buy in valhalla",
         options:
           $items`astral bludgeon, astral shield, astral chapeau, astral bracer, astral longbow, astral shorts, astral mace, astral trousers, astral ring, astral statuette, astral pistol, astral mask, astral pet sweater, astral shirt, astral belt, none`.map(
-            (it) => [it]
+            (it) => [it],
           ),
         default: $item`astral pet sweater`,
       },
       Item.get,
-      "ITEM"
+      "ITEM",
     ),
-    carpe: Args.flag(
-      {
-        help: "Should we skip acquiring Carpe?",
-        default: false
-      }
-    ),
+    carpe: Args.flag({
+      help: "Should we skip acquiring Carpe?",
+      default: false,
+    }),
     moonsign: Args.custom(
       {
         help: "Choose the moonsign you want to ascend into",
@@ -81,19 +84,19 @@ export const args = Args.create(
         default: toMoonSign("blender"),
       },
       toMoonSign,
-      "MOONSIGN"
+      "MOONSIGN",
     ),
     class: Args.custom(
       {
         help: "Choose your default class, if CandyWrapper doesn't have any other goals this run",
         options:
           $classes`Seal Clubber, Turtle Tamer, Pastamancer, Sauceror, Disco Bandit, Accordion Thief`.map(
-            (cl) => [cl]
+            (cl) => [cl],
           ),
         default: $class`Seal Clubber`,
       },
       toClass,
-      "CLASS"
+      "CLASS",
     ),
     clan: Args.string({
       help: `Your VIP Clan. CandyWrapper will whitelist into it at the beginning of your day. Requires clan whitelist.`,
@@ -136,12 +139,9 @@ export const args = Args.create(
       help: `The script that will be used to mallsale items after a run`,
       default: "",
     }),
-    halloween: Args.flag(
-      {
-        help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
-        default: true
-      }
-    ),
-  }
+    halloween: Args.flag({
+      help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
+      default: true,
+    }),
+  },
 );
-

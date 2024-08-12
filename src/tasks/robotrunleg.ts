@@ -475,7 +475,7 @@ export function RobotQuests(): Quest[] {
           do: (): void => {
             cliExecute("unequip");
             cliExecute("UberPvPOptimizer");
-            cliExecute("swagger");
+            cliExecute(`PVP_MAB target=${args.pvpTarget}`);
           },
         },
         {

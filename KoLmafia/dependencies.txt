@@ -2,3 +2,4 @@ https://github.com/loathers/garbage-collector/
 https://github.com/loathers/freecandydotexe/
 https://github.com/soolar/CONSUME.ash/
 https://github.com/Ignose/FolgerCS/
+https://github.com/Pantocyclus/PVP_MAB
