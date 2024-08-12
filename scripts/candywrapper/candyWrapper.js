@@ -7263,11 +7263,6 @@ function printProfits(records) {
 }
 ;// CONCATENATED MODULE: ./src/tasks/utils.ts
 var utils_templateObject, utils_templateObject2, utils_templateObject3, utils_templateObject4, utils_templateObject5, utils_templateObject6, utils_templateObject7, utils_templateObject8, utils_templateObject9, utils_templateObject10, utils_templateObject11, utils_templateObject12, utils_templateObject13, utils_templateObject14, utils_templateObject15, utils_templateObject16, utils_templateObject17, utils_templateObject18, utils_templateObject19, utils_templateObject20, utils_templateObject21, utils_templateObject22, utils_templateObject23, utils_templateObject24, utils_templateObject25, utils_templateObject26, utils_templateObject27, utils_templateObject28, utils_templateObject29, utils_templateObject30, utils_templateObject31, utils_templateObject32, utils_templateObject33, utils_templateObject34, utils_templateObject35, utils_templateObject36;
-function utils_classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function utils_defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, utils_toPropertyKey(descriptor.key), descriptor); } }
-function utils_createClass(Constructor, protoProps, staticProps) { if (protoProps) utils_defineProperties(Constructor.prototype, protoProps); if (staticProps) utils_defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function utils_toPropertyKey(arg) { var key = utils_toPrimitive(arg, "string"); return typeof key === "symbol" ? key : String(key); }
-function utils_toPrimitive(input, hint) { if (typeof input !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (typeof res !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function utils_toConsumableArray(arr) { return utils_arrayWithoutHoles(arr) || utils_iterableToArray(arr) || tasks_utils_unsupportedIterableToArray(arr) || utils_nonIterableSpread(); }
 function utils_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function tasks_utils_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return tasks_utils_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return tasks_utils_arrayLikeToArray(o, minLen); }
@@ -7386,54 +7381,6 @@ function deleteJunkKmails() {
     }
     (0,external_kolmafia_namespaceObject.print)("Failed to delete kmail.", "red");
   });
-}
-var YouRobot = /*#__PURE__*/function () {
-  function YouRobot() {
-    utils_classCallCheck(this, YouRobot);
-  }
-  utils_createClass(YouRobot, null, [{
-    key: "energy",
-    value: function energy() {
-      return (0,external_kolmafia_namespaceObject.myRobotEnergy)();
-    }
-  }, {
-    key: "doCollectEnergy",
-    value: function doCollectEnergy() {
-      (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=scrapheap&action=sh_getpower");
-    }
-  }, {
-    key: "expectedEnergyNextCollect",
-    value: function expectedEnergyNextCollect() {
-      var raw = (25 + property_get("youRobotPoints")) * 0.85 ** property_get("_energyCollected");
-      return (0,external_kolmafia_namespaceObject.round)(raw);
-    }
-  }, {
-    key: "doChronolith",
-    value: function doChronolith() {
-      (0,external_kolmafia_namespaceObject.visitUrl)("place.php?whichplace=scrapheap&action=sh_chronobo");
-    }
-  }, {
-    key: "expectedChronolithCost",
-    value: function expectedChronolithCost() {
-      return property_get("_chronolithNextCost");
-    }
-  }]);
-  return YouRobot;
-}();
-function isChronoWorthIt() {
-  var currentAdventures = (0,external_kolmafia_namespaceObject.myAdventures)();
-  var futureAdventures = currentAdventures;
-  var currentEnergy = YouRobot.energy();
-  var numEnergyCollects = 0;
-  while (futureAdventures > 0) {
-    futureAdventures -= 1;
-    currentEnergy += Math.round(YouRobot.expectedEnergyNextCollect() * 0.85 ** numEnergyCollects);
-    numEnergyCollects += 1;
-    if (currentEnergy >= YouRobot.expectedChronolithCost()) {
-      break;
-    }
-  }
-  return currentEnergy >= YouRobot.expectedChronolithCost() && futureAdventures + 9 > currentAdventures;
 }
 var realMonth = gameDay().getMonth();
 var realDay = gameDay().getDate();
@@ -10326,9 +10273,6 @@ function robotrunleg_firstWorkshed() {
 }
 var sasqBonus = 0.5 * 30 * 1000 / property_get("valueOfAdventure");
 var ratskinBonus = 0.3 * 40 * 1000 / property_get("valueOfAdventure");
-var chronolithDebug1 = () => (YouRobot.expectedChronolithCost() - (0,external_kolmafia_namespaceObject.myRobotEnergy)()) / YouRobot.expectedEnergyNextCollect();
-var chronolithDebug2 = () => chronolithDebug1() <= 1 ? 0 : (0,external_kolmafia_namespaceObject.round)(chronolithDebug1());
-var chronolithDebug3 = () => (0,external_kolmafia_namespaceObject.myAdventures)() - chronolithDebug2() >= 0;
 function RobotQuests() {
   return [{
     name: "Robot Run",
@@ -10385,24 +10329,6 @@ function RobotQuests() {
       completed: () => step("questL13Final") > 11,
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.robotscript),
       clear: "all",
-      tracking: "Run"
-    }, {
-      name: "ChronoLith",
-      prepare: () => {
-        (0,external_kolmafia_namespaceObject.print)("Current Robot Energy is ".concat((0,external_kolmafia_namespaceObject.myRobotEnergy)(), "."));
-        (0,external_kolmafia_namespaceObject.print)("Next chronolith costs ".concat(YouRobot.expectedChronolithCost()));
-        (0,external_kolmafia_namespaceObject.print)("It would cost ".concat(chronolithDebug2(), " adventures to gain 10 adventures"));
-        (0,external_kolmafia_namespaceObject.print)("Is this possible with current adventures? ".concat(chronolithDebug3()));
-      },
-      completed: () => !isChronoWorthIt(),
-      do: () => {
-        while (isChronoWorthIt()) {
-          while (YouRobot.energy() < YouRobot.expectedChronolithCost()) {
-            YouRobot.doCollectEnergy();
-          }
-          YouRobot.doChronolith();
-        }
-      },
       tracking: "Run"
     }, {
       name: "Free King",
