@@ -7493,6 +7493,10 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
     help: "If true, break hippy stone and do pvp.",
     default: false
   }),
+  pvpTarget: Args.string({
+    help: "When doing PvP, what should we fight for? fame, loot or flowers?",
+    default: "flowers"
+  }),
   astralpet: Args.custom({
     help: "Choose the astral pet you want to buy in valhalla",
     options: template_string_$items(args_templateObject || (args_templateObject = args_taggedTemplateLiteral(["astral bludgeon, astral shield, astral chapeau, astral bracer, astral longbow, astral shorts, astral mace, astral trousers, astral ring, astral statuette, astral pistol, astral mask, astral pet sweater, astral shirt, astral belt, none"]))).map(it => [it]),
@@ -8387,7 +8391,7 @@ function GarboWeenQuest() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }]
   };
@@ -9050,7 +9054,7 @@ function AftercoreQuest() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }, {
       name: "Prepare for LoopSmol",
@@ -9937,7 +9941,7 @@ function CasualQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }, {
       name: "Stooper",
@@ -10200,7 +10204,7 @@ function CSQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }, {
       name: "Stooper",
@@ -10623,7 +10627,7 @@ function RobotQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }, {
       name: "Stooper",
@@ -11038,7 +11042,7 @@ function SmolQuests() {
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
         (0,external_kolmafia_namespaceObject.cliExecute)("UberPvPOptimizer");
-        (0,external_kolmafia_namespaceObject.cliExecute)("swagger");
+        (0,external_kolmafia_namespaceObject.cliExecute)("PVP_MAB target=".concat(args.pvpTarget));
       }
     }, {
       name: "Stooper",
