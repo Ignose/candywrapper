@@ -8918,7 +8918,7 @@ function AftercoreQuest() {
       name: "Garbo",
       completed: () => stooperDrunk() || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject71 || (aftercoreleg_templateObject71 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garboascend),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garboascend, " target=\"witchess knight\"")),
       post: () => {
         if ((0,external_kolmafia_namespaceObject.myAdventures)() === 0) $effects(aftercoreleg_templateObject72 || (aftercoreleg_templateObject72 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef));
       },
@@ -10107,7 +10107,7 @@ function CSQuests() {
       ready: () => !(0,external_kolmafia_namespaceObject.holiday)().includes("Halloween"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 && !canDiet() || stooperDrunk(),
       prepare: () => uneffect(template_string_$effect(csrunleg_templateObject34 || (csrunleg_templateObject34 = csrunleg_taggedTemplateLiteral(["Beaten Up"])))),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garbo),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garbo, " target=\"witchess knight\"")),
       post: () => $effects(csrunleg_templateObject35 || (csrunleg_templateObject35 = csrunleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
       clear: "all",
       tracking: "Garbo"
@@ -10536,7 +10536,7 @@ function RobotQuests() {
       ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || stooperDrunk(),
       prepare: () => uneffect(template_string_$effect(robotrunleg_templateObject85 || (robotrunleg_templateObject85 = robotrunleg_taggedTemplateLiteral(["Beaten Up"])))),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garbo),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garbo, " target=\"witchess knight\"")),
       post: () => $effects(robotrunleg_templateObject86 || (robotrunleg_templateObject86 = robotrunleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
       clear: "all",
       tracking: "Garbo"
@@ -10951,7 +10951,7 @@ function SmolQuests() {
       ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || stooperDrunk(),
       prepare: () => uneffect(template_string_$effect(smolrunleg_templateObject109 || (smolrunleg_templateObject109 = smolrunleg_taggedTemplateLiteral(["Beaten Up"])))),
-      do: () => (0,external_kolmafia_namespaceObject.cliExecute)(args.garbo),
+      do: () => (0,external_kolmafia_namespaceObject.cliExecute)("".concat(args.garbo, " target=\"witchess knight\"")),
       post: () => $effects(smolrunleg_templateObject110 || (smolrunleg_templateObject110 = smolrunleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
       clear: "all",
       tracking: "Garbo"
