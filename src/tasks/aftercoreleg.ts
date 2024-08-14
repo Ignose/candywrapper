@@ -400,7 +400,7 @@ export function AftercoreQuest(): Quest {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garboascend} target="witchess knight"`),
+        do: () => cliExecute(`${args.garboascend}`),
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`

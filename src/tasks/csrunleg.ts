@@ -214,7 +214,7 @@ export function CSQuests(): Quest[] {
           ready: () => !holiday().includes("Halloween"),
           completed: () => (myAdventures() === 0 && !canDiet()) || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
-          do: () => cliExecute(`${args.garbo} target="witchess knight"`),
+          do: () => cliExecute(`${args.garbo}`),
           post: () =>
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
               .filter((ef) => have(ef))
