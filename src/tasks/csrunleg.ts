@@ -24,6 +24,7 @@ import {
   retrieveItem,
   setProperty,
   spleenLimit,
+  toBoolean,
   use,
   useFamiliar,
   useSkill,
@@ -48,7 +49,14 @@ import {
 import { args } from "../args";
 
 import { getCurrentLeg, Leg, Quest } from "./structure";
-import { canDiet, doneAdventuring, getGarden, stooperDrunk, totallyDrunk } from "./utils";
+import {
+  canDiet,
+  doneAdventuring,
+  getGarden,
+  pvpCloset,
+  stooperDrunk,
+  totallyDrunk,
+} from "./utils";
 
 let pajamas = false;
 let smoke = 1;
@@ -102,6 +110,12 @@ export function CSQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
+        },
+        {
+          name: "PvP Closet Safety 1",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset1")),
+          do: () => pvpCloset(1),
         },
         {
           name: "Ensure prefs reset",
@@ -270,6 +284,12 @@ export function CSQuests(): Quest[] {
           tracking: "Garbo",
         },
         {
+          name: "PvP Closet Safety 2",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset2")),
+          do: () => pvpCloset(2),
+        },
+        {
           name: "Turn in FunFunds",
           ready: () => get("_stenchAirportToday") && itemAmount($item`FunFunds™`) >= 20,
           completed: () => have($item`one-day ticket to Dinseylandfill`),
@@ -382,6 +402,12 @@ export function CSQuests(): Quest[] {
             cliExecute("set _cleanupToday = true");
           },
           tracking: "Item Cleanup",
+        },
+        {
+          name: "PvP Closet Safety 3",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset3")),
+          do: () => pvpCloset(3),
         },
         {
           name: "Pajamas",

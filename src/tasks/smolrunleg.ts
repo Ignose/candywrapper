@@ -32,6 +32,7 @@ import {
   retrieveItem,
   setProperty,
   storageAmount,
+  toBoolean,
   toInt,
   use,
   useFamiliar,
@@ -67,6 +68,7 @@ import {
   doneAdventuring,
   haveAll,
   maxBase,
+  pvpCloset,
   stooperDrunk,
   totallyDrunk,
 } from "./utils";
@@ -284,6 +286,12 @@ export function SmolQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
+        },
+        {
+          name: "PvP Closet Safety 1",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset1")),
+          do: () => pvpCloset(1),
         },
         {
           name: "Unlock Garbage Mountain",
@@ -521,6 +529,12 @@ export function SmolQuests(): Quest[] {
           do: () => drink(1, $item`steel margarita`),
         },
         {
+          name: "PvP Closet Safety 2",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset2")),
+          do: () => pvpCloset(2),
+        },
+        {
           name: "Garbo",
           ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
           completed: () => myAdventures() === 0 || stooperDrunk(),
@@ -593,6 +607,12 @@ export function SmolQuests(): Quest[] {
             have($effect`Offhand Remarkable`) ||
             get("_aug13Cast", false),
           do: () => useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
+        },
+        {
+          name: "PvP Closet Safety 3",
+          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          completed: () => toBoolean(get("_safetyCloset3")),
+          do: () => pvpCloset(3),
         },
         {
           name: "Item Cleanup",

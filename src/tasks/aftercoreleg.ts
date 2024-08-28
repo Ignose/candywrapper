@@ -27,6 +27,7 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
+  toBoolean,
   use,
   useFamiliar,
   useSkill,
@@ -66,6 +67,7 @@ import {
   isGoodGarboScript,
   maxBase,
   noML,
+  pvpCloset,
   stooperDrunk,
   totallyDrunk,
 } from "./utils";
@@ -107,6 +109,12 @@ export function AftercoreQuest(): Quest {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
+      },
+      {
+        name: "PvP Closet Safety 1",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset1")),
+        do: () => pvpCloset(1),
       },
       {
         name: "Get Floundry item",
@@ -397,6 +405,12 @@ export function AftercoreQuest(): Quest {
         do: () => false,
       },
       {
+        name: "PvP Closet Safety 2",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset2")),
+        do: () => pvpCloset(2),
+      },
+      {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
@@ -490,6 +504,12 @@ export function AftercoreQuest(): Quest {
             .forEach((ef) => uneffect(ef)),
         clear: "all",
         tracking: "Garbo",
+      },
+      {
+        name: "PvP Closet Safety 3",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset3")),
+        do: () => pvpCloset(3),
       },
       {
         name: "Comb Beach",
