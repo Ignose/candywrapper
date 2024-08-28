@@ -28,7 +28,9 @@ import {
   $familiars,
   $item,
   $items,
+  $monster,
   $phylum,
+  ChestMimic,
   gameDay,
   get,
   getBanishedMonsters,
@@ -285,3 +287,22 @@ export function deleteJunkKmails() {
 export const realMonth = gameDay().getMonth();
 export const realDay = gameDay().getDate();
 export const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
+
+const goosoMultiplier = have($familiar`Grey Goose`) ? 2 : 1;
+
+function meatOrItemFarm(): boolean {
+  return mallPrice($item`jumping horseradish`) > mallPrice($item`Sacramento wine`)
+    ? mallPrice($item`jumping horseradish`) > 3000 / goosoMultiplier
+    : mallPrice($item`Sacramento wine`) > 3000 / goosoMultiplier;
+}
+
+export const copyTarget = () =>
+  ChestMimic.differentiableQuantity($monster`Witchess Knight`) > 0
+    ? `target="Witchess Knight"`
+    : ChestMimic.differentiableQuantity($monster`Witchess Bishop`) > 0
+    ? `target="Witchess Bishop"`
+    : !meatOrItemFarm()
+    ? ``
+    : mallPrice($item`jumping horseradish`) > mallPrice($item`Sacramento wine`)
+    ? `target="Witchess Knight"`
+    : `target="Witchess Bishop"`;

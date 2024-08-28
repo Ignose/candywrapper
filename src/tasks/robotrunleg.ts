@@ -4,7 +4,9 @@ import {
   buyUsingStorage,
   cliExecute,
   drink,
+  eat,
   Effect,
+  fullnessLimit,
   getClanName,
   getWorkshed,
   hippyStoneBroken,
@@ -13,6 +15,7 @@ import {
   myAdventures,
   myAscensions,
   myDaycount,
+  myFullness,
   myInebriety,
   myLevel,
   myMaxhp,
@@ -58,6 +61,7 @@ import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
+  copyTarget,
   doneAdventuring,
   halloween,
   haveAll,
@@ -421,11 +425,21 @@ export function RobotQuests(): Quest[] {
           do: () => GarboWeenQuest(),
         },
         {
+          name: "Pre-Garbo Food Time",
+          ready: () => myFullness() + 2 < fullnessLimit(),
+          completed: () => have($effect`Feeling Fancy`),
+          prepare: () => retrieveItem($item`roasted vegetable focaccia`),
+          do: () => eat($item`roasted vegetable focaccia`),
+          clear: "all",
+          tracking: "Garbo",
+          limit: { tries: 1 }, //this will run again after installing CMC, by magic
+        },
+        {
           name: "Garbo",
           ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
           completed: () => myAdventures() === 0 || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
-          do: () => cliExecute(`${args.garbo}`),
+          do: () => cliExecute(`${args.garbo} ${copyTarget()}`),
           post: () =>
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
               .filter((ef) => have(ef))
