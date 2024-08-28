@@ -506,6 +506,15 @@ export function AftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
+        name: "Break Stone",
+        ready: () => args.safepvp,
+        completed: () => hippyStoneBroken() || !args.pvp,
+        do: (): void => {
+          visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
+          visitUrl("peevpee.php?place=fight");
+        },
+      },
+      {
         name: "PvP",
         completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
         do: (): void => {

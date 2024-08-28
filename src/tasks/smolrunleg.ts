@@ -204,6 +204,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Break Stone",
+          ready: () => !args.safepvp,
           completed: () => hippyStoneBroken() || !args.pvp,
           do: (): void => {
             visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
@@ -542,7 +543,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "PvP",
-          ready: () => doneAdventuring(),
+          ready: () => doneAdventuring() && !args.safepvp,
           completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
           do: (): void => {
             cliExecute("unequip");

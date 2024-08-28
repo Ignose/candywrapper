@@ -67,6 +67,15 @@ export function CSQuests(): Quest[] {
           do: () => cliExecute(`/whitelist ${args.clan}`),
         },
         {
+          name: "Break Stone",
+          ready: () => !args.safepvp,
+          completed: () => hippyStoneBroken() || !args.pvp,
+          do: (): void => {
+            visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
+            visitUrl("peevpee.php?place=fight");
+          },
+        },
+        {
           name: "Prep Fireworks Shop",
           completed: () =>
             !have($item`Clan VIP Lounge key`) || get("_goorboFireworksPrepped", false),
@@ -270,7 +279,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "PvP",
-          ready: () => doneAdventuring(),
+          ready: () => doneAdventuring() && !args.safepvp,
           completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
           do: (): void => {
             cliExecute("unequip");
