@@ -7440,6 +7440,10 @@ var args = Args.create("CandyWrapper", "Written by Seraphiii. This is a full-day
     help: "If true, break hippy stone and do pvp.",
     default: false
   }),
+  safepvp: Args.flag({
+    help: "If true, break hippy stone and do only before ascension.",
+    default: false
+  }),
   pvpTarget: Args.string({
     help: "When doing PvP, what should we fight for? fame, loot or flowers?",
     default: "flowers"
@@ -8996,6 +9000,14 @@ function AftercoreQuest() {
       do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(_templateObject103 || (_templateObject103 = aftercoreleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(_templateObject104 || (_templateObject104 = aftercoreleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
       tracking: "Garbo"
     }, {
+      name: "Break Stone",
+      ready: () => args.safepvp,
+      completed: () => (0,external_kolmafia_namespaceObject.hippyStoneBroken)() || !args.pvp,
+      do: () => {
+        (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?action=smashstone&pwd&confirm=on", true);
+        (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?place=fight");
+      }
+    }, {
       name: "PvP",
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
       do: () => {
@@ -9999,6 +10011,14 @@ function CSQuests() {
       completed: () => !args.clan || (0,external_kolmafia_namespaceObject.getClanName)().toLowerCase() === args.clan.toLowerCase(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan))
     }, {
+      name: "Break Stone",
+      ready: () => !args.safepvp,
+      completed: () => (0,external_kolmafia_namespaceObject.hippyStoneBroken)() || !args.pvp,
+      do: () => {
+        (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?action=smashstone&pwd&confirm=on", true);
+        (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?place=fight");
+      }
+    }, {
       name: "Prep Fireworks Shop",
       completed: () => !lib_have(template_string_$item(csrunleg_templateObject2 || (csrunleg_templateObject2 = csrunleg_taggedTemplateLiteral(["Clan VIP Lounge key"])))) || property_get("_goorboFireworksPrepped", false),
       do: () => {
@@ -10146,7 +10166,7 @@ function CSQuests() {
       tracking: "Garbo"
     }, {
       name: "PvP",
-      ready: () => doneAdventuring(),
+      ready: () => doneAdventuring() && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
@@ -10319,6 +10339,7 @@ function RobotQuests() {
       tracking: "Garbo"
     }, {
       name: "Break Stone",
+      ready: () => !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.hippyStoneBroken)() || !args.pvp,
       do: () => {
         (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?action=smashstone&pwd&confirm=on", true);
@@ -10548,7 +10569,7 @@ function RobotQuests() {
       tracking: "Garbo"
     }, {
       name: "PvP",
-      ready: () => doneAdventuring(),
+      ready: () => doneAdventuring() && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
@@ -10723,6 +10744,7 @@ function SmolQuests() {
       (0,external_kolmafia_namespaceObject.use)(template_string_$item(smolrunleg_templateObject26 || (smolrunleg_templateObject26 = smolrunleg_taggedTemplateLiteral(["S.I.T. Course Completion Certificate"]))))
     }, {
       name: "Break Stone",
+      ready: () => !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.hippyStoneBroken)() || !args.pvp,
       do: () => {
         (0,external_kolmafia_namespaceObject.visitUrl)("peevpee.php?action=smashstone&pwd&confirm=on", true);
@@ -10963,7 +10985,7 @@ function SmolQuests() {
       tracking: "Garbo"
     }, {
       name: "PvP",
-      ready: () => doneAdventuring(),
+      ready: () => doneAdventuring() && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
