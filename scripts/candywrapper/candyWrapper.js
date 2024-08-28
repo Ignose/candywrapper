@@ -7262,7 +7262,7 @@ function printProfits(records) {
   printProfitSegment("Total", profits_sum(records, () => true), "black");
 }
 ;// CONCATENATED MODULE: ./src/tasks/utils.ts
-var utils_templateObject, utils_templateObject2, utils_templateObject3, utils_templateObject4, utils_templateObject5, utils_templateObject6, utils_templateObject7, utils_templateObject8, utils_templateObject9, utils_templateObject10, utils_templateObject11, utils_templateObject12, utils_templateObject13, utils_templateObject14, utils_templateObject15, utils_templateObject16, utils_templateObject17, utils_templateObject18, utils_templateObject19, utils_templateObject20, utils_templateObject21, utils_templateObject22, utils_templateObject23, utils_templateObject24, utils_templateObject25, utils_templateObject26, utils_templateObject27, utils_templateObject28, utils_templateObject29, utils_templateObject30, utils_templateObject31, utils_templateObject32, utils_templateObject33, utils_templateObject34, utils_templateObject35, utils_templateObject36;
+var utils_templateObject, utils_templateObject2, utils_templateObject3, utils_templateObject4, utils_templateObject5, utils_templateObject6, utils_templateObject7, utils_templateObject8, utils_templateObject9, utils_templateObject10, utils_templateObject11, utils_templateObject12, utils_templateObject13, utils_templateObject14, utils_templateObject15, utils_templateObject16, utils_templateObject17, utils_templateObject18, utils_templateObject19, utils_templateObject20, utils_templateObject21, utils_templateObject22, utils_templateObject23, utils_templateObject24, utils_templateObject25, utils_templateObject26, utils_templateObject27, utils_templateObject28, utils_templateObject29, utils_templateObject30, utils_templateObject31, utils_templateObject32, utils_templateObject33, utils_templateObject34, utils_templateObject35, utils_templateObject36, utils_templateObject37;
 function utils_toConsumableArray(arr) { return utils_arrayWithoutHoles(arr) || utils_iterableToArray(arr) || tasks_utils_unsupportedIterableToArray(arr) || utils_nonIterableSpread(); }
 function utils_nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function tasks_utils_unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return tasks_utils_arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return tasks_utils_arrayLikeToArray(o, minLen); }
@@ -7385,6 +7385,14 @@ function deleteJunkKmails() {
 var realMonth = gameDay().getMonth();
 var realDay = gameDay().getDate();
 var halloween = (0,external_kolmafia_namespaceObject.gamedayToInt)() === 79 || realMonth === 10 && realDay === 31;
+function pvpCloset(num) {
+  var threshold = 10000;
+  template_string_$items(utils_templateObject37 || (utils_templateObject37 = utils_taggedTemplateLiteral([""]))).filter(it => (0,external_kolmafia_namespaceObject.itemAmount)(it) > 0 && it.tradeable && it.discardable && !it.quest && !it.gift && (0,external_kolmafia_namespaceObject.mallPrice)(it) >= threshold).forEach(it => {
+    (0,external_kolmafia_namespaceObject.putCloset)((0,external_kolmafia_namespaceObject.itemAmount)(it), it);
+    (0,external_kolmafia_namespaceObject.print)("Closeting valuables (".concat((0,external_kolmafia_namespaceObject.mallPrice)(it), " meat): ").concat(it));
+  });
+  _set("_safetyCloset".concat(num), true);
+}
 ;// CONCATENATED MODULE: ./src/args.ts
 var args_templateObject, args_templateObject2, args_templateObject3, args_templateObject4, args_templateObject5, args_templateObject6;
 function args_toConsumableArray(arr) { return args_arrayWithoutHoles(arr) || args_iterableToArray(arr) || args_unsupportedIterableToArray(arr) || args_nonIterableSpread(); }
@@ -8699,6 +8707,11 @@ function AftercoreQuest() {
       completed: () => !args.clan || (0,external_kolmafia_namespaceObject.getClanName)().toLowerCase() === args.clan.toLowerCase(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan))
     }, {
+      name: "PvP Closet Safety 1",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
+      do: () => pvpCloset(1)
+    }, {
       name: "Get Floundry item",
       ready: () => lib_have(template_string_$item(aftercoreleg_templateObject4 || (aftercoreleg_templateObject4 = aftercoreleg_taggedTemplateLiteral(["Clan VIP Lounge key"])))) && !args.carpe,
       completed: () => property_get("_floundryItemCreated"),
@@ -8919,6 +8932,11 @@ function AftercoreQuest() {
       })),
       do: () => false
     }, {
+      name: "PvP Closet Safety 2",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
+      do: () => pvpCloset(2)
+    }, {
       name: "Garbo",
       completed: () => stooperDrunk() || (0,external_kolmafia_namespaceObject.myAdventures)() === 0,
       prepare: () => uneffect(template_string_$effect(aftercoreleg_templateObject71 || (aftercoreleg_templateObject71 = aftercoreleg_taggedTemplateLiteral(["Beaten Up"])))),
@@ -8988,6 +9006,11 @@ function AftercoreQuest() {
       post: () => $effects(_templateObject99 || (_templateObject99 = aftercoreleg_taggedTemplateLiteral(["Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance"]))).filter(ef => lib_have(ef)).forEach(ef => uneffect(ef)),
       clear: "all",
       tracking: "Garbo"
+    }, {
+      name: "PvP Closet Safety 3",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
+      do: () => pvpCloset(3)
     }, {
       name: "Comb Beach",
       ready: () => lib_have(template_string_$item(_templateObject100 || (_templateObject100 = aftercoreleg_taggedTemplateLiteral(["Beach Comb"])))),
@@ -10041,6 +10064,11 @@ function CSQuests() {
       completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
+      name: "PvP Closet Safety 1",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
+      do: () => pvpCloset(1)
+    }, {
       name: "Ensure prefs reset",
       completed: () => !property_get("_folgerInitialConfig", false),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("set _folgerInitialConfig = false")
@@ -10159,6 +10187,11 @@ function CSQuests() {
       clear: "all",
       tracking: "Garbo"
     }, {
+      name: "PvP Closet Safety 2",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
+      do: () => pvpCloset(2)
+    }, {
       name: "Turn in FunFunds",
       ready: () => property_get("_stenchAirportToday") && (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(csrunleg_templateObject40 || (csrunleg_templateObject40 = csrunleg_taggedTemplateLiteral(["FunFunds\u2122"])))) >= 20,
       completed: () => lib_have(template_string_$item(csrunleg_templateObject41 || (csrunleg_templateObject41 = csrunleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
@@ -10241,6 +10274,11 @@ function CSQuests() {
         (0,external_kolmafia_namespaceObject.cliExecute)("set _cleanupToday = true");
       },
       tracking: "Item Cleanup"
+    }, {
+      name: "PvP Closet Safety 3",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
+      do: () => pvpCloset(3)
     }, {
       name: "Pajamas",
       completed: () => lib_have(template_string_$item(csrunleg_templateObject67 || (csrunleg_templateObject67 = csrunleg_taggedTemplateLiteral(["burning cape"])))),
@@ -10369,6 +10407,11 @@ function RobotQuests() {
       name: "Pull All",
       completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
+    }, {
+      name: "PvP Closet Safety 1",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
+      do: () => pvpCloset(1)
     }, {
       name: "Install First Workshed",
       ready: () => lib_have(robotrunleg_firstWorkshed()),
@@ -10568,6 +10611,11 @@ function RobotQuests() {
       do: () => (0,external_kolmafia_namespaceObject.buy)($coinmaster(robotrunleg_templateObject89 || (robotrunleg_templateObject89 = robotrunleg_taggedTemplateLiteral(["The Dinsey Company Store"]))), 1, template_string_$item(robotrunleg_templateObject90 || (robotrunleg_templateObject90 = robotrunleg_taggedTemplateLiteral(["one-day ticket to Dinseylandfill"])))),
       tracking: "Garbo"
     }, {
+      name: "PvP Closet Safety 2",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
+      do: () => pvpCloset(2)
+    }, {
       name: "PvP",
       ready: () => doneAdventuring() && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
@@ -10606,6 +10654,11 @@ function RobotQuests() {
       ready: () => lib_have(template_string_$item(robotrunleg_templateObject97 || (robotrunleg_templateObject97 = robotrunleg_taggedTemplateLiteral(["august scepter"])))),
       completed: () => !lib_have(template_string_$skill(robotrunleg_templateObject98 || (robotrunleg_templateObject98 = robotrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"])))) || lib_have(template_string_$effect(robotrunleg_templateObject99 || (robotrunleg_templateObject99 = robotrunleg_taggedTemplateLiteral(["Offhand Remarkable"])))) || property_get("_aug13Cast", false),
       do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(robotrunleg_templateObject100 || (robotrunleg_templateObject100 = robotrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
+    }, {
+      name: "PvP Closet Safety 3",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
+      do: () => pvpCloset(3)
     }, {
       name: "Item Cleanup",
       // eslint-disable-next-line libram/verify-constants
@@ -10803,6 +10856,11 @@ function SmolQuests() {
       completed: () => property_get("lastEmptiedStorage") === (0,external_kolmafia_namespaceObject.myAscensions)(),
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
+      name: "PvP Closet Safety 1",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
+      do: () => pvpCloset(1)
+    }, {
       name: "Unlock Garbage Mountain",
       completed: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
       do: () => {
@@ -10969,6 +11027,11 @@ function SmolQuests() {
       completed: () => lib_have(template_string_$skill(smolrunleg_templateObject107 || (smolrunleg_templateObject107 = smolrunleg_taggedTemplateLiteral(["Liver of Steel"])))),
       do: () => (0,external_kolmafia_namespaceObject.drink)(1, template_string_$item(smolrunleg_templateObject108 || (smolrunleg_templateObject108 = smolrunleg_taggedTemplateLiteral(["steel margarita"]))))
     }, {
+      name: "PvP Closet Safety 2",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
+      do: () => pvpCloset(2)
+    }, {
       name: "Garbo",
       ready: () => property_get("_stenchAirportToday") || property_get("stenchAirportAlways"),
       completed: () => (0,external_kolmafia_namespaceObject.myAdventures)() === 0 || stooperDrunk(),
@@ -11022,6 +11085,11 @@ function SmolQuests() {
       ready: () => lib_have(template_string_$item(smolrunleg_templateObject121 || (smolrunleg_templateObject121 = smolrunleg_taggedTemplateLiteral(["august scepter"])))),
       completed: () => !lib_have(template_string_$skill(smolrunleg_templateObject122 || (smolrunleg_templateObject122 = smolrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"])))) || lib_have(template_string_$effect(smolrunleg_templateObject123 || (smolrunleg_templateObject123 = smolrunleg_taggedTemplateLiteral(["Offhand Remarkable"])))) || property_get("_aug13Cast", false),
       do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(smolrunleg_templateObject124 || (smolrunleg_templateObject124 = smolrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
+    }, {
+      name: "PvP Closet Safety 3",
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
+      do: () => pvpCloset(3)
     }, {
       name: "Item Cleanup",
       // eslint-disable-next-line libram/verify-constants
