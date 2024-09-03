@@ -10617,7 +10617,7 @@ function RobotQuests() {
       do: () => pvpCloset(2)
     }, {
       name: "PvP",
-      ready: () => doneAdventuring() && !args.safepvp,
+      ready: () => doneAdventuring(),
       completed: () => (0,external_kolmafia_namespaceObject.pvpAttacksLeft)() === 0 || !(0,external_kolmafia_namespaceObject.hippyStoneBroken)(),
       do: () => {
         (0,external_kolmafia_namespaceObject.cliExecute)("unequip");
