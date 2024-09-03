@@ -458,7 +458,7 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "PvP",
-          ready: () => doneAdventuring() && !args.safepvp,
+          ready: () => doneAdventuring(),
           completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
           do: (): void => {
             cliExecute("unequip");
