@@ -3,6 +3,8 @@ import {
   availableAmount,
   buy,
   cliExecute,
+  eat,
+  fullnessLimit,
   getCampground,
   getClanName,
   getWorkshed,
@@ -17,6 +19,7 @@ import {
   myAdventures,
   myClass,
   myDaycount,
+  myFullness,
   myHp,
   myInebriety,
   myLevel,
@@ -63,6 +66,7 @@ import { args } from "../args";
 import { Quest } from "./structure";
 import {
   bestFam,
+  copyTarget,
   getGarden,
   isGoodGarboScript,
   maxBase,
@@ -411,10 +415,20 @@ export function AftercoreQuest(): Quest {
         do: () => pvpCloset(2),
       },
       {
+        name: "Pre-Garbo Food Time",
+        ready: () => myFullness() + 2 < fullnessLimit(),
+        completed: () => have($effect`Feeling Fancy`),
+        prepare: () => retrieveItem($item`roasted vegetable focaccia`),
+        do: () => eat($item`roasted vegetable focaccia`),
+        clear: "all",
+        tracking: "Garbo",
+        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      },
+      {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garboascend}`),
+        do: () => cliExecute(`${args.garboascend} ${copyTarget()}`),
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
