@@ -47,6 +47,10 @@ export const args = Args.create(
     }),
     //configuration args
     pvp: Args.flag({ help: "If true, break hippy stone and do pvp.", default: false }),
+    safepvp: Args.flag({
+      help: "If true, break hippy stone and do only before ascension.",
+      default: false,
+    }),
     pvpTarget: Args.string({
       help: "When doing PvP, what should we fight for? fame, loot or flowers?",
       default: "flowers",

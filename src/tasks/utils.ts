@@ -17,6 +17,7 @@ import {
   myInebriety,
   mySpleenUse,
   print,
+  putCloset,
   retrieveItem,
   spleenLimit,
   urlEncode,
@@ -35,6 +36,7 @@ import {
   get,
   getBanishedMonsters,
   have,
+  set,
   Snapper,
 } from "libram";
 
@@ -288,6 +290,25 @@ export const realMonth = gameDay().getMonth();
 export const realDay = gameDay().getDate();
 export const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
 
+export function pvpCloset(num: number) {
+  const threshold = 10000;
+  $items``
+    .filter(
+      (it) =>
+        itemAmount(it) > 0 &&
+        it.tradeable &&
+        it.discardable &&
+        !it.quest &&
+        !it.gift &&
+        mallPrice(it) >= threshold,
+    )
+    .forEach((it) => {
+      putCloset(itemAmount(it), it);
+      print(`Closeting valuables (${mallPrice(it)} meat): ${it}`);
+    });
+  set(`_safetyCloset${num}`, true);
+}
+
 const goosoMultiplier = have($familiar`Grey Goose`) ? 2 : 1;
 
 function meatOrItemFarm(): boolean {
@@ -306,3 +327,4 @@ export const copyTarget = () =>
     : mallPrice($item`jumping horseradish`) > mallPrice($item`Sacramento wine`)
     ? `target="Witchess Knight"`
     : `target="Witchess Bishop"`;
+

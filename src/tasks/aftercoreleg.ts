@@ -30,6 +30,7 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
+  toBoolean,
   use,
   useFamiliar,
   useSkill,
@@ -70,6 +71,7 @@ import {
   isGoodGarboScript,
   maxBase,
   noML,
+  pvpCloset,
   stooperDrunk,
   totallyDrunk,
 } from "./utils";
@@ -111,6 +113,12 @@ export function AftercoreQuest(): Quest {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
+      },
+      {
+        name: "PvP Closet Safety 1",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset1")),
+        do: () => pvpCloset(1),
       },
       {
         name: "Get Floundry item",
@@ -401,6 +409,12 @@ export function AftercoreQuest(): Quest {
         do: () => false,
       },
       {
+        name: "PvP Closet Safety 2",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset2")),
+        do: () => pvpCloset(2),
+      },
+      {
         name: "Pre-Garbo Food Time",
         ready: () => myFullness() + 2 < fullnessLimit(),
         completed: () => have($effect`Feeling Fancy`),
@@ -506,6 +520,12 @@ export function AftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
+        name: "PvP Closet Safety 3",
+        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        completed: () => toBoolean(get("_safetyCloset3")),
+        do: () => pvpCloset(3),
+      },
+      {
         name: "Comb Beach",
         ready: () => have($item`Beach Comb`),
         completed: () => myAdventures() === 0,
@@ -518,6 +538,15 @@ export function AftercoreQuest(): Quest {
         do: () =>
           buy($coinmaster`The Dinsey Company Store`, 1, $item`one-day ticket to Dinseylandfill`),
         tracking: "Garbo",
+      },
+      {
+        name: "Break Stone",
+        ready: () => args.safepvp,
+        completed: () => hippyStoneBroken() || !args.pvp,
+        do: (): void => {
+          visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
+          visitUrl("peevpee.php?place=fight");
+        },
       },
       {
         name: "PvP",
