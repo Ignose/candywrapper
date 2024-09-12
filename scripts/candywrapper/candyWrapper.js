@@ -8831,7 +8831,7 @@ function AftercoreQuest() {
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan))
     }, {
       name: "PvP Closet Safety 1",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
       do: () => pvpCloset(1)
     }, {
@@ -9056,7 +9056,7 @@ function AftercoreQuest() {
       do: () => false
     }, {
       name: "PvP Closet Safety 2",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
       do: () => pvpCloset(2)
     }, {
@@ -9064,7 +9064,7 @@ function AftercoreQuest() {
       ready: () => (0,external_kolmafia_namespaceObject.myFullness)() + 2 < (0,external_kolmafia_namespaceObject.fullnessLimit)(),
       completed: () => lib_have(template_string_$effect(aftercoreleg_templateObject71 || (aftercoreleg_templateObject71 = aftercoreleg_taggedTemplateLiteral(["Feeling Fancy"])))),
       prepare: () => (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(aftercoreleg_templateObject72 || (aftercoreleg_templateObject72 = aftercoreleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
-      do: () => (0,external_kolmafia_namespaceObject.eat)(template_string_$item(aftercoreleg_templateObject73 || (aftercoreleg_templateObject73 = aftercoreleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
+      do: () => (0,external_kolmafia_namespaceObject.eatsilent)(template_string_$item(aftercoreleg_templateObject73 || (aftercoreleg_templateObject73 = aftercoreleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
       clear: "all",
       tracking: "Garbo",
       limit: {
@@ -9142,7 +9142,7 @@ function AftercoreQuest() {
       tracking: "Garbo"
     }, {
       name: "PvP Closet Safety 3",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
       do: () => pvpCloset(3)
     }, {
@@ -10199,7 +10199,7 @@ function CSQuests() {
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
       name: "PvP Closet Safety 1",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
       do: () => pvpCloset(1)
     }, {
@@ -10322,7 +10322,7 @@ function CSQuests() {
       tracking: "Garbo"
     }, {
       name: "PvP Closet Safety 2",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
       do: () => pvpCloset(2)
     }, {
@@ -10410,7 +10410,7 @@ function CSQuests() {
       tracking: "Item Cleanup"
     }, {
       name: "PvP Closet Safety 3",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
       do: () => pvpCloset(3)
     }, {
@@ -10475,6 +10475,27 @@ function RobotQuests() {
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("/whitelist ".concat(args.clan)),
       choices: {
         1507: 1
+      }
+    }, {
+      name: "Acquire Mouthwash",
+      completed: () =>
+      // eslint-disable-next-line libram/verify-constants
+      property_get("_mouthWashed", "") === "true",
+      do: () => {
+        // Grab Embers
+        (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=september");
+
+        // Grab Bembershoot
+        (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=september&action=buyitem&quantity=1&whichrow=1516&pwd");
+
+        // Grab Mouthwashes
+        (0,external_kolmafia_namespaceObject.visitUrl)("shop.php?whichshop=september&action=buyitem&quantity=3&whichrow=1512&pwd");
+
+        //Set the pref
+        (0,external_kolmafia_namespaceObject.setProperty)("_mouthWashed", "true");
+      },
+      limit: {
+        tries: 1
       }
     }, {
       name: "Get Floundry item",
@@ -10543,7 +10564,7 @@ function RobotQuests() {
       do: () => (0,external_kolmafia_namespaceObject.cliExecute)("pull all; refresh all")
     }, {
       name: "PvP Closet Safety 1",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset1")),
       do: () => pvpCloset(1)
     }, {
@@ -10734,7 +10755,7 @@ function RobotQuests() {
       ready: () => (0,external_kolmafia_namespaceObject.myFullness)() + 2 < (0,external_kolmafia_namespaceObject.fullnessLimit)(),
       completed: () => lib_have(template_string_$effect(robotrunleg_templateObject85 || (robotrunleg_templateObject85 = robotrunleg_taggedTemplateLiteral(["Feeling Fancy"])))),
       prepare: () => (0,external_kolmafia_namespaceObject.retrieveItem)(template_string_$item(robotrunleg_templateObject86 || (robotrunleg_templateObject86 = robotrunleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
-      do: () => (0,external_kolmafia_namespaceObject.eat)(template_string_$item(robotrunleg_templateObject87 || (robotrunleg_templateObject87 = robotrunleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
+      do: () => (0,external_kolmafia_namespaceObject.eatsilent)(template_string_$item(robotrunleg_templateObject87 || (robotrunleg_templateObject87 = robotrunleg_taggedTemplateLiteral(["roasted vegetable focaccia"])))),
       clear: "all",
       tracking: "Garbo",
       limit: {
@@ -10757,7 +10778,7 @@ function RobotQuests() {
       tracking: "Garbo"
     }, {
       name: "PvP Closet Safety 2",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset2")),
       do: () => pvpCloset(2)
     }, {
@@ -10801,7 +10822,7 @@ function RobotQuests() {
       do: () => (0,external_kolmafia_namespaceObject.useSkill)(template_string_$skill(robotrunleg_templateObject103 || (robotrunleg_templateObject103 = robotrunleg_taggedTemplateLiteral(["Aug. 13th: Left/Off Hander's Day!"]))))
     }, {
       name: "PvP Closet Safety 3",
-      ready: () => args.pvp && property_get("autoSatisfyWithCloset"),
+      ready: () => args.pvp && property_get("autoSatisfyWithCloset") && !args.safepvp,
       completed: () => (0,external_kolmafia_namespaceObject.toBoolean)(property_get("_safetyCloset3")),
       do: () => pvpCloset(3)
     }, {
