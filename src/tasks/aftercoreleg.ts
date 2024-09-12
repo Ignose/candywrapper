@@ -162,20 +162,6 @@ export function AftercoreQuest(): Quest {
         limit: { tries: 3 },
       },
       {
-        name: "Use Mayam",
-        // eslint-disable-next-line libram/verify-constants
-        ready: () => have($item`Mayam Calendar`),
-        completed: () =>
-          ["yam4", "explosion", "clock"].every((sym) => get("_mayamSymbolsUsed").includes(sym)),
-        do: () => {
-          if ($familiar`Chest Mimic`.experience < 450) useFamiliar($familiar`Chest Mimic`);
-          else useFamiliar($familiar`Grey Goose`);
-          cliExecute("mayam rings vessel yam cheese explosion");
-          cliExecute("mayam rings yam meat eyepatch yam");
-          cliExecute("mayam rings fur bottle wall clock");
-        },
-      },
-      {
         name: "Plant Grass",
         completed: () =>
           !have($item`packet of tall grass seeds`) ||
