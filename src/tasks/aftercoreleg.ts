@@ -3,7 +3,7 @@ import {
   availableAmount,
   buy,
   cliExecute,
-  eat,
+  eatsilent,
   fullnessLimit,
   getCampground,
   getClanName,
@@ -116,7 +116,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "PvP Closet Safety 1",
-        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset1")),
         do: () => pvpCloset(1),
       },
@@ -410,7 +410,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "PvP Closet Safety 2",
-        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset2")),
         do: () => pvpCloset(2),
       },
@@ -419,7 +419,7 @@ export function AftercoreQuest(): Quest {
         ready: () => myFullness() + 2 < fullnessLimit(),
         completed: () => have($effect`Feeling Fancy`),
         prepare: () => retrieveItem($item`roasted vegetable focaccia`),
-        do: () => eat($item`roasted vegetable focaccia`),
+        do: () => eatsilent($item`roasted vegetable focaccia`),
         clear: "all",
         tracking: "Garbo",
         limit: { tries: 1 }, //this will run again after installing CMC, by magic
@@ -521,7 +521,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "PvP Closet Safety 3",
-        ready: () => args.pvp && get("autoSatisfyWithCloset"),
+        ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset3")),
         do: () => pvpCloset(3),
       },

@@ -113,7 +113,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 1",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset1")),
           do: () => pvpCloset(1),
         },
@@ -285,7 +285,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 2",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset2")),
           do: () => pvpCloset(2),
         },
@@ -405,7 +405,7 @@ export function CSQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 3",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset3")),
           do: () => pvpCloset(3),
         },
