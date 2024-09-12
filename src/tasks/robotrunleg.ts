@@ -4,7 +4,7 @@ import {
   buyUsingStorage,
   cliExecute,
   drink,
-  eat,
+  eatsilent,
   Effect,
   fullnessLimit,
   getClanName,
@@ -100,6 +100,26 @@ export function RobotQuests(): Quest[] {
           },
         },
         {
+          name: "Acquire Mouthwash",
+          completed: () =>
+            // eslint-disable-next-line libram/verify-constants
+            get("_mouthWashed", "") === "true",
+          do: (): void => {
+            // Grab Embers
+            visitUrl("shop.php?whichshop=september");
+
+            // Grab Bembershoot
+            visitUrl(`shop.php?whichshop=september&action=buyitem&quantity=1&whichrow=1516&pwd`);
+
+            // Grab Mouthwashes
+            visitUrl("shop.php?whichshop=september&action=buyitem&quantity=3&whichrow=1512&pwd");
+
+            //Set the pref
+            setProperty("_mouthWashed", "true");
+          },
+          limit: { tries: 1 },
+        },
+        {
           name: "Get Floundry item",
           ready: () => have($item`Clan VIP Lounge key`) && !args.carpe,
           completed: () => get("_floundryItemCreated"),
@@ -180,7 +200,7 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 1",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset1")),
           do: () => pvpCloset(1),
         },
@@ -438,7 +458,7 @@ export function RobotQuests(): Quest[] {
           ready: () => myFullness() + 2 < fullnessLimit(),
           completed: () => have($effect`Feeling Fancy`),
           prepare: () => retrieveItem($item`roasted vegetable focaccia`),
-          do: () => eat($item`roasted vegetable focaccia`),
+          do: () => eatsilent($item`roasted vegetable focaccia`),
           clear: "all",
           tracking: "Garbo",
           limit: { tries: 1 }, //this will run again after installing CMC, by magic
@@ -466,7 +486,7 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 2",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset2")),
           do: () => pvpCloset(2),
         },
@@ -525,7 +545,7 @@ export function RobotQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 3",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset3")),
           do: () => pvpCloset(3),
         },
