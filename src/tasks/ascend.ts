@@ -6,22 +6,13 @@ import {
   runChoice,
   visitUrl,
 } from "kolmafia";
-import {
-  $class,
-  $item,
-  $path,
-  ascend,
-  CursedMonkeyPaw,
-  have,
-  Lifestyle,
-} from "libram";
-import { Quest } from "./structure";
-import {
-  toMoonSign,
-  totallyDrunk,
-} from "./utils";
+import { $class, $item, $path, ascend, CursedMonkeyPaw, have } from "libram";
+
 import { args } from "../args";
+
 import { targetPerms } from "./perm";
+import { Quest } from "./structure";
+import { toMoonSign, totallyDrunk } from "./utils";
 
 export function AscendQuest(): Quest {
   return {
@@ -31,29 +22,37 @@ export function AscendQuest(): Quest {
     tasks: [
       {
         name: "Do the Ascension",
-        ready: () => have($item`Pizza of Legend`) && have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`),
+        ready: () =>
+          have($item`Pizza of Legend`) &&
+          have($item`Deep Dish of Legend`) &&
+          have($item`Calzone of Legend`),
         completed: () => myDaycount() === 1, //Change this
         do: (): void => {
-          const skillsToPerm = new Map();
-          targetPerms().forEach((sk) => skillsToPerm.set(sk, Lifestyle.softcore));
+          const [skills, permLifestyle] = targetPerms();
 
-          const path =
-            args.cs
-              ? $path`Community Service`
+          const skillsToPerm = new Map();
+          skills.forEach((sk) => skillsToPerm.set(sk, permLifestyle));
+
+          const path = args.cs
+            ? $path`Community Service`
             : args.smol
-              ? $path`A Shrunken Adventurer am I`
+            ? $path`A Shrunken Adventurer am I`
             : args.casual
-              ? $path.none
+            ? $path.none
             : args.robot
-              ? $path`You, Robot`
+            ? $path`You, Robot`
             : undefined;
           const lifestyle = args.casual ? 1 : 2;
 
-          if(path === undefined) throw "You have no path defined";
-
+          if (path === undefined) throw "You have no path defined";
 
           const canRobotNonMon = CursedMonkeyPaw.have() && have($item`genie bottle`);
-          const moonsign = args.robot && canRobotNonMon ? toMoonSign("mongoose") : args.robot ? toMoonSign("vole") : toMoonSign(args.moonsign);
+          const moonsign =
+            args.robot && canRobotNonMon
+              ? toMoonSign("mongoose")
+              : args.robot
+              ? toMoonSign("vole")
+              : toMoonSign(args.moonsign);
           const myClass = args.robot && !canRobotNonMon ? $class`Pastamancer` : args.class;
 
           ascend({
@@ -64,13 +63,12 @@ export function AscendQuest(): Quest {
             consumable: $item`astral six-pack`,
             pet: args.astralpet === $item`none` ? undefined : args.astralpet,
             permOptions: { permSkills: skillsToPerm, neverAbort: false },
-            });
+          });
           cliExecute("refresh all");
           visitUrl("main.php");
-          if(args.smol || args.robot) {
-            while (handlingChoice())
-              runChoice(1)
-            };
+          if (args.smol || args.robot) {
+            while (handlingChoice()) runChoice(1);
+          }
         },
       },
     ],
