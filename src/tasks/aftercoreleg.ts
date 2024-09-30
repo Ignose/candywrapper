@@ -3,8 +3,6 @@ import {
   availableAmount,
   buy,
   cliExecute,
-  eatsilent,
-  fullnessLimit,
   getCampground,
   getClanName,
   getWorkshed,
@@ -19,7 +17,6 @@ import {
   myAdventures,
   myClass,
   myDaycount,
-  myFullness,
   myHp,
   myInebriety,
   myLevel,
@@ -399,16 +396,6 @@ export function AftercoreQuest(): Quest {
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset2")),
         do: () => pvpCloset(2),
-      },
-      {
-        name: "Pre-Garbo Food Time",
-        ready: () => myFullness() + 2 < fullnessLimit(),
-        completed: () => have($effect`Feeling Fancy`),
-        prepare: () => retrieveItem($item`roasted vegetable focaccia`),
-        do: () => eatsilent($item`roasted vegetable focaccia`),
-        clear: "all",
-        tracking: "Garbo",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
       },
       {
         name: "Garbo",
