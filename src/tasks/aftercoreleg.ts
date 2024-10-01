@@ -30,7 +30,6 @@ import {
   toBoolean,
   use,
   useFamiliar,
-  useSkill,
   visitUrl,
 } from "kolmafia";
 import {
@@ -67,7 +66,6 @@ import {
   getGarden,
   isGoodGarboScript,
   maxBase,
-  noML,
   pvpCloset,
   stooperDrunk,
   totallyDrunk,
@@ -271,37 +269,6 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`[glitch season reward name]`),
         completed: () => get("_glitchItemImplemented"),
         do: () => use($item`[glitch season reward name]`),
-      },
-      {
-        name: "Fight Glitch",
-        ready: () => have($item`[glitch season reward name]`),
-        completed: () => get("_glitchMonsterFights") > 0,
-        acquire: $items`gas can, gas balloon, shard of double-ice`.map((it) => ({
-          item: it,
-          price: 1000,
-        })),
-        prepare: () => {
-          restoreHp(0.9 * myMaxhp());
-          if (have($skill`Blood Bubble`) && !have($effect`Blood Bubble`))
-            useSkill($skill`Blood Bubble`);
-        },
-        do: () => visitUrl("inv_eat.php?pwd&whichitem=10207"),
-        post: () => {
-          if (!get("_lastCombatWon"))
-            throw new Error("Lost Combat - Check to see what went wrong.");
-        },
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${myPrimestat()} experience, 5 ${myPrimestat()} experience percent, ${noML()}`,
-        }),
-        combat: new CombatStrategy().macro(() =>
-          Macro.tryItem($item`gas balloon`)
-            .trySkill($skill`Feel Pride`)
-            .tryItem(...$items`shard of double-ice, gas can`)
-            .attack()
-            .repeat(),
-        ),
-        tracking: "Leveling",
       },
       {
         name: "Unlock Guild",
