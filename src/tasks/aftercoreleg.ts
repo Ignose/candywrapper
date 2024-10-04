@@ -3,8 +3,6 @@ import {
   availableAmount,
   buy,
   cliExecute,
-  eatsilent,
-  fullnessLimit,
   getCampground,
   getClanName,
   getWorkshed,
@@ -19,7 +17,6 @@ import {
   myAdventures,
   myClass,
   myDaycount,
-  myFullness,
   myHp,
   myInebriety,
   myLevel,
@@ -33,7 +30,6 @@ import {
   toBoolean,
   use,
   useFamiliar,
-  useSkill,
   visitUrl,
 } from "kolmafia";
 import {
@@ -70,7 +66,6 @@ import {
   getGarden,
   isGoodGarboScript,
   maxBase,
-  noML,
   pvpCloset,
   stooperDrunk,
   totallyDrunk,
@@ -114,6 +109,19 @@ export function AftercoreQuest(): Quest {
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
       },
+      /* {
+        name: "Pre-Run Photobooth",
+        ready: () => have($item`Clan VIP Lounge key`),
+        completed: () => get("_boothDone", false),
+        do: () => {
+          visitUrl("clan_viplounge.php?action=photobooth");
+          visitUrl("choice.php?whichchoice=1533&option=2&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=2&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=3&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=4&pwd");
+          set("_boothDone", true);
+        },
+      }, */
       {
         name: "PvP Closet Safety 1",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
@@ -276,37 +284,6 @@ export function AftercoreQuest(): Quest {
         do: () => use($item`[glitch season reward name]`),
       },
       {
-        name: "Fight Glitch",
-        ready: () => have($item`[glitch season reward name]`),
-        completed: () => get("_glitchMonsterFights") > 0,
-        acquire: $items`gas can, gas balloon, shard of double-ice`.map((it) => ({
-          item: it,
-          price: 1000,
-        })),
-        prepare: () => {
-          restoreHp(0.9 * myMaxhp());
-          if (have($skill`Blood Bubble`) && !have($effect`Blood Bubble`))
-            useSkill($skill`Blood Bubble`);
-        },
-        do: () => visitUrl("inv_eat.php?pwd&whichitem=10207"),
-        post: () => {
-          if (!get("_lastCombatWon"))
-            throw new Error("Lost Combat - Check to see what went wrong.");
-        },
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${myPrimestat()} experience, 5 ${myPrimestat()} experience percent, ${noML()}`,
-        }),
-        combat: new CombatStrategy().macro(() =>
-          Macro.tryItem($item`gas balloon`)
-            .trySkill($skill`Feel Pride`)
-            .tryItem(...$items`shard of double-ice, gas can`)
-            .attack()
-            .repeat(),
-        ),
-        tracking: "Leveling",
-      },
-      {
         name: "Unlock Guild",
         ready: () =>
           myClass() === $class`Seal Clubber` &&
@@ -399,16 +376,6 @@ export function AftercoreQuest(): Quest {
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset2")),
         do: () => pvpCloset(2),
-      },
-      {
-        name: "Pre-Garbo Food Time",
-        ready: () => myFullness() + 2 < fullnessLimit(),
-        completed: () => have($effect`Feeling Fancy`),
-        prepare: () => retrieveItem($item`roasted vegetable focaccia`),
-        do: () => eatsilent($item`roasted vegetable focaccia`),
-        clear: "all",
-        tracking: "Garbo",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
       },
       {
         name: "Garbo",

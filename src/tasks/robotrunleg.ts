@@ -4,9 +4,7 @@ import {
   buyUsingStorage,
   cliExecute,
   drink,
-  eatsilent,
   Effect,
-  fullnessLimit,
   getClanName,
   getWorkshed,
   hippyStoneBroken,
@@ -15,7 +13,6 @@ import {
   myAdventures,
   myAscensions,
   myDaycount,
-  myFullness,
   myInebriety,
   myLevel,
   myMaxhp,
@@ -99,6 +96,19 @@ export function RobotQuests(): Quest[] {
             1507: 1,
           },
         },
+        /* {
+          name: "Pre-Run Photobooth",
+          ready: () => have($item`Clan VIP Lounge key`),
+          completed: () => get("_boothDone", false),
+          do: () => {
+            visitUrl("clan_viplounge.php?action=photobooth");
+            visitUrl("choice.php?whichchoice=1533&option=2&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=2&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=3&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=4&pwd");
+            set("_boothDone", true);
+          },
+        }, */
         {
           name: "Acquire Mouthwash",
           completed: () =>
@@ -452,16 +462,6 @@ export function RobotQuests(): Quest[] {
           ready: () => halloween,
           completed: () => myAdventures() === 0 || stooperDrunk(),
           do: () => GarboWeenQuest(),
-        },
-        {
-          name: "Pre-Garbo Food Time",
-          ready: () => myFullness() + 2 < fullnessLimit(),
-          completed: () => have($effect`Feeling Fancy`),
-          prepare: () => retrieveItem($item`roasted vegetable focaccia`),
-          do: () => eatsilent($item`roasted vegetable focaccia`),
-          clear: "all",
-          tracking: "Garbo",
-          limit: { tries: 1 }, //this will run again after installing CMC, by magic
         },
         {
           name: "Garbo",
