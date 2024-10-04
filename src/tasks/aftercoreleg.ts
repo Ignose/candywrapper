@@ -109,6 +109,19 @@ export function AftercoreQuest(): Quest {
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
       },
+      /* {
+        name: "Pre-Run Photobooth",
+        ready: () => have($item`Clan VIP Lounge key`),
+        completed: () => get("_boothDone", false),
+        do: () => {
+          visitUrl("clan_viplounge.php?action=photobooth");
+          visitUrl("choice.php?whichchoice=1533&option=2&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=2&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=3&pwd");
+          visitUrl("choice.php?whichchoice=1535&option=4&pwd");
+          set("_boothDone", true);
+        },
+      }, */
       {
         name: "PvP Closet Safety 1",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,

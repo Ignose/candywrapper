@@ -367,7 +367,7 @@ function bestTarget(): Monster {
   );
   const sausageGoblin = 1_000;
 
-  return valueDrops(bestDrop) * goosoMultiplier > sausageGoblin
+  return totalValue(bestDrop) * goosoMultiplier > sausageGoblin
     ? bestDrop
     : $monster`sausage goblin`;
 }

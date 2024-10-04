@@ -96,6 +96,19 @@ export function RobotQuests(): Quest[] {
             1507: 1,
           },
         },
+        /* {
+          name: "Pre-Run Photobooth",
+          ready: () => have($item`Clan VIP Lounge key`),
+          completed: () => get("_boothDone", false),
+          do: () => {
+            visitUrl("clan_viplounge.php?action=photobooth");
+            visitUrl("choice.php?whichchoice=1533&option=2&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=2&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=3&pwd");
+            visitUrl("choice.php?whichchoice=1535&option=4&pwd");
+            set("_boothDone", true);
+          },
+        }, */
         {
           name: "Acquire Mouthwash",
           completed: () =>
