@@ -318,23 +318,21 @@ export function pvpCloset(num: number) {
 
 const goosoMultiplier = have($familiar`Grey Goose`) ? 2 : 1;
 
-const valueDrops = (monster: Monster) =>
+export const valueDrops = (monster: Monster) =>
   sum(itemDropsArray(monster), ({ drop, rate, type }) =>
     !["c", "0", "p", "a"].includes(type) ? (garboValue(drop) * rate) / 100 : 0,
   );
 
-function snapperValue(mon: Monster): number {
+export function snapperValue(mon: Monster): number {
   if (!Snapper.have()) return 0;
   const item = Snapper.phylumItem.get(mon.phylum);
   if (!item) return 0;
 
-  const denominator = 11 - (Snapper.getTrackedPhylum() === mon.phylum ? Snapper.getProgress() : 0);
-
-  return garboValue(item) / denominator;
+  return garboValue(item) / 11;
 }
 
 const LIMITED_BOFA_DROPS = $items`pocket wish, tattered scrap of paper`;
-function bofaValue(mon: Monster): number {
+export function bofaValue(mon: Monster): number {
   if (!have($skill`Just the Facts`)) return 0;
   switch (mon.factType) {
     case "item": {
@@ -360,7 +358,7 @@ function totalValue(mon: Monster): number {
   return valueDrops(mon) + snapperValue(mon) + bofaValue(mon);
 }
 
-function bestTarget(): Monster {
+export function bestTarget(): Monster {
   const bestDrop = maxBy(
     $monsters.all().filter((m) => m.wishable && m.copyable && m.attributes.includes("FREE")),
     totalValue,
@@ -382,6 +380,7 @@ function mimicSafety(): Monster | boolean {
 }
 
 export const copyTarget = () => {
+  if (args.targetmonster) return `target="${args.targetmonster}"`;
   if (mimicSafety()) return `target="${mimicSafety()}"`;
   return `target="${bestTarget()}"`;
 };

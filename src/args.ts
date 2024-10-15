@@ -147,5 +147,12 @@ export const args = Args.create(
       help: "Should we warn you when tomorrow is Halloween so you can prepare a steel organ?",
       default: true,
     }),
+    targetsim: Args.flag({
+      help: "Sim what target we'll fight next, and why",
+      default: false,
+    }),
+    targetmonster: Args.string({
+      help: "Define a specific monster for Garbo to target; note that the wrapper will find something useful for you!",
+    }),
   },
 );

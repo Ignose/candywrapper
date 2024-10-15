@@ -1,5 +1,6 @@
 import { Args, getTasks } from "grimoire-kolmafia";
-import { gamedayToInt, print } from "kolmafia";
+import { gamedayToInt, print, toMonster } from "kolmafia";
+import { $monster } from "libram";
 
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
@@ -10,7 +11,16 @@ import { CasualQuests } from "./tasks/casualrunleg";
 import { CSQuests } from "./tasks/csrunleg";
 import { RobotQuests } from "./tasks/robotrunleg";
 import { SmolQuests } from "./tasks/smolrunleg";
-import { deleteJunkKmails, halloween, realDay, realMonth } from "./tasks/utils";
+import {
+  bestTarget,
+  bofaValue,
+  deleteJunkKmails,
+  halloween,
+  realDay,
+  realMonth,
+  snapperValue,
+  valueDrops,
+} from "./tasks/utils";
 
 const version = "0.0.3";
 
@@ -21,6 +31,19 @@ export function main(command?: string): void {
   if (args.help) {
     Args.showHelp(args);
     return;
+  }
+
+  if (args.targetsim) {
+    let target = $monster`sausage goblin`;
+    if (args.targetmonster) {
+      target = toMonster(args.targetmonster);
+    } else {
+      target = bestTarget();
+    }
+    const dropValue = valueDrops(target);
+    const snapper = snapperValue(target);
+    const bofa = bofaValue(target);
+    throw `Your target will be ${target} because it drops ${dropValue} and offers Snapper bonus ${snapper} as well as Just The Facts ${bofa}!`;
   }
 
   if (dontCS && args.halloween && args.cs) {
