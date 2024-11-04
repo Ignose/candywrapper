@@ -2357,12 +2357,12 @@ eslint-config-prettier@^8.8.0:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-8.8.0.tgz#bfda738d412adc917fd7b038857110efe98c9348"
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
-eslint-plugin-libram@^0.4.2:
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.5.tgz#792cc47eef9fc5e32c550cd4ce515a03f0ab02ae"
-  integrity sha512-ST5J8liK4io73wraAnTGbf37wbLoNAUhgq7eyDPcX58zv5rI7zCGC8IxtRc18GIKE3dQf9CgZlcK9ZOrwsG6oA==
+eslint-plugin-libram@^0.4.15:
+  version "0.4.15"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.15.tgz#ea6cf0a1f9941cf0e16927a8d688d8daa6567433"
+  integrity sha512-QW+CwY9ocoSBr5xHM7KnlC/YcjmbYMUFSM33SmqoBrliheo9oJErdmO5PVYBrjZ4bNjqh2Ea4xW7OEzbNXjT7g==
   dependencies:
-    html-entities "^2.4.0"
+    html-entities "^2.5.2"
     requireindex "~1.2.0"
 
 eslint-plugin-prettier@^5.0.0:
@@ -2849,7 +2849,7 @@ hasown@^2.0.0:
   dependencies:
     function-bind "^1.1.2"
 
-html-entities@^2.4.0, html-entities@^2.5.2:
+html-entities@^2.5.2:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.5.2.tgz#201a3cf95d3a15be7099521620d19dfb4f65359f"
   integrity sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==
