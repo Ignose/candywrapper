@@ -59,7 +59,6 @@ import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
   bestFam,
-  copyTarget,
   doneAdventuring,
   halloween,
   haveAll,
@@ -95,39 +94,6 @@ export function RobotQuests(): Quest[] {
           choices: {
             1507: 1,
           },
-        },
-        /* {
-          name: "Pre-Run Photobooth",
-          ready: () => have($item`Clan VIP Lounge key`),
-          completed: () => get("_boothDone", false),
-          do: () => {
-            visitUrl("clan_viplounge.php?action=photobooth");
-            visitUrl("choice.php?whichchoice=1533&option=2&pwd");
-            visitUrl("choice.php?whichchoice=1535&option=2&pwd");
-            visitUrl("choice.php?whichchoice=1535&option=3&pwd");
-            visitUrl("choice.php?whichchoice=1535&option=4&pwd");
-            set("_boothDone", true);
-          },
-        }, */
-        {
-          name: "Acquire Mouthwash",
-          completed: () =>
-            // eslint-disable-next-line libram/verify-constants
-            get("_mouthWashed", "") === "true",
-          do: (): void => {
-            // Grab Embers
-            visitUrl("shop.php?whichshop=september");
-
-            // Grab Bembershoot
-            visitUrl(`shop.php?whichshop=september&action=buyitem&quantity=1&whichrow=1516&pwd`);
-
-            // Grab Mouthwashes
-            visitUrl("shop.php?whichshop=september&action=buyitem&quantity=3&whichrow=1512&pwd");
-
-            //Set the pref
-            setProperty("_mouthWashed", "true");
-          },
-          limit: { tries: 1 },
         },
         {
           name: "Get Floundry item",
@@ -207,6 +173,14 @@ export function RobotQuests(): Quest[] {
           name: "Pull All",
           completed: () => get("lastEmptiedStorage") === myAscensions(),
           do: () => cliExecute("pull all; refresh all"),
+        },
+        {
+          name: "Clear citizen",
+          completed: () => !get("_citizenZone", "").includes("castle"),
+          do: (): void => {
+            uneffect($effect`Citizen of a Zone`);
+            cliExecute(`set _citizenZone = ""`);
+          },
         },
         {
           name: "PvP Closet Safety 1",
@@ -468,7 +442,7 @@ export function RobotQuests(): Quest[] {
           ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
           completed: () => myAdventures() === 0 || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
-          do: () => cliExecute(`${args.garbo} ${copyTarget()}`),
+          do: () => cliExecute(`${args.garbo} ${args.targetmonster}`),
           post: () =>
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
               .filter((ef) => have(ef))

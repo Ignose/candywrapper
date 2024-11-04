@@ -62,7 +62,6 @@ import { args } from "../args";
 import { Quest } from "./structure";
 import {
   bestFam,
-  copyTarget,
   getGarden,
   isGoodGarboScript,
   maxBase,
@@ -109,19 +108,16 @@ export function AftercoreQuest(): Quest {
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
       },
-      /* {
+      {
         name: "Pre-Run Photobooth",
-        ready: () => have($item`Clan VIP Lounge key`),
-        completed: () => get("_boothDone", false),
+        ready: () => have($item`Clan VIP Lounge key`) && get("_photoBoothEquipment", 0) === 0,
+        completed: () => get("_photoBoothEquipment", 0) >= 3,
         do: () => {
-          visitUrl("clan_viplounge.php?action=photobooth");
-          visitUrl("choice.php?whichchoice=1533&option=2&pwd");
-          visitUrl("choice.php?whichchoice=1535&option=2&pwd");
-          visitUrl("choice.php?whichchoice=1535&option=3&pwd");
-          visitUrl("choice.php?whichchoice=1535&option=4&pwd");
-          set("_boothDone", true);
+          cliExecute("photobooth item fake arrow-through-the-head");
+          cliExecute("photobooth item oversized monocle on a stick");
+          cliExecute("photobooth item feather boa");
         },
-      }, */
+      },
       {
         name: "PvP Closet Safety 1",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
@@ -381,7 +377,7 @@ export function AftercoreQuest(): Quest {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garboascend} ${copyTarget()}`),
+        do: () => cliExecute(`${args.garboascend} ${args.targetmonster}`),
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`

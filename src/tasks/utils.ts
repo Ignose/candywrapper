@@ -6,11 +6,10 @@ import {
   fullnessLimit,
   gamedayToInt,
   getCampground,
+  holiday,
   inebrietyLimit,
   Item,
   itemAmount,
-  itemDropsArray,
-  itemFact,
   mallPrice,
   Monster,
   myAdventures,
@@ -18,7 +17,6 @@ import {
   myFullness,
   myInebriety,
   mySpleenUse,
-  numericFact,
   print,
   putCloset,
   retrieveItem,
@@ -32,19 +30,13 @@ import {
   $familiars,
   $item,
   $items,
-  $monster,
-  $monsters,
   $phylum,
-  $skill,
-  ChestMimic,
   gameDay,
   get,
   getBanishedMonsters,
   have,
-  maxBy,
   set,
   Snapper,
-  sum,
 } from "libram";
 
 import { args } from "../args";
@@ -266,7 +258,8 @@ function isJunkKmail(kmail: Kmail) {
 
   if (
     (kmail.fromname.toLowerCase() === "cheesefax" ||
-      kmail.fromname.toLowerCase() === "averagechat") &&
+      kmail.fromname.toLowerCase() === "averagechat" ||
+      kmail.fromname.toLowerCase() === "onlyfax") &&
     kmail.message.includes("completed your relationship fortune test!")
   ) {
     return true;
@@ -295,7 +288,8 @@ export function deleteJunkKmails() {
 
 export const realMonth = gameDay().getMonth();
 export const realDay = gameDay().getDate();
-export const halloween = gamedayToInt() === 79 || (realMonth === 10 && realDay === 31);
+export const halloween =
+  gamedayToInt() === 79 || (realMonth === 10 && realDay === 31) || holiday().includes("halloween");
 
 export function pvpCloset(num: number) {
   const threshold = 10000;
@@ -315,73 +309,3 @@ export function pvpCloset(num: number) {
     });
   set(`_safetyCloset${num}`, true);
 }
-
-const goosoMultiplier = have($familiar`Grey Goose`) ? 2 : 1;
-
-const valueDrops = (monster: Monster) =>
-  sum(itemDropsArray(monster), ({ drop, rate, type }) =>
-    !["c", "0", "p", "a"].includes(type) ? (garboValue(drop) * rate) / 100 : 0,
-  );
-
-function snapperValue(mon: Monster): number {
-  if (!Snapper.have()) return 0;
-  const item = Snapper.phylumItem.get(mon.phylum);
-  if (!item) return 0;
-
-  const denominator = 11 - (Snapper.getTrackedPhylum() === mon.phylum ? Snapper.getProgress() : 0);
-
-  return garboValue(item) / denominator;
-}
-
-const LIMITED_BOFA_DROPS = $items`pocket wish, tattered scrap of paper`;
-function bofaValue(mon: Monster): number {
-  if (!have($skill`Just the Facts`)) return 0;
-  switch (mon.factType) {
-    case "item": {
-      const item = itemFact(mon);
-      const quantity = numericFact(mon);
-      if (LIMITED_BOFA_DROPS.includes(item)) {
-        return 0;
-      }
-      return quantity * garboValue(item);
-    }
-    case "effect": {
-      return 0;
-    }
-    case "meat": {
-      return numericFact(mon);
-    }
-    default:
-      return 0;
-  }
-}
-
-function totalValue(mon: Monster): number {
-  return valueDrops(mon) + snapperValue(mon) + bofaValue(mon);
-}
-
-function bestTarget(): Monster {
-  const bestDrop = maxBy(
-    $monsters.all().filter((m) => m.wishable && m.copyable && m.attributes.includes("FREE")),
-    totalValue,
-  );
-  const sausageGoblin = 1_000;
-
-  return totalValue(bestDrop) * goosoMultiplier > sausageGoblin
-    ? bestDrop
-    : $monster`sausage goblin`;
-}
-
-function mimicSafety(): Monster | boolean {
-  const check = $monsters
-    .all()
-    .filter((m) => m.wishable && m.copyable && m.attributes.includes("FREE"))
-    .filter((m) => ChestMimic.differentiableQuantity(m));
-  if (check.length === 1) return check[0];
-  return false;
-}
-
-export const copyTarget = () => {
-  if (mimicSafety()) return `target="${mimicSafety()}"`;
-  return `target="${bestTarget()}"`;
-};
