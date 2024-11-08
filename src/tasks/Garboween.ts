@@ -26,7 +26,6 @@ import {
   spleenLimit,
   use,
   useFamiliar,
-  visitUrl,
 } from "kolmafia";
 import {
   $class,
@@ -44,22 +43,20 @@ import {
   getTodaysHolidayWanderers,
   have,
   Macro,
-  set,
   uneffect,
 } from "libram";
 
 import { args } from "../args";
 
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { Quest } from "./structure";
 import { bestFam, getGarden, maxBase, stooperDrunk, totallyDrunk } from "./utils";
 
 let garboDone = false;
 
 export function GarboWeenQuest(): Quest {
   return {
-    name: "Aftercore",
-    ready: () => getCurrentLeg() === 0,
-    completed: () => getCurrentLeg() > Leg.Aftercore,
+    name: "Garboween",
+    completed: () => myAdventures() === 0 && totallyDrunk(),
     tasks: [
       {
         name: "Whitelist VIP Clan",
@@ -72,14 +69,6 @@ export function GarboWeenQuest(): Quest {
         completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
         do: () => use($item`one-day ticket to Dinseylandfill`),
         tracking: "Garbo",
-      },
-      {
-        name: "Prep Fireworks Shop",
-        completed: () => !have($item`Clan VIP Lounge key`) || get("_goorboFireworksPrepped", false),
-        do: () => {
-          visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
-          set("_goorboFireworksPrepped", true);
-        },
       },
       {
         name: "Breakfast",
@@ -105,15 +94,12 @@ export function GarboWeenQuest(): Quest {
       },
       {
         name: "SIT Course",
-        // eslint-disable-next-line libram/verify-constants
         ready: () => have($item`S.I.T. Course Completion Certificate`),
         completed: () => get("_sitCourseCompleted", false),
         choices: {
           1494: 2,
         },
-        do: () =>
-          // eslint-disable-next-line libram/verify-constants
-          use($item`S.I.T. Course Completion Certificate`),
+        do: () => use($item`S.I.T. Course Completion Certificate`),
       },
       {
         name: "Drive Observantly",
