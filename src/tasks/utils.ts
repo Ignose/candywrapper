@@ -1,4 +1,5 @@
 import {
+  canEquip,
   chew,
   cliExecute,
   Effect,
@@ -6,6 +7,7 @@ import {
   fullnessLimit,
   gamedayToInt,
   getCampground,
+  getOutfits,
   holiday,
   inebrietyLimit,
   Item,
@@ -17,10 +19,13 @@ import {
   myFullness,
   myInebriety,
   mySpleenUse,
+  outfitPieces,
+  outfitTreats,
   print,
   putCloset,
   retrieveItem,
   spleenLimit,
+  toItem,
   urlEncode,
   use,
   visitUrl,
@@ -35,8 +40,10 @@ import {
   get,
   getBanishedMonsters,
   have,
+  maxBy,
   set,
   Snapper,
+  sum,
 } from "libram";
 
 import { args } from "../args";
@@ -289,7 +296,10 @@ export function deleteJunkKmails() {
 export const realMonth = gameDay().getMonth();
 export const realDay = gameDay().getDate();
 export const halloween =
-  gamedayToInt() === 79 || (realMonth === 10 && realDay === 31) || holiday().includes("halloween");
+  (gamedayToInt() === 79 ||
+    (realMonth === 10 && realDay === 31) ||
+    holiday().includes("halloween")) &&
+  isHalloweenWorthDoing();
 
 export function pvpCloset(num: number) {
   const threshold = 10000;
@@ -308,4 +318,47 @@ export function pvpCloset(num: number) {
       print(`Closeting valuables (${mallPrice(it)} meat): ${it}`);
     });
   set(`_safetyCloset${num}`, true);
+}
+
+function treatValue(outfit: string): number {
+  return sum(
+    Object.entries(outfitTreats(outfit)),
+    ([candyName, probability]) => probability * garboValue(toItem(candyName)),
+  );
+}
+
+export function getTreatOutfit(): string {
+  let outfit = get("freecandy_treatOutfit");
+  const availableOutfits = getOutfits().filter((name) =>
+    outfitPieces(name).every((piece) => canEquip(piece)),
+  );
+
+  if (!availableOutfits.length) {
+    return "seal-clubbing club";
+  }
+
+  outfit = maxBy(availableOutfits, treatValue);
+
+  return outfit;
+}
+
+let _baseAdventureValue: number;
+function baseAdventureValue(): number {
+  if (!_baseAdventureValue) {
+    const outfitCandyValue = treatValue(getTreatOutfit());
+    const totOutfitCandyMultiplier = have($familiar`Trick-or-Treating Tot`) ? 1.6 : 1;
+    const bowlValue = (1 / 5) * garboValue($item`huge bowl of candy`);
+    const prunetsValue = have($familiar`Trick-or-Treating Tot`)
+      ? 4 * 0.2 * garboValue($item`Prunets`)
+      : 0;
+
+    const outfitCandyTotal = 3 * outfitCandyValue * totOutfitCandyMultiplier;
+    _baseAdventureValue = (1 / 5) * (outfitCandyTotal + bowlValue + prunetsValue);
+  }
+  return _baseAdventureValue;
+}
+
+function isHalloweenWorthDoing(): boolean {
+  const freeFightValue = have($familiar`Red-Nosed Snapper`) ? 2000 : 1100;
+  return baseAdventureValue() + freeFightValue > get("valueOfAdventure");
 }

@@ -3,6 +3,8 @@ import {
   availableAmount,
   buy,
   cliExecute,
+  equip,
+  familiarEquippedEquipment,
   getCampground,
   getClanName,
   getWorkshed,
@@ -52,6 +54,7 @@ import {
   have,
   Macro,
   set,
+  StillSuit,
   TrainSet,
   uneffect,
 } from "libram";
@@ -92,6 +95,8 @@ const stations = [
   Station.CANDY_FACTORY, // candies
 ] as Cycle;
 
+const bestStillsuitFamiliar = StillSuit.bestFamiliar("Item Drop");
+
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
@@ -107,6 +112,15 @@ export function AftercoreQuest(): Quest {
         name: "Whitelist VIP Clan",
         completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
         do: () => cliExecute(`/whitelist ${args.clan}`),
+      },
+      {
+        name: "Set up Sweatsuit",
+        ready: () => have($item`tiny stillsuit`),
+        completed: () => familiarEquippedEquipment(bestStillsuitFamiliar) === $item`tiny stillsuit`,
+        do: (): void => {
+          equip(bestStillsuitFamiliar, $item`tiny stillsuit`);
+        },
+        limit: { tries: 1 },
       },
       {
         name: "Pre-Run Photobooth",

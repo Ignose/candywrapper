@@ -5,6 +5,8 @@ import {
   cliExecute,
   drink,
   Effect,
+  equip,
+  familiarEquippedEquipment,
   getClanName,
   getWorkshed,
   hippyStoneBroken,
@@ -49,6 +51,7 @@ import {
   have,
   Macro,
   set,
+  StillSuit,
   uneffect,
 } from "libram";
 
@@ -81,6 +84,8 @@ function firstWorkshed() {
 const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
 const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
 
+const bestStillsuitFamiliar = StillSuit.bestFamiliar("Item Drop");
+
 export function RobotQuests(): Quest[] {
   return [
     {
@@ -94,6 +99,16 @@ export function RobotQuests(): Quest[] {
           choices: {
             1507: 1,
           },
+        },
+        {
+          name: "Set up Sweatsuit",
+          ready: () => have($item`tiny stillsuit`),
+          completed: () =>
+            familiarEquippedEquipment(bestStillsuitFamiliar) === $item`tiny stillsuit`,
+          do: (): void => {
+            equip(bestStillsuitFamiliar, $item`tiny stillsuit`);
+          },
+          limit: { tries: 1 },
         },
         {
           name: "Get Floundry item",
