@@ -474,7 +474,7 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
         completed: () => myAdventures() === 0,
-        do: () => cliExecute("garbo ascend"),
+        do: () => cliExecute(`${args.garboascend}`),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
             .filter((ef) => have(ef))
