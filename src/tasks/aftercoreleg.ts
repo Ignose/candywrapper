@@ -60,15 +60,7 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 import { args } from "../args";
 
 import { Quest } from "./structure";
-import {
-  bestFam,
-  getGarden,
-  isGoodGarboScript,
-  maxBase,
-  pvpCloset,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+import { bestFam, getGarden, maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -234,16 +226,6 @@ export function AftercoreQuest(): Quest {
           DNALab.makeTonic(3);
           DNALab.hybridize();
         },
-      },
-      {
-        name: "LGR Seed",
-        ready: () =>
-          //best guess if we're going to Dinseylandfill later in the day
-          isGoodGarboScript(args.garboascend) ||
-          args.pulls.includes($item`one-day ticket to Dinseylandfill`),
-        completed: () =>
-          !have($item`lucky gold ring`) || get("_stenchAirportToday") || get("stenchAirportAlways"),
-        do: () => use($item`one-day ticket to Dinseylandfill`),
       },
       {
         name: "June Cleaver",

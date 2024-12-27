@@ -198,15 +198,6 @@ export function RobotQuests(): Quest[] {
           do: () => use(firstWorkshed()),
         },
         {
-          name: "Unlock Garbage Mountain",
-          completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          do: (): void => {
-            retrieveItem($item`one-day ticket to Dinseylandfill`);
-            use($item`one-day ticket to Dinseylandfill`);
-          },
-          tracking: "Garbo",
-        },
-        {
           name: "Wardrobe-o-matic",
           ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
           completed: () => get("_wardrobeUsed", false),
@@ -438,8 +429,22 @@ export function RobotQuests(): Quest[] {
           do: () => GarboWeenQuest(),
         },
         {
+          name: "Emergency Drink Part 3",
+          ready: () => myAdventures() < 40 && myInebriety() < 11,
+          completed: () => myAdventures() > 40 || myInebriety() >= 11,
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => {
+            while (myAdventures() < 40) {
+              useSkill($skill`The Ode to Booze`);
+              drink(1, $item`astral pilsner`);
+            }
+          },
+          limit: { tries: 6 },
+        },
+        {
           name: "Garbo",
-          ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
           completed: () => myAdventures() === 0 || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(`${args.garbo}`),
