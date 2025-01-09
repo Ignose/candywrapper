@@ -12,9 +12,11 @@ import {
   inebrietyLimit,
   Item,
   itemAmount,
+  Location,
   mallPrice,
   Monster,
   myAdventures,
+  myDaycount,
   myFamiliar,
   myFullness,
   myInebriety,
@@ -35,6 +37,7 @@ import {
   $familiars,
   $item,
   $items,
+  $location,
   $phylum,
   gameDay,
   get,
@@ -149,6 +152,16 @@ export function bestFam(mob?: Monster) {
     .filter((fam) => have(fam))
     .sort((a, b) => famValue(b, mob) - famValue(a, mob));
   return fams.find((fam) => have(fam));
+}
+
+export function nextCyberZone(): Location {
+  return $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount()
+    ? $location`Cyberzone 1`
+    : $location`Cyberzone 2`.turnsSpent >= 19 * myDaycount()
+    ? $location`Cyberzone 2`
+    : $location`Cyberzone 3`.turnsSpent >= 19 * myDaycount()
+    ? $location`Cyberzone 3`
+    : $location`none`;
 }
 
 export function canDiet(): boolean {

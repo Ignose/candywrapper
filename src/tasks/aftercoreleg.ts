@@ -3,6 +3,8 @@ import {
   availableAmount,
   buy,
   cliExecute,
+  equip,
+  Familiar,
   getCampground,
   getClanName,
   getWorkshed,
@@ -17,6 +19,7 @@ import {
   myAdventures,
   myClass,
   myDaycount,
+  myFamiliar,
   myHp,
   myInebriety,
   myLevel,
@@ -28,8 +31,11 @@ import {
   restoreMp,
   retrieveItem,
   toBoolean,
+  toInt,
+  toSkill,
   use,
   useFamiliar,
+  useSkill,
   visitUrl,
 } from "kolmafia";
 import {
@@ -60,7 +66,7 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 import { args } from "../args";
 
 import { Quest } from "./structure";
-import { bestFam, getGarden, maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { getGarden, maxBase, nextCyberZone, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -83,6 +89,19 @@ const stations = [
   Station.WATER_BRIDGE, // +ML
   Station.CANDY_FACTORY, // candies
 ] as Cycle;
+
+const bestFam = () =>
+  famCheck($familiar`Pocket Professor`)
+    ? $familiar`Pocket Professor`
+    : famCheck($familiar`Chest Mimic`)
+    ? $familiar`Chest Mimic`
+    : famCheck($familiar`Grey Goose`)
+    ? $familiar`Grey Goose`
+    : $familiar`Grey Goose`;
+
+function famCheck(fam: Familiar): boolean {
+  return have(fam) && fam.experience < 400;
+}
 
 export function AftercoreQuest(): Quest {
   return {
@@ -109,6 +128,67 @@ export function AftercoreQuest(): Quest {
           cliExecute("photobooth item oversized monocle on a stick");
           cliExecute("photobooth item feather boa");
         },
+      },
+      {
+        name: "Candy Deviler",
+        // eslint-disable-next-line libram/verify-constants
+        ready: () => have($item`candy egg deviler`),
+        completed: () => toInt(get("_candyEggsDeviled")) >= 3,
+        do: () => {
+          visitUrl(`inventory.php?action=eggdevil&pwd`);
+          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+        },
+      },
+      {
+        name: "CyberRealm: Prepare Familiar",
+        completed: () => myFamiliar() === $familiar`Shorter-Order Cook`,
+        do: () => {
+          if (have($familiar`Shorter-Order Cook`)) {
+            cliExecute("familiar Shorter-Order Cook");
+            equip($familiar`Shorter-Order Cook`, $item`blue plate`);
+          }
+          cliExecute(`familiar ${bestFam().name}`);
+          cliExecute("familiar Shorter-Order Cook");
+        },
+      },
+      {
+        name: "Run CyberRealm",
+        ready: () => mallPrice($item`1`) > 1_000,
+        prepare: () => {
+          $effects`Astral Shell, Elemental Saucesphere, Scarysauce`.forEach((ef) => {
+            if (!have(ef)) useSkill(toSkill(ef));
+          });
+        },
+        completed: () => nextCyberZone() === $location`none`, // $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount(),
+        choices: { 1545: 1, 1546: 1, 1547: 1, 1548: 1, 1549: 1, 1550: 1 },
+        do: nextCyberZone(),
+        outfit: {
+          hat: $item`Crown of Thrones`,
+          back: $item`unwrapped knock-off retro superhero cape`,
+          shirt: $item`zero-trust tanktop`,
+          weapon: $item`encrypted shuriken`,
+          offhand: $item`visual packet sniffer`,
+          pants: $item`digibritches`,
+          acc1: $item`retro floppy disk`,
+          acc2: $item`retro floppy disk`,
+          acc3: $item`retro floppy disk`,
+          famequip: $item`familiar-in-the-middle wrapper`,
+          modes: { retrocape: ["vampire", "hold"] },
+          riders: { "crown-of-thrones": $familiar`Mini Kiwi` },
+        },
+        combat: new CombatStrategy().macro(() =>
+          Macro.if_(
+            "!monsterphylum construct",
+            Macro.trySkill($skill`Sing Along`)
+              .trySkill($skill`Saucestorm`)
+              .repeat(),
+          )
+            .skill($skill`Throw Cyber Rock`)
+            .repeat(),
+        ),
+        limit: { skip: 60 },
       },
       {
         name: "PvP Closet Safety 1",

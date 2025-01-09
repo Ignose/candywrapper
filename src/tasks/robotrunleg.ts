@@ -5,14 +5,18 @@ import {
   cliExecute,
   drink,
   Effect,
+  equip,
+  Familiar,
   getClanName,
   getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
+  mallPrice,
   myAdventures,
   myAscensions,
   myDaycount,
+  myFamiliar,
   myInebriety,
   myLevel,
   myMaxhp,
@@ -28,6 +32,7 @@ import {
   storageAmount,
   toBoolean,
   toInt,
+  toSkill,
   use,
   useFamiliar,
   useSkill,
@@ -58,11 +63,11 @@ import { GarboWeenQuest } from "./Garboween";
 import { getCurrentLeg, Leg, Quest } from "./structure";
 import {
   backstageItemsDone,
-  bestFam,
   doneAdventuring,
   halloween,
   haveAll,
   maxBase,
+  nextCyberZone,
   pvpCloset,
   stooperDrunk,
   totallyDrunk,
@@ -70,6 +75,7 @@ import {
 
 let pajamas = false;
 let smoke = 1;
+let duffo = false;
 
 function firstWorkshed() {
   return (
@@ -80,6 +86,19 @@ function firstWorkshed() {
 }
 const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
 const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
+
+const bestFam = () =>
+  famCheck($familiar`Pocket Professor`)
+    ? $familiar`Pocket Professor`
+    : famCheck($familiar`Chest Mimic`)
+    ? $familiar`Chest Mimic`
+    : famCheck($familiar`Grey Goose`)
+    ? $familiar`Grey Goose`
+    : $familiar`Grey Goose`;
+
+function famCheck(fam: Familiar): boolean {
+  return have(fam) && fam.experience < 400;
+}
 
 export function RobotQuests(): Quest[] {
   return [
@@ -93,6 +112,14 @@ export function RobotQuests(): Quest[] {
           do: () => cliExecute(`/whitelist ${args.clan}`),
           choices: {
             1507: 1,
+          },
+        },
+        {
+          name: "Unpack Duffel Bag",
+          completed: () => duffo,
+          do: () => {
+            visitUrl("inventory.php?action=skiduffel&pwd");
+            duffo = true;
           },
         },
         {
@@ -436,12 +463,73 @@ export function RobotQuests(): Quest[] {
             if (have($item`astral six-pack`)) use($item`astral six-pack`);
           },
           do: () => {
-            while (myAdventures() < 40) {
+            while (myAdventures() < 80 && have($item`astral pilsner`)) {
               useSkill($skill`The Ode to Booze`);
               drink(1, $item`astral pilsner`);
             }
           },
           limit: { tries: 6 },
+        },
+        {
+          name: "Candy Deviler",
+          // eslint-disable-next-line libram/verify-constants
+          ready: () => have($item`candy egg deviler`),
+          completed: () => toInt(get("_candyEggsDeviled")) >= 3,
+          do: () => {
+            visitUrl(`inventory.php?action=eggdevil&pwd`);
+            visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+            visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+            visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
+          },
+        },
+        {
+          name: "CyberRealm: Prepare Familiar",
+          completed: () => myFamiliar() === $familiar`Shorter-Order Cook`,
+          do: () => {
+            if (have($familiar`Shorter-Order Cook`)) {
+              cliExecute("familiar Shorter-Order Cook");
+              equip($familiar`Shorter-Order Cook`, $item`blue plate`);
+            }
+            cliExecute(`familiar ${bestFam().name}`);
+            cliExecute("familiar Shorter-Order Cook");
+          },
+        },
+        {
+          name: "Run CyberRealm",
+          ready: () => mallPrice($item`1`) > 1_000,
+          prepare: () => {
+            $effects`Astral Shell, Elemental Saucesphere, Scarysauce`.forEach((ef) => {
+              if (!have(ef)) useSkill(toSkill(ef));
+            });
+          },
+          completed: () => nextCyberZone() === $location`none`, // $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount(),
+          choices: { 1545: 1, 1546: 1, 1547: 1, 1548: 1, 1549: 1, 1550: 1 },
+          do: nextCyberZone(),
+          outfit: {
+            hat: $item`Crown of Thrones`,
+            back: $item`unwrapped knock-off retro superhero cape`,
+            shirt: $item`zero-trust tanktop`,
+            weapon: $item`encrypted shuriken`,
+            offhand: $item`visual packet sniffer`,
+            pants: $item`digibritches`,
+            acc1: $item`retro floppy disk`,
+            acc2: $item`retro floppy disk`,
+            acc3: $item`retro floppy disk`,
+            famequip: $item`familiar-in-the-middle wrapper`,
+            modes: { retrocape: ["vampire", "hold"] },
+            riders: { "crown-of-thrones": $familiar`Mini Kiwi` },
+          },
+          combat: new CombatStrategy().macro(() =>
+            Macro.if_(
+              "!monsterphylum construct",
+              Macro.trySkill($skill`Sing Along`)
+                .trySkill($skill`Saucestorm`)
+                .repeat(),
+            )
+              .skill($skill`Throw Cyber Rock`)
+              .repeat(),
+          ),
+          limit: { skip: 60 },
         },
         {
           name: "Garbo",
