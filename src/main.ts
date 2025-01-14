@@ -4,10 +4,10 @@ import { gamedayToInt, print } from "kolmafia";
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
 import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
-import { AftercoreQuest } from "./tasks/aftercoreleg";
-import { AscendQuest } from "./tasks/ascend";
-import { PostRunQuests } from "./tasks/postrunleg";
-import { RunQuests } from "./tasks/runleg";
+import { AftercoreQuest } from "./tasks/1 aftercoreleg";
+import { AscendQuest } from "./tasks/2 ascend";
+import { PostRunQuests } from "./tasks/4 postrunleg";
+import { RunQuests } from "./tasks/3 runleg";
 
 const version = "0.0.3";
 
