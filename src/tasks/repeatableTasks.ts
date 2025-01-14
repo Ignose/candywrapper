@@ -1,6 +1,6 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { availableAmount, canAdventure, cliExecute, equip, Familiar, fullnessLimit, getCampground, getClanName, getWorkshed, guildStoreAvailable, handlingChoice, haveEffect, hippyStoneBroken, holiday, inebrietyLimit, mallPrice, myAdventures, myClass, myDaycount, myFamiliar, myFullness, myHp, myInebriety, myLevel, myMaxhp, myPrimestat, mySpleenUse, restoreHp, retrieveItem, spleenLimit, toInt, toSkill, use, useFamiliar, useSkill, visitUrl } from "kolmafia";
-import { $class, $effect, $effects, $familiar, $item, $items, $location, $monster, $skill, $stat, AprilingBandHelmet, AsdonMartin, get, getTodaysHolidayWanderers, have, Macro, set, uneffect } from "libram";
+import { availableAmount, canAdventure, cliExecute, equip, Familiar, fullnessLimit, getCampground, getClanName, getWorkshed, guildStoreAvailable, haveEffect, hippyStoneBroken, holiday, inebrietyLimit, mallPrice, myAdventures, myClass, myDaycount, myFamiliar, myFullness, myHp, myInebriety, myLevel, myMaxhp, myPrimestat, mySpleenUse, restoreHp, retrieveItem, spleenLimit, toInt, toSkill, use, useFamiliar, useSkill, visitUrl } from "kolmafia";
+import { $class, $effect, $effects, $familiar, $item, $items, $location, $skill, $stat, AprilingBandHelmet, AsdonMartin, get, getTodaysHolidayWanderers, have, Macro, set, uneffect } from "libram";
 import { Task } from "./structure";
 import { getGarden, maxBase, nextCyberZone, stooperDrunk, totallyDrunk } from "./utils";
 import { args } from "../args";
@@ -32,31 +32,6 @@ return [
           completed: () => get("breakfastCompleted"),
           do: () => cliExecute("breakfast"),
         },
-        {
-        name: "June Cleaver",
-        ready: () => have($item`June cleaver`)  && get("_juneCleaverFightsLeft") === 0,
-        completed: () => myAdventures() === 0,
-        choices: {
-          1467: 3, //Poetic Justice
-          1468: get("_juneCleaverSkips") < 5 ? 4 : 2, //Aunts not Ants
-          1469: 3, //Beware of Aligator
-          1470: get("_juneCleaverSkips") < 5 ? 4 : 2, //Teacher's Pet
-          1471: 1, //Lost and Found
-          1472: get("_juneCleaverSkips") < 5 ? 4 : 1, //Summer Days
-          1473: get("_juneCleaverSkips") < 5 ? 4 : 1, //Bath Time
-          1474: get("_juneCleaverSkips") < 5 ? 4 : 2, //Delicious Sprouts
-          1475: 1, //Hypnotic Master
-        },
-        do: $location`Noob Cave`,
-        post: () => {
-          if (handlingChoice()) visitUrl("main.php");
-          if (have($effect`Beaten Up`)) uneffect($effect`Beaten Up`);
-          if (get("lastCopyableMonster") === $monster`crate`) cliExecute("kolfix cleaver");
-        },
-        outfit: () => ({ equip: $items`June cleaver, Greatest American Pants` }),
-        combat: new CombatStrategy().macro(Macro.runaway()),
-        limit: undefined,
-      },
         {
           name: "Harvest Garden",
           completed: () =>
