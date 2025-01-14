@@ -12,6 +12,7 @@ import {
   inebrietyLimit,
   Item,
   itemAmount,
+  lastChoice,
   Location,
   mallPrice,
   Monster,
@@ -39,6 +40,7 @@ import {
   $items,
   $location,
   $phylum,
+  Kmail as _Kmail,
   gameDay,
   get,
   getBanishedMonsters,
@@ -155,13 +157,25 @@ export function bestFam(mob?: Monster) {
 }
 
 export function nextCyberZone(): Location {
-  return $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount()
+
+  if(lastChoice() === 1546) {
+    set("_cyberRealm1Done", true)
+  }
+  if(lastChoice() === 1548) {
+    set("_cyberRealm2Done", true)
+  }
+  if(lastChoice() === 1550) {
+    set("_cyberRealm3Done", true)
+  }
+  const realmChoice = () => !(get("_cyberRealm1Done").includes("true"))
     ? $location`Cyberzone 1`
-    : $location`Cyberzone 2`.turnsSpent >= 19 * myDaycount()
+    : !get("_cyberRealm2Done").includes("true")
     ? $location`Cyberzone 2`
-    : $location`Cyberzone 3`.turnsSpent >= 19 * myDaycount()
+    : !get("_cyberRealm3Done").includes("true")
     ? $location`Cyberzone 3`
     : $location`none`;
+  print(`Choosing ${realmChoice()} because turns spent ${realmChoice().turnsSpent - 19 * (myDaycount() - 1)}`);
+  return realmChoice();
 }
 
 export function canDiet(): boolean {
@@ -249,6 +263,27 @@ export interface Kmail {
   message: string;
 
   delete(): boolean;
+}
+
+export function notifyVoters(): void {
+  if (get("_kmailSentToday").includes("true")) return;
+
+  const recipients = [
+    "Datris",
+    "ange1ade",
+    "miroto1998",
+    "tissen",
+    "nannachi",
+    "Mandoline",
+  ];
+
+  const message = `Voter Monster Today is ${get("_voteMonster")}`;
+
+  recipients.forEach((recipient) => {
+    _Kmail.send(recipient, message);
+  });
+
+  set("_kmailSentToday", true);
 }
 
 export function getKmails(caller: string = "GreyDay"): Kmail[] {

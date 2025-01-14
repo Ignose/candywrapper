@@ -1,28 +1,15 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
-  availableAmount,
   buy,
   cliExecute,
-  equip,
-  Familiar,
-  getCampground,
-  getClanName,
-  getWorkshed,
-  guildStoreAvailable,
-  handlingChoice,
-  haveEffect,
   haveEquipped,
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
   mallPrice,
   myAdventures,
-  myClass,
   myDaycount,
-  myFamiliar,
-  myHp,
   myInebriety,
-  myLevel,
   myMaxhp,
   myPrimestat,
   print,
@@ -31,33 +18,21 @@ import {
   restoreMp,
   retrieveItem,
   toBoolean,
-  toInt,
-  toSkill,
-  use,
   useFamiliar,
-  useSkill,
   visitUrl,
 } from "kolmafia";
 import {
-  $class,
   $coinmaster,
   $effect,
   $effects,
   $familiar,
   $item,
-  $items,
   $location,
-  $phylum,
   $skill,
-  $stat,
-  AprilingBandHelmet,
-  AsdonMartin,
-  DNALab,
   get,
   getTodaysHolidayWanderers,
   have,
   Macro,
-  set,
   TrainSet,
   uneffect,
 } from "libram";
@@ -66,7 +41,8 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 import { args } from "../args";
 
 import { Quest } from "./structure";
-import { getGarden, maxBase, nextCyberZone, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -90,19 +66,6 @@ const stations = [
   Station.CANDY_FACTORY, // candies
 ] as Cycle;
 
-const bestFam = () =>
-  famCheck($familiar`Pocket Professor`)
-    ? $familiar`Pocket Professor`
-    : famCheck($familiar`Chest Mimic`)
-    ? $familiar`Chest Mimic`
-    : famCheck($familiar`Grey Goose`)
-    ? $familiar`Grey Goose`
-    : $familiar`Grey Goose`;
-
-function famCheck(fam: Familiar): boolean {
-  return have(fam) && fam.experience < 400;
-}
-
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
@@ -115,11 +78,6 @@ export function AftercoreQuest(): Quest {
       myDaycount() === 1,
     tasks: [
       {
-        name: "Whitelist VIP Clan",
-        completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
-        do: () => cliExecute(`/whitelist ${args.clan}`),
-      },
-      {
         name: "Pre-Run Photobooth",
         ready: () => have($item`Clan VIP Lounge key`) && get("_photoBoothEquipment", 0) === 0,
         completed: () => get("_photoBoothEquipment", 0) >= 3,
@@ -130,311 +88,17 @@ export function AftercoreQuest(): Quest {
         },
       },
       {
-        name: "Candy Deviler",
-        // eslint-disable-next-line libram/verify-constants
-        ready: () => have($item`candy egg deviler`),
-        completed: () => toInt(get("_candyEggsDeviled")) >= 3,
-        do: () => {
-          visitUrl(`inventory.php?action=eggdevil&pwd`);
-          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-          visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-        },
-      },
-      {
-        name: "CyberRealm: Prepare Familiar",
-        completed: () => myFamiliar() === $familiar`Shorter-Order Cook`,
-        do: () => {
-          if (have($familiar`Shorter-Order Cook`)) {
-            cliExecute("familiar Shorter-Order Cook");
-            equip($familiar`Shorter-Order Cook`, $item`blue plate`);
-          }
-          cliExecute(`familiar ${bestFam().name}`);
-          cliExecute("familiar Shorter-Order Cook");
-        },
-      },
-      {
-        name: "Run CyberRealm",
-        ready: () => mallPrice($item`1`) > 1_000,
-        prepare: () => {
-          $effects`Astral Shell, Elemental Saucesphere, Scarysauce`.forEach((ef) => {
-            if (!have(ef)) useSkill(toSkill(ef));
-          });
-        },
-        completed: () => nextCyberZone() === $location`none`, // $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount(),
-        choices: { 1545: 1, 1546: 1, 1547: 1, 1548: 1, 1549: 1, 1550: 1 },
-        do: nextCyberZone(),
-        outfit: {
-          hat: $item`Crown of Thrones`,
-          back: $item`unwrapped knock-off retro superhero cape`,
-          shirt: $item`zero-trust tanktop`,
-          weapon: $item`encrypted shuriken`,
-          offhand: $item`visual packet sniffer`,
-          pants: $item`digibritches`,
-          acc1: $item`retro floppy disk`,
-          acc2: $item`retro floppy disk`,
-          acc3: $item`retro floppy disk`,
-          famequip: $item`familiar-in-the-middle wrapper`,
-          modes: { retrocape: ["vampire", "hold"] },
-          riders: { "crown-of-thrones": $familiar`Mini Kiwi` },
-        },
-        combat: new CombatStrategy().macro(() =>
-          Macro.if_(
-            "!monsterphylum construct",
-            Macro.trySkill($skill`Sing Along`)
-              .trySkill($skill`Saucestorm`)
-              .repeat(),
-          )
-            .skill($skill`Throw Cyber Rock`)
-            .repeat(),
-        ),
-        limit: { skip: 60 },
-      },
-      {
         name: "PvP Closet Safety 1",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset1")),
         do: () => pvpCloset(1),
       },
-      {
-        name: "Get Floundry item",
-        ready: () => have($item`Clan VIP Lounge key`) && !args.carpe,
-        completed: () => get("_floundryItemCreated"),
-        do: (): void => {
-          retrieveItem($item`carpe`);
-        },
-        limit: { tries: 1 },
-      },
-      {
-        name: "Prep Fireworks Shop",
-        completed: () => !have($item`Clan VIP Lounge key`) || get("_goorboFireworksPrepped", false),
-        do: () => {
-          visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
-          set("_goorboFireworksPrepped", true);
-        },
-      },
-      {
-        name: "Breakfast",
-        completed: () => get("breakfastCompleted"),
-        do: () => cliExecute("breakfast"),
-      },
-      {
-        name: "Apriling",
-        ready: () => AprilingBandHelmet.canChangeSong(),
-        completed: () => have($effect`Apriling Band Celebration Bop`),
-        do: (): void => {
-          AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`);
-        },
-        limit: { tries: 1 },
-      },
-      {
-        name: "Harvest Garden",
-        completed: () =>
-          getGarden() === $item`none` ||
-          getGarden() === $item`packet of mushroom spores` ||
-          getCampground()[getGarden().name] === 0,
-        do: () => cliExecute("garden pick"),
-        tracking: "Dailies",
-        limit: { tries: 3 },
-      },
-      {
-        name: "Plant Grass",
-        completed: () =>
-          !have($item`packet of tall grass seeds`) ||
-          getGarden() === $item`packet of tall grass seeds`,
-        do: () => use($item`packet of tall grass seeds`),
-      },
-      {
-        name: "SIT Course",
-        // eslint-disable-next-line libram/verify-constants
-        ready: () => have($item`S.I.T. Course Completion Certificate`),
-        completed: () => get("_sitCourseCompleted", false),
-        choices: {
-          1494: 2,
-        },
-        do: () =>
-          // eslint-disable-next-line libram/verify-constants
-          use($item`S.I.T. Course Completion Certificate`),
-      },
-      {
-        name: "Drive Observantly",
-        completed: () =>
-          get("dailyDungeonDone") ||
-          getWorkshed() !== $item`Asdon Martin keyfob (on ring)` ||
-          haveEffect($effect`Driving Observantly`) >=
-            (totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60),
-        do: () =>
-          AsdonMartin.drive(
-            $effect`Driving Observantly`,
-            totallyDrunk() || !have($item`Drunkula's wineglass`)
-              ? myAdventures()
-              : myAdventures() + 60,
-            false,
-          ),
-        limit: { tries: 5 },
-      },
-      {
-        name: "Sample Constellation DNA",
-        ready: () => have($item`DNA extraction syringe`),
-        completed: () =>
-          !DNALab.installed() ||
-          DNALab.isHybridized($phylum`Constellation`) ||
-          get("dnaSyringe") === $phylum`Constellation`,
-        outfit: {
-          familiar: bestFam(),
-          modifier: `${maxBase()}`,
-        },
-        do: $location`The Hole in the Sky`,
-        combat: new CombatStrategy()
-          .macro(Macro.skill($skill`Curse of Weaksauce`), getTodaysHolidayWanderers())
-          .macro(Macro.tryItem($item`DNA extraction syringe`))
-          .macro(
-            Macro.tryItem($item`train whistle`)
-              .tryItem($item`porquoise-handled sixgun`)
-              .trySkill($skill`Sing Along`)
-              .attack()
-              .repeat(),
-          ),
-      },
-      {
-        name: "Hybridize Constellation",
-        ready: () => get("dnaSyringe") === $phylum`Constellation`,
-        completed: () => !DNALab.installed() || DNALab.isHybridized($phylum`Constellation`),
-        do: () => {
-          DNALab.makeTonic(3);
-          DNALab.hybridize();
-        },
-      },
-      {
-        name: "June Cleaver",
-        completed: () =>
-          !have($item`June cleaver`) || get("_juneCleaverFightsLeft") > 0 || myAdventures() === 0,
-        choices: {
-          1467: 3, //Poetic Justice
-          1468: get("_juneCleaverSkips") < 5 ? 4 : 2, //Aunts not Ants
-          1469: 3, //Beware of Aligator
-          1470: get("_juneCleaverSkips") < 5 ? 4 : 2, //Teacher's Pet
-          1471: 1, //Lost and Found
-          1472: get("_juneCleaverSkips") < 5 ? 4 : 1, //Summer Days
-          1473: get("_juneCleaverSkips") < 5 ? 4 : 1, //Bath Time
-          1474: get("_juneCleaverSkips") < 5 ? 4 : 2, //Delicious Sprouts
-          1475: 1, //Hypnotic Master
-        },
-        do: $location`Noob Cave`,
-        post: () => {
-          if (handlingChoice()) visitUrl("main.php");
-          if (have($effect`Beaten Up`)) uneffect($effect`Beaten Up`);
-        },
-        outfit: () => ({ equip: $items`June cleaver` }),
-        limit: undefined,
-      },
-      {
-        name: "Restore HP",
-        completed: () => myHp() > 0.5 * myMaxhp(),
-        do: () => restoreHp(0.95 * myMaxhp()),
-      },
-      {
-        name: "Implement Glitch",
-        ready: () => have($item`[glitch season reward name]`),
-        completed: () => get("_glitchItemImplemented"),
-        do: () => use($item`[glitch season reward name]`),
-      },
-      {
-        name: "Unlock Guild",
-        ready: () =>
-          myClass() === $class`Seal Clubber` &&
-          Math.min(
-            ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-              availableAmount(it),
-            ),
-          ) < 20 &&
-          doSmol,
-        completed: () => guildStoreAvailable() || myAdventures() === 0 || stooperDrunk(),
-        do: () => cliExecute("guild"),
-        choices: {
-          //sleazy back alley
-          108: 4, //craps: skip
-          109: 1, //drunken hobo: fight
-          110: 4, //entertainer: skip
-          112: 2, //harold's hammer: skip
-          21: 2, //under the knife: skip
-          //haunted pantry
-          115: 1, //drunken hobo: fight
-          116: 4, //singing tree: skip
-          117: 1, //knob goblin chef: fight
-          114: 2, //birthday cake: skip
-          //outskirts of cobb's knob
-          113: 2, //knob goblin chef: fight
-          111: 3, //chain gang: fight
-          118: 2, //medicine quest: skip
-        },
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${maxBase()}, ${
-            myPrimestat() === $stat`Muscle` ? "100 combat rate 20 max" : "-100 combat rate"
-          }, 250 bonus carnivorous potted plant`,
-        }),
-        combat: new CombatStrategy()
-          .macro(
-            () =>
-              Macro.step("pickpocket")
-                .externalIf(
-                  have($skill`Curse of Weaksauce`),
-                  Macro.trySkill($skill`Curse of Weaksauce`),
-                  Macro.tryItem($item`electronics kit`),
-                )
-                .tryItem($item`porquoise-handled sixgun`)
-                .trySkill($skill`Sing Along`)
-                .attack()
-                .repeat(),
-            getTodaysHolidayWanderers(),
-          )
-          .macro(() =>
-            Macro.step("pickpocket")
-              .trySkill($skill`Sing Along`)
-              .tryItem($item`porquoise-handled sixgun`)
-              .attack()
-              .repeat(),
-          ),
-      },
-      {
-        name: "Stock Up on MMJs",
-        ready: () =>
-          guildStoreAvailable() &&
-          (myClass().primestat === $stat`Mysticality` ||
-            (myClass() === $class`Accordion Thief` && myLevel() >= 9)),
-        completed: () => availableAmount($item`magical mystery juice`) >= 500,
-        acquire: [
-          {
-            item: $item`magical mystery juice`,
-            num: 500,
-          },
-        ],
-        do: () => false,
-      },
-      {
-        name: "Buy Seal Summoning Supplies",
-        ready: () => myClass() === $class`Seal Clubber` && guildStoreAvailable(),
-        completed: () =>
-          Math.min(
-            ...$items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) =>
-              availableAmount(it),
-            ),
-          ) >= 40,
-        acquire: $items`figurine of a wretched-looking seal, seal-blubber candle`.map((it) => ({
-          item: it,
-          num: 500,
-        })),
-        do: () => false,
-      },
-      {
-        name: "PvP Closet Safety 2",
-        ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
-        completed: () => toBoolean(get("_safetyCloset2")),
-        do: () => pvpCloset(2),
-      },
+      ...preRunQuests(),
+      ...postRunQuests(),
+      ...noBarf(),
+      ...garboWeen(),
+      ...crimbo(),
+      ...chrono(),
       {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
@@ -531,7 +195,7 @@ export function AftercoreQuest(): Quest {
         tracking: "Garbo",
       },
       {
-        name: "PvP Closet Safety 3",
+        name: "PvP Closet Safety 2",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset3")),
         do: () => pvpCloset(3),

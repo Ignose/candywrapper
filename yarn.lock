@@ -3162,10 +3162,10 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libram@^0.9.29:
-  version "0.9.29"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.9.29.tgz#d81695cb7e9d9c463a0b5cfa7072ec2ff8375cb3"
-  integrity sha512-LVehF8VtyRhnnti2WW38FSbC6t26q4MXIw/tuth8tdcNXaRzC07Gif20cZMx+y0X76G4x2/LnIBhU0eKivnPSw==
+libram@^0.9.31:
+  version "0.9.31"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.9.31.tgz#49b368b285670b7512cd95be7fad8c016543ef90"
+  integrity sha512-ubtAkQnDctHZS1Q8cE5cHEk0Br+q3yiEIP18yXDqxsdQXWM4UI8ryMjG/VBaQSCRj+94Q6YWiT88/yzu4bUL1Q==
   dependencies:
     html-entities "^2.5.2"
 

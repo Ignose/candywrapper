@@ -1,284 +1,23 @@
-import { CombatStrategy, step } from "grimoire-kolmafia";
-import {
-  buy,
-  buyUsingStorage,
-  cliExecute,
-  drink,
-  eat,
-  Effect,
-  equip,
-  familiarWeight,
-  fullnessLimit,
-  getClanName,
-  getWorkshed,
-  hippyStoneBroken,
-  inebrietyLimit,
-  itemAmount,
-  mallPrice,
-  myAdventures,
-  myAscensions,
-  myDaycount,
-  myFullness,
-  myInebriety,
-  myLevel,
-  myMaxhp,
-  mySign,
-  numericModifier,
-  print,
-  pullsRemaining,
-  pvpAttacksLeft,
-  restoreHp,
-  restoreMp,
-  retrieveItem,
-  setProperty,
-  storageAmount,
-  toBoolean,
-  toInt,
-  use,
-  useFamiliar,
-  useSkill,
-  visitUrl,
-  wait,
-} from "kolmafia";
-import {
-  $coinmaster,
-  $effect,
-  $effects,
-  $familiar,
-  $familiars,
-  $item,
-  $items,
-  $location,
-  $skill,
-  AprilingBandHelmet,
-  clamp,
-  get,
-  have,
-  Macro,
-  set,
-  uneffect,
-} from "libram";
-
+import { CombatStrategy } from "grimoire-kolmafia";
+import { buy, cliExecute, drink, Effect, hippyStoneBroken, inebrietyLimit, itemAmount, mallPrice, myAdventures, myAscensions, myDaycount, myInebriety, myLevel, myMaxhp, mySign, numericModifier, print, pvpAttacksLeft, restoreHp, restoreMp, retrieveItem, setProperty, toBoolean, use, useFamiliar, useSkill, wait } from "kolmafia";
+import { $coinmaster, $effect, $effects, $familiar, $familiars, $item, $items, $location, $skill, get, have, Macro, uneffect } from "libram";
 import { args } from "../args";
-
-import { getCurrentLeg, Leg, Quest } from "./structure";
-import {
-  backstageItemsDone,
-  bestFam,
-  doneAdventuring,
-  haveAll,
-  maxBase,
-  pvpCloset,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
+import { Quest } from "./structure";
+import { backstageItemsDone, bestFam, doneAdventuring, haveAll, maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 let pajamas = false;
-let smoke = 1;
+let smoke = 0;
+const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
+const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
 
 const checkMelange = () =>
   get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
   !have($item`designer sweatpants`);
 
-export function howManySausagesCouldIEat() {
-  if (!have($item`Kramco Sausage-o-Matic™`)) return 0;
-  // You may be full but you can't be overfull
-  if (myFullness() > fullnessLimit()) return 0;
-
-  return clamp(
-    23 - get("_sausagesEaten"),
-    0,
-    itemAmount($item`magical sausage`) + itemAmount($item`magical sausage casing`),
-  );
-}
-
-function firstWorkshed() {
-  return (
-    $items`model train set, Asdon Martin keyfob (on ring), cold medicine cabinet, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-      (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-    ) || $item`none`
-  );
-}
-function altWorkshed() {
-  const ws = getWorkshed();
-  switch (ws) {
-    case $item`model train set`:
-      return (
-        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-        ) || ws
-      );
-    case $item`Asdon Martin keyfob (on ring)`:
-      return (
-        $items`cold medicine cabinet, model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-        ) || ws
-      );
-    case $item`cold medicine cabinet`:
-      return (
-        $items`Asdon Martin keyfob (on ring), model train set, Little Geneticist DNA-Splicing Lab, portable Mayo Clinic, warbear induction oven, snow machine`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-        ) || ws
-      );
-    case $item`Little Geneticist DNA-Splicing Lab`:
-      return (
-        $items`cold medicine cabinet, Asdon Martin keyfob (on ring), model train set, portable Mayo Clinic`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-        ) || ws
-      );
-    case $item`portable Mayo Clinic`:
-      return (
-        $items`cold medicine cabinet, model train set, Asdon Martin keyfob (on ring), Little Geneticist DNA-Splicing Lab`.find(
-          (it) => have(it) || getWorkshed() === it || storageAmount(it) > 0,
-        ) || ws
-      );
-    default:
-      return $item`none`;
-  }
-}
-
-export function SmolQuests(): Quest[] {
-  return [
-    {
-      name: "Smol Run",
-      completed: () => getCurrentLeg() !== Leg.Run || get("kingLiberated", false),
-      tasks: [
-        {
-          name: "Whitelist VIP Clan",
-          completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
-          do: () => cliExecute(`/whitelist ${args.clan}`),
-          choices: {
-            1507: 1,
-          },
-        },
-        {
-          name: "Prep Fireworks Shop",
-          completed: () =>
-            !have($item`Clan VIP Lounge key`) || get("_goorboFireworksPrepped", false),
-          do: () => {
-            visitUrl("clan_viplounge.php?action=fwshop&whichfloor=2");
-            set("_goorboFireworksPrepped", true);
-          },
-        },
-        {
-          name: "Pre-Pulls",
-          completed: () =>
-            pullsRemaining() === 0 ||
-            !args.pulls.find(
-              (it) => !have(it) && !get("_roninStoragePulls").includes(toInt(it).toString()),
-            ), //can't find a pull that (we dont have and it hasn't been pulled today)
-          do: () =>
-            args.pulls.forEach((it) => {
-              if (!have(it) && !get("_roninStoragePulls").includes(toInt(it).toString())) {
-                if (storageAmount(it) === 0) buyUsingStorage(it); //should respect autoBuyPriceLimit
-                cliExecute(`pull ${it}`);
-              }
-            }),
-        },
-        {
-          name: "LGR Seed",
-          ready: () =>
-            have($item`lucky gold ring`) && have($item`one-day ticket to Dinseylandfill`),
-          completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          do: () => use($item`one-day ticket to Dinseylandfill`),
-          tracking: "Garbo",
-        },
-        {
-          name: "Install First Workshed",
-          ready: () => have(firstWorkshed()),
-          completed: () =>
-            firstWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() !== $item`none`,
-          do: () => use(firstWorkshed()),
-        },
-        {
-          name: "SIT Course",
-          // eslint-disable-next-line libram/verify-constants
-          ready: () => have($item`S.I.T. Course Completion Certificate`),
-          completed: () => get("_sitCourseCompleted", false),
-          choices: {
-            1494: 2,
-          },
-          do: () =>
-            // eslint-disable-next-line libram/verify-constants
-            use($item`S.I.T. Course Completion Certificate`),
-        },
-        {
-          name: "Break Stone",
-          ready: () => !args.safepvp,
-          completed: () => hippyStoneBroken() || !args.pvp,
-          do: (): void => {
-            visitUrl("peevpee.php?action=smashstone&pwd&confirm=on", true);
-            visitUrl("peevpee.php?place=fight");
-          },
-        },
-        {
-          name: "Prepare Empathy",
-          completed: () => get("_empathyReady", false),
-          do: (): void => {
-            cliExecute("maximize MP; set _empathyReady = true");
-          },
-        },
-        {
-          name: "Stillsuit Prep",
-          completed: () => itemAmount($item`tiny stillsuit`) === 0,
-          do: () =>
-            equip(
-              $item`tiny stillsuit`,
-              get(
-                "stillsuitFamiliar",
-                $familiars`Gelatinous Cubeling, Levitating Potato, Mosquito`.find((fam) =>
-                  have(fam),
-                ) || $familiar`none`,
-              ),
-            ),
-        },
-        {
-          name: "Run",
-          completed: () => step("questL13Final") > 11,
-          do: () => cliExecute(args.smolscript),
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "drink",
-          ready: () =>
-            step("questL13Final") > 11 &&
-            (have($item`designer sweatpants`) || checkMelange()) &&
-            have($skill`Drinking to Drink`) &&
-            storageAmount($item`synthetic dog hair pill`) >= 1,
-          completed: () => myInebriety() >= 2,
-          do: (): void => {
-            if (have($skill`The Ode to Booze`)) useSkill($skill`The Ode to Booze`);
-            drink($item`astral pilsner`, 1);
-          },
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "Sausages",
-          completed: () => howManySausagesCouldIEat() === 0,
-          do: (): void => {
-            eat($item`magical sausage`, howManySausagesCouldIEat());
-          },
-          clear: "all",
-          tracking: "Run",
-        },
-        {
-          name: "Free King",
-          ready: () => step("questL13Final") > 11,
-          completed: () => get("kingLiberated", false),
-          do: (): void => {
-            visitUrl("place.php?whichplace=nstower&action=ns_11_prism");
-          },
-          clear: "all",
-          tracking: "Ignore",
-        },
-      ],
-    },
-    {
-      name: "Post-SMOL Aftercore",
+export function PostRunQuests(): Quest {
+  return {
+    name: "Post-Run Aftercore",
       ready: () => myDaycount() === 1 && get("kingLiberated", false),
       completed: () => totallyDrunk() && pajamas,
       tasks: [
@@ -288,26 +27,30 @@ export function SmolQuests(): Quest[] {
           do: () => cliExecute("pull all; refresh all"),
         },
         {
-          name: "PvP Closet Safety 1",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
-          completed: () => toBoolean(get("_safetyCloset1")),
-          do: () => pvpCloset(1),
+          name: "Clear citizen",
+          completed: () => !get("_citizenZone", "").includes("castle") && !get("_citizenZone", "").includes("Madness Bakery"),
+          do: (): void => {
+            uneffect($effect`Citizen of a Zone`);
+            cliExecute(`set _citizenZone = ""`);
+          },
         },
         {
-          name: "Unlock Garbage Mountain",
-          completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
-          do: (): void => {
-            retrieveItem($item`one-day ticket to Dinseylandfill`);
-            use($item`one-day ticket to Dinseylandfill`);
-          },
-          tracking: "Garbo",
+          name: "Ensure prefs reset",
+          completed: () => !get("_folgerInitialConfig", false),
+          do: () => cliExecute("set _folgerInitialConfig = false"),
+        },
+        {
+          name: "But dad I don't want to feel lost",
+          completed: () => !have($effect`Feeling Lost`),
+          do: () => uneffect($effect`Feeling Lost`),
         },
         {
           name: "Sober Up",
+          ready:() => args.smol,
           completed: () =>
-            myInebriety() <= 15 ||
+            (myInebriety() <= 15 ||
             get("_mimeArmyShotglassUsed") ||
-            get("_sweatOutSomeBoozeUsed", 0) === 3,
+            get("_sweatOutSomeBoozeUsed", 0) === 3),
           do: (): void => {
             if (checkMelange()) {
               cliExecute("acquire spice melange; use spice melange");
@@ -323,23 +66,10 @@ export function SmolQuests(): Quest[] {
           },
         },
         {
-          name: "Wardrobe-o-matic",
-          ready: () => myLevel() >= 15 && have($item`wardrobe-o-matic`),
-          completed: () => get("_wardrobeUsed", false),
-          do: (): void => {
-            use($item`wardrobe-o-matic`);
-            cliExecute("set _wardrobeUsed = true");
-          },
-          limit: { tries: 1 },
-        },
-        {
-          name: "Apriling Part 1",
-          ready: () => AprilingBandHelmet.canChangeSong(),
-          completed: () => have($effect`Apriling Band Celebration Bop`),
-          do: (): void => {
-            AprilingBandHelmet.conduct($effect`Apriling Band Celebration Bop`);
-          },
-          limit: { tries: 1 },
+          name: "PvP Closet Safety 1",
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
+          completed: () => toBoolean(get("_safetyCloset1")),
+          do: () => pvpCloset(1),
         },
         {
           name: "Drink Pre-Tune",
@@ -364,30 +94,46 @@ export function SmolQuests(): Quest[] {
           do: () => cliExecute("spoon wombat"),
         },
         {
-          name: "Install Alternate Workshed",
-          ready: () => have(altWorkshed()),
-          completed: () =>
-            altWorkshed() === $item`none` ||
-            get("_workshedItemUsed") ||
-            getWorkshed() === altWorkshed(),
-          do: () => use(altWorkshed()),
-        },
-        {
           name: "Gold Wedding Ring",
+          ready: () => !args.cs,
           completed: () =>
-            !have($skill`Comprehensive Cartography`) ||
-            myAscensions() === get("lastCartographyBooPeak"),
+            (!have($skill`Comprehensive Cartography`) ||
+            myAscensions() === get("lastCartographyBooPeak")),
           choices: { 1430: 3, 606: 4, 610: 1, 1056: 1 },
           do: $location`A-Boo Peak`,
           outfit: { modifier: "initiative 40 min 40 max, -tie" },
         },
         {
-          name: "Breakfast",
-          completed: () => get("breakfastCompleted"),
-          do: () => cliExecute("breakfast"),
+          name: "Emergency Drink",
+          ready: () => myAdventures() < 25,
+          completed: () => get("_mimeArmyShotglassUsed") || !have($item`mime army shotglass`),
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => {
+            while (myAdventures() < 25) {
+              drink(1, $item`astral pilsner`);
+            }
+          },
+        },
+        {
+          name: "Emergency Drink Part 2",
+          ready: () => myAdventures() === 0 && myInebriety() < 11,
+          completed: () => myAdventures() > 0 || myInebriety() >= 11,
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => {
+            while (myAdventures() < 25) {
+              useSkill($skill`The Ode to Booze`);
+              drink(1, $item`astral pilsner`);
+            }
+          },
+          limit: { tries: 6 },
         },
         {
           name: "Laugh Floor",
+          ready: () => !args.cs,
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
@@ -427,6 +173,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Infernal Rackets Backstage",
+          ready: () => !args.cs,
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
@@ -464,7 +211,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Mourn",
-          ready: () => have($item`observational glasses`),
+          ready: () => have($item`observational glasses`) && !args.cs,
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
@@ -476,7 +223,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Sven Golly",
-          ready: () => backstageItemsDone(),
+          ready: () => backstageItemsDone() && !args.cs,
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
@@ -502,7 +249,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "Moaning Panda",
-          ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`),
+          ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && !args.cs,
           completed: () =>
             have($skill`Liver of Steel`) ||
             have($item`steel margarita`) ||
@@ -529,14 +276,27 @@ export function SmolQuests(): Quest[] {
           do: () => drink(1, $item`steel margarita`),
         },
         {
-          name: "PvP Closet Safety 2",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
-          completed: () => toBoolean(get("_safetyCloset2")),
-          do: () => pvpCloset(2),
+          name: "Emergency Drink Part 3",
+          ready: () => myAdventures() < 40 && myInebriety() < 11,
+          completed: () => myAdventures() > 40 || myInebriety() >= 11,
+          prepare: () => {
+            if (have($item`astral six-pack`)) use($item`astral six-pack`);
+          },
+          do: () => {
+            while (myAdventures() < 80 && have($item`astral pilsner`)) {
+              useSkill($skill`The Ode to Booze`);
+              drink(1, $item`astral pilsner`);
+            }
+          },
+          limit: { tries: 6 },
         },
+        ...postRunQuests(),
+        ...noBarf(),
+        ...garboWeen(),
+        ...crimbo(),
+        ...chrono(),
         {
           name: "Garbo",
-          ready: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
           completed: () => myAdventures() === 0 || stooperDrunk(),
           prepare: () => uneffect($effect`Beaten Up`),
           do: () => cliExecute(`${args.garbo}`),
@@ -556,8 +316,14 @@ export function SmolQuests(): Quest[] {
           tracking: "Garbo",
         },
         {
+          name: "PvP Closet Safety 2",
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
+          completed: () => toBoolean(get("_safetyCloset2")),
+          do: () => pvpCloset(2),
+        },
+        {
           name: "PvP",
-          ready: () => doneAdventuring() && !args.safepvp,
+          ready: () => doneAdventuring(),
           completed: () => pvpAttacksLeft() === 0 || !hippyStoneBroken(),
           do: (): void => {
             cliExecute("unequip");
@@ -610,7 +376,7 @@ export function SmolQuests(): Quest[] {
         },
         {
           name: "PvP Closet Safety 3",
-          ready: () => args.pvp && get("autoSatisfyWithCloset"),
+          ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
           completed: () => toBoolean(get("_safetyCloset3")),
           do: () => pvpCloset(3),
         },
@@ -624,32 +390,6 @@ export function SmolQuests(): Quest[] {
           },
           clear: "all",
           tracking: "Item Cleanup",
-        },
-        {
-          name: "Apriling Part 2",
-          ready: () => AprilingBandHelmet.canJoinSection(),
-          completed: () => !AprilingBandHelmet.canPlay($item`Apriling band piccolo`),
-          do: (): void => {
-            AprilingBandHelmet.joinSection($item`Apriling band piccolo`);
-            if (AprilingBandHelmet.canJoinSection()) {
-              AprilingBandHelmet.joinSection($item`Apriling band saxophone`);
-              AprilingBandHelmet.play($item`Apriling band saxophone`);
-            }
-            if (have($familiar`Grey Goose`)) useFamiliar($familiar`Grey Goose`);
-            else if (have($familiar`Chest Mimic`)) useFamiliar($familiar`Chest Mimic`);
-            else if (
-              have($familiar`Pocket Professor`) &&
-              familiarWeight($familiar`Pocket Professor`) < 20
-            )
-              useFamiliar($familiar`Pocket Professor`);
-            else if (have($familiar`Comma Chameleon`)) useFamiliar($familiar`Comma Chameleon`);
-            while (
-              $item`Apriling band piccolo`.dailyusesleft > 0 &&
-              have($item`Apriling band piccolo`)
-            )
-              AprilingBandHelmet.play($item`Apriling band piccolo`);
-          },
-          limit: { tries: 1 },
         },
         {
           name: "Pajamas",
@@ -669,7 +409,9 @@ export function SmolQuests(): Quest[] {
               $familiars`Trick-or-Treating Tot, Left-Hand Man, Disembodied Hand, Grey Goose`.find(
                 (fam) => have(fam),
               ),
-            modifier: `adventures${args.pvp ? ", 0.3 fites" : ""}`,
+            modifier: `adventures ${sasqBonus} bonus Sasq™ watch, ${ratskinBonus} bonus ratskin pajama pants ${
+              args.pvp ? ", 0.3 fites" : ""
+            }`,
           }),
         },
         {
@@ -678,7 +420,7 @@ export function SmolQuests(): Quest[] {
           completed: () => stooperDrunk(),
           do: (): void => {
             const targetAdvs = 100 - numericModifier("adventures");
-            print("smol completed, but did not overdrink.", "red");
+            print("robot completed, but did not overdrink.", "red");
             if (targetAdvs < myAdventures() && targetAdvs > 0)
               print(
                 `Rerun with fewer than ${targetAdvs} adventures for smol to handle your diet`,
@@ -687,7 +429,6 @@ export function SmolQuests(): Quest[] {
             else print("Something went wrong.", "red");
           },
         },
-      ],
-    },
-  ];
+      ]
+  }
 }

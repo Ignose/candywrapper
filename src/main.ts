@@ -3,14 +3,11 @@ import { gamedayToInt, print } from "kolmafia";
 
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
-import { GarboWeenQuest } from "./tasks/Garboween";
+import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
 import { AftercoreQuest } from "./tasks/aftercoreleg";
 import { AscendQuest } from "./tasks/ascend";
-import { CasualQuests } from "./tasks/casualrunleg";
-import { CSQuests } from "./tasks/csrunleg";
-import { RobotQuests } from "./tasks/robotrunleg";
-import { SmolQuests } from "./tasks/smolrunleg";
-import { deleteJunkKmails, halloween, realDay, realMonth } from "./tasks/utils";
+import { PostRunQuests } from "./tasks/postrunleg";
+import { RunQuests } from "./tasks/runleg";
 
 const version = "0.0.3";
 
@@ -31,29 +28,13 @@ export function main(command?: string): void {
     throw `Today is halloween, run CS for more organ space!`;
   }
 
-  /*if (args.profits) {
-    printProfits(this.profits.all());
-    return;
-  };*/
-
   print(`Running: candyWrapper v${version}`);
 
-  const runQuest = args.cs
-    ? CSQuests()
-    : args.smol
-    ? SmolQuests()
-    : args.casual
-    ? CasualQuests()
-    : args.robot
-    ? RobotQuests()
-    : undefined;
-  if (runQuest === undefined) throw "Undefined runtype; please choose either cs or smol";
+  if (!args.cs && !args.smol && !args.casual && !args.robot) throw "Undefined runtype; please choose an acceptable path";
 
-  const tasks = halloween
-    ? getTasks([GarboWeenQuest(), AscendQuest(), ...runQuest])
-    : getTasks([AftercoreQuest(), AscendQuest(), ...runQuest]);
+  const tasks = getTasks([AftercoreQuest(), AscendQuest(), RunQuests(), PostRunQuests()]);
 
-  if (tasks === undefined) throw "Undefined runtype; please choose either cs or smol";
+  if (tasks === undefined) throw "Undefined runtype; please choose a valid run type";
 
   if (args.abort) {
     const to_abort = tasks.find((task) => task.name === args.abort);
@@ -75,4 +56,5 @@ export function main(command?: string): void {
     engine.destruct();
   }
   deleteJunkKmails();
+  notifyVoters();
 }

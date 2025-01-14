@@ -23,18 +23,37 @@ export const args = Args.create(
     }),
     cs: Args.flag({
       help: "Ascend into and run CS.",
+      default: false,
       setting: "",
     }),
     smol: Args.flag({
       help: "Ascend into and run smol.",
+      default: false,
       setting: "",
     }),
     casual: Args.flag({
       help: "Ascend into and run casual.",
+      default: false,
       setting: "",
     }),
     robot: Args.flag({
       help: "Ascend into and run You, Robot.",
+      default: false,
+      setting: "",
+    }),
+    crimbo: Args.flag({
+      help: "Farm Crimbo instead of Garbo",
+      default: false,
+      setting: "",
+    }),
+    chrono: Args.flag({
+      help: "Farm TTT instead of Garbo",
+      default: false,
+      setting: "",
+    }),
+    ween: Args.flag({
+      help: "Run Halloween instead of Garbo",
+      default: false,
       setting: "",
     }),
 
@@ -138,6 +157,14 @@ export const args = Args.create(
     garboascend: Args.string({
       help: `The command that will be used to diet and use all your adventures in Day 2 aftercore.`,
       default: "garbo ascend",
+    }),
+    crimboscript: Args.string({
+      help: `The command that will be used to run a crimbo farming script - note that if no script is provided, we will default to garbo`,
+      default: "",
+    }),
+    chronoscript: Args.string({
+      help: `The command that will be used to run a TTT farming script - note that if no script is provided, we will default to garbo`,
+      default: "",
     }),
     itemcleanup: Args.string({
       help: `The script that will be used to mallsale items after a run`,
