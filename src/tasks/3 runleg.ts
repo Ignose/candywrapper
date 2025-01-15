@@ -73,6 +73,7 @@ export function RunQuests(): Quest {
             visitUrl("place.php?whichplace=nstower&action=ns_11_prism");
           },
           clear: "all",
+          tracking: "ignore",
         },
       ]
   }
