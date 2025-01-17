@@ -28,6 +28,7 @@ import {
   putCloset,
   retrieveItem,
   spleenLimit,
+  storageAmount,
   toItem,
   urlEncode,
   use,
@@ -40,6 +41,7 @@ import {
   $items,
   $location,
   $phylum,
+  $skill,
   Kmail as _Kmail,
   gameDay,
   get,
@@ -157,24 +159,28 @@ export function bestFam(mob?: Monster) {
 }
 
 export function nextCyberZone(): Location {
-
-  if(lastChoice() === 1546) {
-    set("_cyberRealm1Done", true)
+  if (lastChoice() === 1546) {
+    set("_cyberRealm1Done", true);
   }
-  if(lastChoice() === 1548) {
-    set("_cyberRealm2Done", true)
+  if (lastChoice() === 1548) {
+    set("_cyberRealm2Done", true);
   }
-  if(lastChoice() === 1550) {
-    set("_cyberRealm3Done", true)
+  if (lastChoice() === 1550) {
+    set("_cyberRealm3Done", true);
   }
-  const realmChoice = () => !(get("_cyberRealm1Done").includes("true"))
-    ? $location`Cyberzone 1`
-    : !get("_cyberRealm2Done").includes("true")
-    ? $location`Cyberzone 2`
-    : !get("_cyberRealm3Done").includes("true")
-    ? $location`Cyberzone 3`
-    : $location`none`;
-  print(`Choosing ${realmChoice()} because turns spent ${realmChoice().turnsSpent - 19 * (myDaycount() - 1)}`);
+  const realmChoice = () =>
+    !get("_cyberRealm1Done").includes("true")
+      ? $location`Cyberzone 1`
+      : !get("_cyberRealm2Done").includes("true")
+      ? $location`Cyberzone 2`
+      : !get("_cyberRealm3Done").includes("true")
+      ? $location`Cyberzone 3`
+      : $location`none`;
+  print(
+    `Choosing ${realmChoice()} because turns spent ${
+      realmChoice().turnsSpent - 19 * (myDaycount() - 1)
+    }`,
+  );
   return realmChoice();
 }
 
@@ -268,14 +274,7 @@ export interface Kmail {
 export function notifyVoters(): void {
   if (get("_kmailSentToday").includes("true")) return;
 
-  const recipients = [
-    "Datris",
-    "ange1ade",
-    "miroto1998",
-    "tissen",
-    "nannachi",
-    "Mandoline",
-  ];
+  const recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline"];
 
   const message = `Voter Monster Today is ${get("_voteMonster")}`;
 
@@ -409,4 +408,29 @@ function baseAdventureValue(): number {
 function isHalloweenWorthDoing(): boolean {
   const freeFightValue = have($familiar`Red-Nosed Snapper`) ? 2000 : 1100;
   return baseAdventureValue() + freeFightValue > get("valueOfAdventure");
+}
+
+export function shouldWeOverdrink(): boolean {
+  const overdrinkValue =
+    get("valueOfAdventure") * (110 - 5.5 * 5) + mallPrice($item`Sacramento wine`) * 5;
+  const numToCleanse = 5;
+  const sweatpants = have($item`designer sweatpants`) ? 3 : 0;
+  const drinking = have($skill`Drinking to Drink`) ? 1 : 0;
+  const doghair = storageAmount($item`synthetic dog hair pill`) >= 1 ? 1 : 0;
+  const checkMelange = () =>
+    get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) && sweatpants < 3;
+  const melange = checkMelange() ? 3 : 0;
+  const melangeCost = () => (checkMelange() ? mallPrice($item`spice melange`) : 0);
+
+  if (sweatpants + drinking + doghair + melange >= numToCleanse && overdrinkValue > 0) {
+    return true;
+  } else {
+    const sobrie = 1;
+    if (
+      sweatpants + drinking + doghair + sobrie + melange >= numToCleanse &&
+      overdrinkValue - mallPrice($item`cuppa Sobrie tea`) - melangeCost() > 0
+    ) {
+      return true;
+    } else return false;
+  }
 }

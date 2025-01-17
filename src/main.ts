@@ -3,11 +3,11 @@ import { gamedayToInt, print } from "kolmafia";
 
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
-import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
 import { AftercoreQuest } from "./tasks/1 aftercoreleg";
 import { AscendQuest } from "./tasks/2 ascend";
-import { PostRunQuests } from "./tasks/4 postrunleg";
 import { RunQuests } from "./tasks/3 runleg";
+import { PostRunQuests } from "./tasks/4 postrunleg";
+import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
 
 const version = "0.0.3";
 
@@ -30,7 +30,8 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  if (!args.cs && !args.smol && !args.casual && !args.robot) throw "Undefined runtype; please choose an acceptable path";
+  if (!args.cs && !args.smol && !args.casual && !args.robot)
+    throw "Undefined runtype; please choose an acceptable path";
 
   const tasks = getTasks([AftercoreQuest(), AscendQuest(), RunQuests(), PostRunQuests()]);
 

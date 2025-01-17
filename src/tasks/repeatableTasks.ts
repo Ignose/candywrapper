@@ -1,9 +1,65 @@
 import { CombatStrategy } from "grimoire-kolmafia";
-import { availableAmount, canAdventure, cliExecute, equip, Familiar, fullnessLimit, getCampground, getClanName, getWorkshed, guildStoreAvailable, haveEffect, hippyStoneBroken, holiday, inebrietyLimit, mallPrice, myAdventures, myClass, myDaycount, myFamiliar, myFullness, myHp, myInebriety, myLevel, myMaxhp, myPrimestat, mySpleenUse, restoreHp, retrieveItem, spleenLimit, toInt, toSkill, use, useFamiliar, useSkill, visitUrl } from "kolmafia";
-import { $class, $effect, $effects, $familiar, $item, $items, $location, $skill, $stat, AprilingBandHelmet, AsdonMartin, get, getTodaysHolidayWanderers, have, Macro, set, uneffect } from "libram";
+import {
+  availableAmount,
+  canAdventure,
+  cliExecute,
+  equip,
+  Familiar,
+  fullnessLimit,
+  getCampground,
+  getClanName,
+  getWorkshed,
+  guildStoreAvailable,
+  haveEffect,
+  hippyStoneBroken,
+  holiday,
+  inebrietyLimit,
+  mallPrice,
+  myAdventures,
+  myClass,
+  myDaycount,
+  myFamiliar,
+  myFullness,
+  myHp,
+  myInebriety,
+  myLevel,
+  myMaxhp,
+  myPrimestat,
+  mySpleenUse,
+  restoreHp,
+  retrieveItem,
+  spleenLimit,
+  toInt,
+  toSkill,
+  use,
+  useFamiliar,
+  useSkill,
+  visitUrl,
+} from "kolmafia";
+import {
+  $class,
+  $effect,
+  $effects,
+  $familiar,
+  $item,
+  $items,
+  $location,
+  $skill,
+  $stat,
+  AprilingBandHelmet,
+  AsdonMartin,
+  get,
+  getTodaysHolidayWanderers,
+  have,
+  Macro,
+  set,
+  uneffect,
+} from "libram";
+
+import { args } from "../args";
+
 import { Task } from "./structure";
 import { getGarden, maxBase, nextCyberZone, stooperDrunk, totallyDrunk } from "./utils";
-import { args } from "../args";
 
 const bestFam = () =>
   famCheck($familiar`Pocket Professor`)
@@ -21,7 +77,7 @@ function famCheck(fam: Familiar): boolean {
 const doSmol = args.smol ? true : false;
 
 export function postRunQuests(): Task[] {
-return [
+  return [
     {
       name: "Whitelist VIP Clan",
       completed: () => !args.clan || getClanName().toLowerCase() === args.clan.toLowerCase(),
@@ -93,7 +149,7 @@ return [
         }
         cliExecute(`familiar ${bestFam().name}`);
         cliExecute("familiar Shorter-Order Cook");
-        set("_familiarPrepped", true)
+        set("_familiarPrepped", true);
       },
     },
     {
@@ -259,11 +315,10 @@ return [
         visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
       },
     },
-  ]
+  ];
 }
 
 let duffo = false;
-
 
 export function preRunQuests(): Task[] {
   return [
@@ -295,7 +350,10 @@ export function preRunQuests(): Task[] {
     {
       name: "LGR Seed",
       ready: () =>
-        have($item`lucky gold ring`) && have($item`one-day ticket to Dinseylandfill`) && !args.garboascend.includes("penguin") && !args.cs,
+        have($item`lucky gold ring`) &&
+        have($item`one-day ticket to Dinseylandfill`) &&
+        !args.garboascend.includes("penguin") &&
+        !args.cs,
       completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
       do: () => use($item`one-day ticket to Dinseylandfill`),
       tracking: "Garbo",
@@ -309,7 +367,7 @@ export function preRunQuests(): Task[] {
         visitUrl("peevpee.php?place=fight");
       },
     },
-  ]
+  ];
 }
 
 let garboDone = false;
@@ -334,46 +392,46 @@ export function noBarf(): Task[] {
         garboDone = true;
       },
     },
-  ]
+  ];
 }
 
 export function garboWeen(): Task[] {
   return [
-      {
-        name: "Freecandy time",
-        ready: () => holiday().includes("Halloween"),
-        completed: () => myAdventures() / 5 < 1,
-        prepare: () => uneffect($effect`Beaten Up`),
-        do: (): void => {
-          if (have($familiar`Trick-or-Treating Tot`)) cliExecute("familiar Trick-or-Treating Tot");
-          else if (have($familiar`Red-Nosed Snapper`)) cliExecute("familiar snapper");
-          cliExecute(`freecandy ${myAdventures()}`);
-        },
-        clear: "all",
-        tracking: "Freecandy",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
+    {
+      name: "Freecandy time",
+      ready: () => holiday().includes("Halloween"),
+      completed: () => myAdventures() / 5 < 1,
+      prepare: () => uneffect($effect`Beaten Up`),
+      do: (): void => {
+        if (have($familiar`Trick-or-Treating Tot`)) cliExecute("familiar Trick-or-Treating Tot");
+        else if (have($familiar`Red-Nosed Snapper`)) cliExecute("familiar snapper");
+        cliExecute(`freecandy ${myAdventures()}`);
       },
-      {
-        name: "Super Nightcap",
-        ready: () => have($item`Drunkula's wineglass`) && holiday().includes("Halloween"),
-        completed: () => totallyDrunk(),
-        do: () => cliExecute(`CONSUME NIGHTCAP`),
+      clear: "all",
+      tracking: "Freecandy",
+      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+    },
+    {
+      name: "Super Nightcap",
+      ready: () => have($item`Drunkula's wineglass`) && holiday().includes("Halloween"),
+      completed: () => totallyDrunk(),
+      do: () => cliExecute(`CONSUME NIGHTCAP`),
+    },
+    {
+      name: "Freecandy Drunk",
+      ready: () => holiday().includes("Halloween"),
+      completed: () => Math.floor(myAdventures() / 5) === 0,
+      prepare: () => uneffect($effect`Beaten Up`),
+      do: (): void => {
+        useFamiliar($familiar`Red-Nosed Snapper`);
+        cliExecute(`freeCandy ${myAdventures()}`);
       },
-      {
-        name: "Freecandy Drunk",
-        ready: () => holiday().includes("Halloween"),
-        completed: () => Math.floor(myAdventures() / 5) === 0,
-        prepare: () => uneffect($effect`Beaten Up`),
-        do: (): void => {
-          useFamiliar($familiar`Red-Nosed Snapper`);
-          cliExecute(`freeCandy ${myAdventures()}`);
-        },
-        clear: "all",
-        tracking: "Freecandy",
-        limit: { tries: 1 }, //this will run again after installing CMC, by magic
-      },
-    ]
-  }
+      clear: "all",
+      tracking: "Freecandy",
+      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+    },
+  ];
+}
 
 export function chrono(): Task[] {
   return [
@@ -391,7 +449,11 @@ export function chrono(): Task[] {
     },
     {
       name: "Super Nightcap",
-      ready: () => have($item`Drunkula's wineglass`) && args.chrono && canAdventure($location`The Primordial Stew`) && myDaycount() > 1,
+      ready: () =>
+        have($item`Drunkula's wineglass`) &&
+        args.chrono &&
+        canAdventure($location`The Primordial Stew`) &&
+        myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
     },
@@ -407,10 +469,10 @@ export function chrono(): Task[] {
       tracking: "Chrono",
       limit: { tries: 1 }, //this will run again after installing CMC, by magic
     },
-  ]
+  ];
 }
 
-  export function crimbo(): Task[] {
+export function crimbo(): Task[] {
   return [
     {
       name: "Crimbo Time",
@@ -426,7 +488,8 @@ export function chrono(): Task[] {
     },
     {
       name: "Super Nightcap",
-      ready: () => have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
+      ready: () =>
+        have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
     },
@@ -442,5 +505,5 @@ export function chrono(): Task[] {
       tracking: "Crimbo",
       limit: { tries: 1 }, //this will run again after installing CMC, by magic
     },
-  ]
+  ];
 }

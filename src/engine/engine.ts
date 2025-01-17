@@ -1,7 +1,9 @@
 import { CombatResources, CombatStrategy, Engine } from "grimoire-kolmafia";
 import { cliExecute, equippedAmount, Location, logprint, setAutoAttack, writeCcs } from "kolmafia";
 import { $item, clearMaximizerCache, get, JuneCleaver, PropertiesManager } from "libram";
+
 import { getCurrentLeg, Task } from "../tasks/structure";
+
 import { printProfits, ProfitTracker } from "./profits";
 
 const grimoireCCS = "grimoire_macro";
@@ -14,7 +16,7 @@ export class ProfitTrackingEngine extends Engine<never, Task> {
     this.profits = new ProfitTracker(key);
   }
 
- setChoices(task: Task, manager: PropertiesManager): void {
+  setChoices(task: Task, manager: PropertiesManager): void {
     super.setChoices(task, manager);
     if (equippedAmount($item`June cleaver`) > 0) {
       this.propertyManager.setChoices(
@@ -31,13 +33,13 @@ export class ProfitTrackingEngine extends Engine<never, Task> {
   setCombat(
     task: Task,
     task_combat: CombatStrategy<never>,
-    task_resources: CombatResources<never>
+    task_resources: CombatResources<never>,
   ): void {
     // Save regular combat macro
     const macro = task_combat.compile(
       task_resources,
       this.options?.combat_defaults,
-      task.do instanceof Location ? task.do : undefined
+      task.do instanceof Location ? task.do : undefined,
     );
     if (macro.toString().length > 1) {
       macro.save();
@@ -95,23 +97,22 @@ export class ProfitTrackingEngine extends Engine<never, Task> {
   }
 }
 function shouldSkip(choice: number): boolean {
-  const skip = [1468, 1470, 1472, 1473, 1474]
+  const skip = [1468, 1470, 1472, 1473, 1474];
   return skip.includes(choice) && get("_juneCleaverSkips") < 5;
 }
 
 function bestJuneCleaverOption(choice: number): number {
-    const choiceTable: { [key: number]: number } = {
-        1467: 3, // Poetic Justice
-        1468: 2, // Aunts not Ants
-        1469: 3, // Beware of Alligator
-        1470: 2, // Teacher's Pet
-        1471: 1, // Lost and Found
-        1472: 1, // Summer Days
-        1473: 1, // Bath Time
-        1474: 2, // Delicious Sprouts
-        1475: 1, // Hypnotic Master
-    };
+  const choiceTable: { [key: number]: number } = {
+    1467: 3, // Poetic Justice
+    1468: 2, // Aunts not Ants
+    1469: 3, // Beware of Alligator
+    1470: 2, // Teacher's Pet
+    1471: 1, // Lost and Found
+    1472: 1, // Summer Days
+    1473: 1, // Bath Time
+    1474: 2, // Delicious Sprouts
+    1475: 1, // Hypnotic Master
+  };
 
-    return choiceTable[choice] ?? 0;
+  return choiceTable[choice] ?? 0;
 }
-
