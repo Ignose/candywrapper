@@ -173,7 +173,7 @@ export function PostRunQuests(): Quest {
       {
         name: "Emergency Drink Part 2",
         ready: () => myAdventures() === 0 && myInebriety() < 11,
-        completed: () => myAdventures() > 0 || myInebriety() >= 11,
+        completed: () => myAdventures() > 0 || myInebriety() >= 11 || (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
         prepare: () => {
           if (have($item`astral six-pack`)) use($item`astral six-pack`);
         },
@@ -332,7 +332,7 @@ export function PostRunQuests(): Quest {
       {
         name: "Emergency Drink Part 3",
         ready: () => myAdventures() < 40 && myInebriety() < 11,
-        completed: () => myAdventures() > 40 || myInebriety() >= 11,
+        completed: () => myAdventures() > 40 || myInebriety() >= 11|| (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
         prepare: () => {
           if (have($item`astral six-pack`)) use($item`astral six-pack`);
         },

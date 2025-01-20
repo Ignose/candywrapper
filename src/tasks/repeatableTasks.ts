@@ -253,7 +253,7 @@ export function postRunQuests(): Task[] {
     },
     {
       name: "Run CyberRealm",
-      ready: () => mallPrice($item`1`) > 1_000,
+      ready: () => mallPrice($item`1`) > 1_000 && myAdventures() > 60,
       prepare: () => {
         $effects`Astral Shell, Elemental Saucesphere, Scarysauce`.forEach((ef) => {
           if (!have(ef)) useSkill(toSkill(ef));
