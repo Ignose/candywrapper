@@ -42,7 +42,7 @@ import { args } from "../args";
 
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
 import { Quest } from "./structure";
-import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { maxBase, pingu, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -103,7 +103,7 @@ export function AftercoreQuest(): Quest {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garboascend}`),
+        do: () => cliExecute(`${args.garboascend} ${pingu()}`),
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
@@ -186,7 +186,7 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
         completed: () => myAdventures() === 0,
-        do: () => cliExecute(`${args.garboascend}`),
+        do: () => cliExecute(`${args.garboascend} ${pingu()}`),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
             .filter((ef) => have(ef))

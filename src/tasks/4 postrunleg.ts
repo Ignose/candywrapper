@@ -54,6 +54,7 @@ import {
   doneAdventuring,
   haveAll,
   maxBase,
+  pingu,
   pvpCloset,
   stooperDrunk,
   totallyDrunk,
@@ -98,6 +99,11 @@ export function PostRunQuests(): Quest {
         name: "But dad I don't want to feel lost",
         completed: () => !have($effect`Feeling Lost`),
         do: () => uneffect($effect`Feeling Lost`),
+      },
+      {
+        name: "Hey kids, let's take a trip to the beach",
+        completed: () => have($item`bitchin' meatcar`) || have($item`Desert Bus pass`),
+        do: () => cliExecute("acquire bitchin"),
       },
       {
         name: "Sober Up",
@@ -353,7 +359,7 @@ export function PostRunQuests(): Quest {
         name: "Garbo",
         completed: () => myAdventures() === 0 || stooperDrunk(),
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garbo}`),
+        do: () => cliExecute(`${args.garbo} ${pingu()}`),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
             .filter((ef) => have(ef))

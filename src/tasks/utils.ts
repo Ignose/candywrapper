@@ -434,3 +434,5 @@ export function shouldWeOverdrink(): boolean {
     } else return false;
   }
 }
+
+export const pingu = () => args.smol || args.robot || args.casual ? "penguin" : "";
