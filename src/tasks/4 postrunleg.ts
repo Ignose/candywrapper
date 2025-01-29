@@ -4,6 +4,7 @@ import {
   cliExecute,
   drink,
   Effect,
+  getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
   itemAmount,
@@ -26,6 +27,7 @@ import {
   use,
   useFamiliar,
   useSkill,
+  visitUrl,
   wait,
 } from "kolmafia";
 import {
@@ -450,6 +452,15 @@ export function PostRunQuests(): Quest {
         },
         clear: "all",
         tracking: "Item Cleanup",
+      },
+      {
+        name: "Takerspace",
+        ready: () => getWorkshed() === $item`model train set` && !get("_workshedItemUsed"),
+        completed: () => getWorkshed() === $item`TakerSpace letter of Marque`,
+        do: () => {
+          use($item`TakerSpace letter of Marque`);
+          visitUrl("campground.php?action=workshed");
+        },
       },
       {
         name: "Pajamas",

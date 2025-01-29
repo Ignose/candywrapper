@@ -2,9 +2,11 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import {
   buy,
   cliExecute,
+  getWorkshed,
   haveEquipped,
   hippyStoneBroken,
   inebrietyLimit,
+  Item,
   itemAmount,
   mallPrice,
   myAdventures,
@@ -18,6 +20,7 @@ import {
   restoreMp,
   retrieveItem,
   toBoolean,
+  use,
   useFamiliar,
   visitUrl,
 } from "kolmafia";
@@ -33,7 +36,10 @@ import {
   getTodaysHolidayWanderers,
   have,
   Macro,
+  maxBy,
+  TakerSpace,
   TrainSet,
+  Tuple,
   uneffect,
 } from "libram";
 import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
@@ -43,6 +49,71 @@ import { args } from "../args";
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
 import { Quest } from "./structure";
 import { maxBase, pingu, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { garboValue } from "../engine/profits";
+
+const RESOURCES = ["Spice", "Rum", "Anchor", "Mast", "Silk", "Gold"] as const;
+export type Resource = (typeof RESOURCES)[number];
+
+export type Recipe = Tuple<number, (typeof RESOURCES)["length"]>;
+const RECIPES = new Map<Item, Recipe>([
+  [$item`deft pirate hook`, [0, 0, 1, 1, 0, 1]],
+  [$item`iron tricorn hat`, [0, 0, 2, 1, 0, 0]],
+  [$item`jolly roger flag`, [0, 1, 0, 1, 1, 0]],
+  [$item`sleeping profane parrot`, [15, 3, 0, 0, 2, 1]],
+  [$item`pirrrate's currrse`, [2, 2, 0, 0, 0, 0]],
+  [$item`tankard of spiced rum`, [1, 2, 0, 0, 0, 0]],
+  [$item`packaged luxury garment`, [0, 0, 0, 0, 3, 2]],
+  [$item`harpoon`, [0, 0, 0, 2, 0, 0]],
+  [$item`chili powder cutlass`, [5, 0, 1, 0, 0, 0]],
+  [$item`cursed Aztec tamale`, [2, 0, 0, 0, 0, 0]],
+  [$item`jolly roger tattoo kit`, [0, 6, 1, 1, 0, 6]],
+  [$item`golden pet rock`, [0, 0, 0, 0, 0, 7]],
+  [$item`groggles`, [0, 6, 0, 0, 0, 0]],
+  [$item`pirate dinghy`, [0, 0, 1, 1, 1, 0]],
+  [$item`anchor bomb`, [0, 1, 3, 1, 0, 1]],
+  [$item`silky pirate drawers`, [0, 0, 0, 0, 2, 0]],
+  [$item`spices`, [1, 0, 0, 0, 0, 0]],
+]);
+
+/**
+ * @returns A copy of our map of all recipes
+ */
+export function allRecipes(): Map<Item, Recipe> {
+  return new Map(
+    [...RECIPES.entries()].map(([item, recipe]) => [item, [...recipe]]),
+  );
+}
+
+export function affordableRecipes(): Item[] {
+  const recipes = allRecipes(); // Get all recipes
+  print(`Recipes Map: ${recipes}`);
+
+  const result = [...recipes.keys()].filter((item) => TakerSpace.canMake(item));
+  print(`Final affordable items array: ${result}`);
+
+  return result;
+}
+
+function takerSpaceOptimizer(): boolean {
+  let recipes = affordableRecipes();
+  print(`Recipes after affordableRecipes: ${recipes}`);
+
+  while (recipes.length > 0) {
+    print(`Current recipe list: ${recipes}`);
+
+    // Find the best item to craft based on garboValue
+    const bestRecipe = maxBy(recipes, garboValue);
+    print(`Best recipe to craft: ${bestRecipe}`);
+
+    // Craft the selected recipe
+    TakerSpace.make(bestRecipe);
+
+    // Recompute the list of craftable recipes after crafting
+    recipes = affordableRecipes();
+  }
+
+  return true;
+}
 
 const doSmol = args.smol ? true : false;
 const doCS = args.cs ? true : false;
@@ -77,6 +148,16 @@ export function AftercoreQuest(): Quest {
         have($item`Calzone of Legend`)) ||
       myDaycount() === 1,
     tasks: [
+      {
+        name: "Takerspace",
+        ready: () => getWorkshed() === $item`TakerSpace letter of Marque` && !get("_workshedItemUsed"),
+        completed: () => getWorkshed() === $item`model train set`,
+        do: () => {
+          visitUrl("campground.php?action=workshed");
+          takerSpaceOptimizer()
+          use($item`model train set`);
+        },
+      },
       {
         name: "Pre-Run Photobooth",
         ready: () => have($item`Clan VIP Lounge key`) && get("_photoBoothEquipment", 0) === 0,

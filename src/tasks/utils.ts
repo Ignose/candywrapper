@@ -1,4 +1,5 @@
 import {
+  canAdventure,
   canEquip,
   chew,
   cliExecute,
@@ -435,4 +436,4 @@ export function shouldWeOverdrink(): boolean {
   }
 }
 
-export const pingu = () => args.smol || args.robot || args.casual ? "penguin" : "";
+export const pingu = () => canAdventure($location`The Copperhead Club`) ? "penguin" : "";
