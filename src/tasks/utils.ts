@@ -22,6 +22,7 @@ import {
   myFamiliar,
   myFullness,
   myInebriety,
+  myPrimestat,
   mySpleenUse,
   outfitPieces,
   outfitTreats,
@@ -49,6 +50,7 @@ import {
   getBanishedMonsters,
   have,
   maxBy,
+  Pantogram,
   set,
   Snapper,
   sum,
@@ -437,3 +439,35 @@ export function shouldWeOverdrink(): boolean {
 }
 
 export const pingu = () => canAdventure($location`The Copperhead Club`) ? "penguin" : "";
+
+export function pantogramReady(): boolean {
+  if (!Pantogram.have() || Pantogram.havePants()) return false;
+  const pantogramValue = 100 * myAdventures();
+
+  const cloverPrice = Math.min(
+    ...$items`ten-leaf clover, disassembled clover`.map((item) =>
+      mallPrice(item),
+    ),
+  );
+  if (cloverPrice + mallPrice($item`porquoise`) > pantogramValue) {
+    return false;
+  }
+  retrieveItem($item`porquoise`, 1);
+  if (!have($item`porquoise`)) return false;
+  return true;
+}
+
+export function pantogram(): boolean {
+  if (!Pantogram.have() || Pantogram.havePants()) return true;
+  retrieveItem($item`ten-leaf clover`);
+  retrieveItem($item`bubblin' crude`);
+  Pantogram.makePants(
+    myPrimestat().toString(),
+    "Sleaze Resistance: 2",
+    "MP Regen Max: 15",
+    "Drops Items: true",
+    "Meat Drop: 60",
+  );
+  return true;
+}
+

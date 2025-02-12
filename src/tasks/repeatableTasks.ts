@@ -56,7 +56,7 @@ import {
 import { args } from "../args";
 
 import { Task } from "./structure";
-import { getGarden, maxBase, nextCyberZone, stooperDrunk, totallyDrunk } from "./utils";
+import { getGarden, maxBase, nextCyberZone, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
 
 const bestFam = () =>
   famCheck($familiar`Pocket Professor`)
@@ -353,7 +353,8 @@ export function preRunQuests(): Task[] {
   ];
 }
 
-let garboDone = false;
+let garboDone1 = false;
+let garboDone2 = false
 
 export function noBarf(): Task[] {
   return [
@@ -367,12 +368,23 @@ export function noBarf(): Task[] {
       do: () => cliExecute("consume ALL"),
     },
     {
+      name: "Pantogramming",
+      ready: () => pantogramReady(),
+      completed: () => pantogram(),
+      do: () => pantogram(),
+    },
+    {
       name: "Garbo Nobarf",
       ready: () => holiday().includes("Halloween") || args.crimbo || args.chrono,
-      completed: () => garboDone,
+      completed: () => (myDaycount() > 1 && garboDone1) ||
+        (myDaycount() === 1 && garboDone2),
       do: (): void => {
         cliExecute(`garbo nodiet nobarf target="witchess knight"`);
-        garboDone = true;
+        if(myDaycount() > 1) {
+          garboDone1 = true;
+        } else {
+          garboDone2 = true;
+        }
       },
     },
   ];
