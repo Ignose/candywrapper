@@ -3,7 +3,6 @@ import {
   availableAmount,
   canAdventure,
   cliExecute,
-  equip,
   Familiar,
   fullnessLimit,
   getCampground,
@@ -18,7 +17,6 @@ import {
   myAdventures,
   myClass,
   myDaycount,
-  myFamiliar,
   myFullness,
   myHp,
   myInebriety,
@@ -52,7 +50,6 @@ import {
   getTodaysHolidayWanderers,
   have,
   Macro,
-  set,
   uneffect,
 } from "libram";
 
@@ -137,20 +134,6 @@ export function postRunQuests(): Task[] {
           false,
         ),
       limit: { tries: 5 },
-    },
-    {
-      name: "CyberRealm: Prepare Familiar",
-      ready: () => !get("_familiarPrepped").includes("true"),
-      completed: () => myFamiliar() === $familiar`Shorter-Order Cook`,
-      do: () => {
-        if (have($familiar`Shorter-Order Cook`)) {
-          cliExecute("familiar Shorter-Order Cook");
-          equip($familiar`Shorter-Order Cook`, $item`blue plate`);
-        }
-        cliExecute(`familiar ${bestFam().name}`);
-        cliExecute("familiar Shorter-Order Cook");
-        set("_familiarPrepped", true);
-      },
     },
     {
       name: "Restore HP",
@@ -388,7 +371,7 @@ export function noBarf(): Task[] {
       ready: () => holiday().includes("Halloween") || args.crimbo || args.chrono,
       completed: () => garboDone,
       do: (): void => {
-        cliExecute(`${args.garboascend} nodiet nobarf target="witchess knight"`);
+        cliExecute(`garbo nodiet nobarf target="witchess knight"`);
         garboDone = true;
       },
     },

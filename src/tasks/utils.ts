@@ -275,7 +275,7 @@ export interface Kmail {
 export function notifyVoters(): void {
   if (get("_kmailSentToday").includes("true")) return;
 
-  const recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline"];
+  const recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline", "Lucasyeo"];
 
   const message = `Voter Monster Today is ${get("_voteMonster")}`;
 
