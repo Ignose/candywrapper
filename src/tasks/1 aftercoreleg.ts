@@ -157,6 +157,7 @@ export function AftercoreQuest(): Quest {
           takerSpaceOptimizer()
           use($item`model train set`);
         },
+        tracking: "Workshed"
       },
       {
         name: "Pre-Run Photobooth",
@@ -206,6 +207,7 @@ export function AftercoreQuest(): Quest {
           useFamiliar($familiar`Stooper`);
           cliExecute("drink stillsuit distillate");
         },
+        tracking: "Organs",
       },
       {
         name: "Barfing Drunk with Stooper",
@@ -242,18 +244,21 @@ export function AftercoreQuest(): Quest {
               .repeat(),
           ),
         limit: { tries: 30 },
+        tracking: "Garbo"
       },
       {
         name: "Nightcap (Wine Glass)",
         ready: () => have($item`Drunkula's wineglass`),
         completed: () => totallyDrunk(),
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE ${get("valueOfAdventure") - 1000}`),
+        tracking: "Organs"
       },
       {
         name: "Nightcap (Marginal)",
         ready: () => have($item`Beach Comb`) || have($item`Map to Safety Shelter Grimace Prime`),
         completed: () => totallyDrunk(),
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
+        tracking: "Organs"
       },
       {
         name: "Grimace Maps",
@@ -261,6 +266,7 @@ export function AftercoreQuest(): Quest {
         completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
         do: () => cliExecute("grimace maps"),
         limit: { tries: 30 },
+        tracking: "Bonus"
       },
       {
         name: "Garbo (Drunk)",
@@ -286,6 +292,7 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Beach Comb`),
         completed: () => myAdventures() === 0,
         do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
+        tracking: "Combo"
       },
       {
         name: "Turn in FunFunds",
@@ -329,6 +336,7 @@ export function AftercoreQuest(): Quest {
               "acquire Pizza of Legend; acquire Frosty's frosty mug; acquire Ol' Scratch's salad fork",
             );
         },
+        tracking: "Ascension Prep"
       },
       {
         name: "Marble Soda!",
@@ -342,6 +350,7 @@ export function AftercoreQuest(): Quest {
             skipSoda = true;
           }
         },
+        tracking: "Ascension Prep"
       },
       {
         name: "Prepare for LoopCS",
@@ -355,6 +364,7 @@ export function AftercoreQuest(): Quest {
           !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
           !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
         },
+        tracking: "Ascension Prep"
       },
       {
         name: "Let's do the trainset again",

@@ -65,7 +65,7 @@ export function RunQuests(): Quest {
           drink($item`astral pilsner`, 1);
         },
         clear: "all",
-        tracking: "Run",
+        tracking: "Organs",
       },
       {
         name: "Sausages",

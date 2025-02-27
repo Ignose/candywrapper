@@ -84,6 +84,7 @@ export function postRunQuests(): Task[] {
       name: "Breakfast",
       completed: () => get("breakfastCompleted"),
       do: () => cliExecute("breakfast"),
+      tracking: "Breakfast"
     },
     {
       name: "Harvest Garden",
@@ -134,11 +135,13 @@ export function postRunQuests(): Task[] {
           false,
         ),
       limit: { tries: 5 },
+      tracking: "Other"
     },
     {
       name: "Restore HP",
       completed: () => myHp() > 0.5 * myMaxhp(),
       do: () => restoreHp(0.95 * myMaxhp()),
+      tracking: "Other"
     },
     {
       name: "Implement Glitch",
@@ -203,6 +206,7 @@ export function postRunQuests(): Task[] {
             .attack()
             .repeat(),
         ),
+        tracking: "Other"
     },
     {
       name: "Stock Up on MMJs",
@@ -218,6 +222,7 @@ export function postRunQuests(): Task[] {
         },
       ],
       do: () => false,
+      tracking: "Other"
     },
     {
       name: "Buy Seal Summoning Supplies",
@@ -233,6 +238,7 @@ export function postRunQuests(): Task[] {
         num: 500,
       })),
       do: () => false,
+      tracking: "Other"
     },
     {
       name: "Run CyberRealm",
@@ -275,6 +281,7 @@ export function postRunQuests(): Task[] {
           .repeat(),
       ),
       limit: { skip: 60 },
+      tracking: "Cyber Realm"
     },
     {
       name: "Wardrobe-o-matic",
@@ -297,6 +304,7 @@ export function postRunQuests(): Task[] {
         visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
         visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
       },
+      tracking: "Garbo"
     },
   ];
 }
@@ -366,12 +374,14 @@ export function noBarf(): Task[] {
         mySpleenUse() >= spleenLimit() &&
         myInebriety() >= inebrietyLimit(),
       do: () => cliExecute("consume ALL"),
+      tracking: "Organs"
     },
     {
       name: "Pantogramming",
       ready: () => pantogramReady(),
       completed: () => pantogram(),
       do: () => pantogram(),
+      tracking: "Farming Prep"
     },
     {
       name: "Garbo Nobarf",
@@ -386,6 +396,7 @@ export function noBarf(): Task[] {
           garboDone2 = true;
         }
       },
+      tracking: "Garbo"
     },
   ];
 }
@@ -411,6 +422,7 @@ export function garboWeen(): Task[] {
       ready: () => have($item`Drunkula's wineglass`) && holiday().includes("Halloween"),
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
+      tracking: "Organs"
     },
     {
       name: "Freecandy Drunk",
@@ -439,7 +451,7 @@ export function chrono(): Task[] {
         cliExecute(`${args.chronoscript}`);
       },
       clear: "all",
-      tracking: "chrono",
+      tracking: "Chrono",
       limit: { tries: 1 }, //this will run again after installing CMC, by magic
     },
     {
@@ -451,6 +463,7 @@ export function chrono(): Task[] {
         myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
+      tracking: "Organs"
     },
     {
       name: "Chrono Drunk",
@@ -487,6 +500,7 @@ export function crimbo(): Task[] {
         have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
+      tracking: "Organs"
     },
     {
       name: "Crimbo Drunk",
