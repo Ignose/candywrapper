@@ -41,6 +41,11 @@ export const args = Args.create(
       default: false,
       setting: "",
     }),
+    zooto: Args.flag({
+      help: "Ascend into and run Zootomist",
+      default: false,
+      setting: "",
+    }),
     crimbo: Args.flag({
       help: "Farm Crimbo instead of Garbo",
       default: false,

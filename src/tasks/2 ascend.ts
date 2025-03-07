@@ -41,6 +41,8 @@ export function AscendQuest(): Quest {
             ? $path.none
             : args.robot
             ? $path`You, Robot`
+            : args.zooto
+            ? $path`Z is for Zootomist`
             : undefined;
           const lifestyle = args.casual ? 1 : 2;
 
@@ -57,7 +59,7 @@ export function AscendQuest(): Quest {
 
           ascend({
             path: path,
-            playerClass: myClass,
+            playerClass: args.zooto ? $class`Zootomist` : myClass,
             lifestyle: lifestyle,
             moon: moonsign,
             consumable: $item`astral six-pack`,

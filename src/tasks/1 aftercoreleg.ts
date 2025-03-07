@@ -48,7 +48,7 @@ import { args } from "../args";
 
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
 import { Quest } from "./structure";
-import { maxBase, pingu, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
+import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 import { garboValue } from "../engine/profits";
 
 const RESOURCES = ["Spice", "Rum", "Anchor", "Mast", "Silk", "Gold"] as const;
@@ -140,6 +140,7 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
+    ready: () => myDaycount() >= (args.zooto ? 3 : 2) && get("kingLiberated"),
     completed: () =>
       (myAdventures() === 0 &&
         totallyDrunk() &&
@@ -185,7 +186,7 @@ export function AftercoreQuest(): Quest {
         name: "Garbo",
         completed: () => stooperDrunk() || myAdventures() === 0,
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garboascend} ${pingu()}`),
+        do: () => cliExecute(`${args.garboascend}`),
         post: () => {
           if (myAdventures() === 0)
             $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
@@ -273,7 +274,7 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
         completed: () => myAdventures() === 0,
-        do: () => cliExecute(`${args.garboascend} ${pingu()}`),
+        do: () => cliExecute(`${args.garboascend}`),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
             .filter((ef) => have(ef))

@@ -15,7 +15,7 @@ import { $item, $skill, clamp, get, have } from "libram";
 import { args } from "../args";
 
 import { preRunQuests } from "./repeatableTasks";
-import { getCurrentLeg, Leg, Quest } from "./structure";
+import { Quest } from "./structure";
 import { shouldWeOverdrink } from "./utils";
 
 const runType = () =>
@@ -27,7 +27,7 @@ const runType = () =>
     ? args.casualscript
     : args.robot
     ? args.robotscript
-    : args.robotscript;
+    : "autoscend";
 
 export function howManySausagesCouldIEat() {
   if (!have($item`Kramco Sausage-o-Matic™`)) return 0;
@@ -44,7 +44,7 @@ export function howManySausagesCouldIEat() {
 export function RunQuests(): Quest {
   return {
     name: "Ascension Run",
-    completed: () => getCurrentLeg() !== Leg.Run || get("kingLiberated"),
+    completed: () => get("kingLiberated"),
     tasks: [
       ...preRunQuests(),
       {

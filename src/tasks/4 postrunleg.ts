@@ -56,7 +56,6 @@ import {
   doneAdventuring,
   haveAll,
   maxBase,
-  pingu,
   pvpCloset,
   stooperDrunk,
   totallyDrunk,
@@ -74,7 +73,7 @@ const checkMelange = () =>
 export function PostRunQuests(): Quest {
   return {
     name: "Post-Run Aftercore",
-    ready: () => myDaycount() === 1 && get("kingLiberated", false),
+    ready: () => (myDaycount() === 1 || (myDaycount() === 2 && args.zooto)) && get("kingLiberated", false),
     completed: () => totallyDrunk() && pajamas,
     tasks: [
       {
@@ -377,7 +376,7 @@ export function PostRunQuests(): Quest {
         name: "Garbo",
         completed: () => myAdventures() === 0 || stooperDrunk(),
         prepare: () => uneffect($effect`Beaten Up`),
-        do: () => cliExecute(`${args.garbo} ${pingu()}`),
+        do: () => cliExecute(`${args.garbo}`),
         post: () =>
           $effects`Power Ballad of the Arrowsmith, Stevedave's Shanty of Superiority, The Moxious Madrigal, The Magical Mojomuscular Melody, Aloysius' Antiphon of Aptitude, Ur-Kel's Aria of Annoyance`
             .filter((ef) => have(ef))

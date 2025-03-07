@@ -1,5 +1,4 @@
 import {
-  canAdventure,
   canEquip,
   chew,
   cliExecute,
@@ -437,8 +436,6 @@ export function shouldWeOverdrink(): boolean {
     } else return false;
   }
 }
-
-export const pingu = () => canAdventure($location`The Copperhead Club`) ? "penguin" : "";
 
 export function pantogramReady(): boolean {
   if (!Pantogram.have() || Pantogram.havePants()) return false;
