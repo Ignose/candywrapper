@@ -47,12 +47,10 @@ import {
   $stat,
   AprilingBandHelmet,
   AsdonMartin,
-  directlyUse,
   get,
   getTodaysHolidayWanderers,
   have,
   Macro,
-  set,
   uneffect,
 } from "libram";
 
@@ -60,6 +58,7 @@ import { args } from "../args";
 
 import { Task } from "./structure";
 import { getGarden, maxBase, nextCyberZone, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
+import { leprecondoTask } from "../engine/leprecondo";
 
 const bestFam = () =>
   famCheck($familiar`Pocket Professor`)
@@ -337,19 +336,7 @@ export function preRunQuests(): Task[] {
       },
       limit: { tries: 1 },
     },
-    {
-      name: "Leprecondo",
-      // eslint-disable-next-line libram/verify-constants
-      ready: () => have($item`Leprecondo`),
-      completed: () => get("_doCondo", false),
-      do: (): void => {
-        // eslint-disable-next-line libram/verify-constants
-        directlyUse($item`Leprecondo`);
-        visitUrl(`choice.php?pwd&option=1&whichchoice=1556&r0=21&r1=8&r2=9&r3=13`);
-        set("_doCondo", true);
-      },
-      limit: { tries: 1 },
-    },
+    leprecondoTask(),
     {
       name: "Unpack Duffel Bag",
       completed: () => duffo,
