@@ -14,6 +14,8 @@ import { targetPerms } from "./perm";
 import { Quest } from "./structure";
 import { toMoonSign, totallyDrunk } from "./utils";
 
+const skipPizza = args.cs || args.smol ? false : true
+
 export function AscendQuest(): Quest {
   return {
     name: "Ascend",
@@ -23,9 +25,10 @@ export function AscendQuest(): Quest {
       {
         name: "Do the Ascension",
         ready: () =>
-          have($item`Pizza of Legend`) &&
+          (have($item`Pizza of Legend`) &&
           have($item`Deep Dish of Legend`) &&
-          have($item`Calzone of Legend`),
+          have($item`Calzone of Legend`)) ||
+          skipPizza,
         completed: () => myDaycount() === 1, //Change this
         do: (): void => {
           const [skills, permLifestyle] = targetPerms();
@@ -43,6 +46,8 @@ export function AscendQuest(): Quest {
             ? $path`You, Robot`
             : args.zooto
             ? $path`Z is for Zootomist`
+            : args.ih8u
+            ? $path`11 Things I Hate About U`
             : undefined;
           const lifestyle = args.casual ? 1 : 2;
 

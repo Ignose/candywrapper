@@ -46,6 +46,11 @@ export const args = Args.create(
       default: false,
       setting: "",
     }),
+    ih8u: Args.flag({
+      help: "Ascend into and run 11 Things I Hate About U",
+      default: false,
+      setting: "",
+    }),
     crimbo: Args.flag({
       help: "Farm Crimbo instead of Garbo",
       default: false,
@@ -146,6 +151,10 @@ export const args = Args.create(
       help: "The command that will do your You, Robot run for you. Include any arguments desired.",
       default: "",
     }),
+    ih8uscript: Args.string({
+      help: "The command that will do your You, Robot run for you. Include any arguments desired.",
+      default: "",
+    }),
     pulls: Args.items({
       help: "A list of items to pull at the start of the smol run.",
       default: [
@@ -183,5 +192,9 @@ export const args = Args.create(
       help: "Define a specific monster for Garbo to target; note that the wrapper will find something useful for you!",
       default: "",
     }),
+    test: Args.flag({
+      help: "test",
+      default: false
+    })
   },
 );

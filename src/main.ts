@@ -8,6 +8,7 @@ import { AscendQuest } from "./tasks/2 ascend";
 import { RunQuests } from "./tasks/3 runleg";
 import { PostRunQuests } from "./tasks/4 postrunleg";
 import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
+import { itemPriceValue } from "./tasks/cluedin";
 
 const version = "0.0.3";
 
@@ -20,6 +21,10 @@ export function main(command?: string): void {
     return;
   }
 
+  if (args.test) {
+    itemPriceValue();
+  }
+
   if (dontCS && args.halloween && args.cs) {
     throw `Tomorrow is halloween, run something that lets you get steel organs!`;
   }
@@ -30,7 +35,7 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  if (!args.cs && !args.smol && !args.casual && !args.robot && !args.zooto)
+  if (!args.cs && !args.smol && !args.casual && !args.robot && !args.zooto && !args.ih8u)
     throw "Undefined runtype; please choose an acceptable path";
 
   const tasks = getTasks([AftercoreQuest(), AscendQuest(), RunQuests(), PostRunQuests()]);

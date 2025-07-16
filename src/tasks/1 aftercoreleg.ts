@@ -140,7 +140,7 @@ const stations = [
 export function AftercoreQuest(): Quest {
   return {
     name: "Aftercore",
-    ready: () => myDaycount() >= (args.zooto ? 3 : 2) && get("kingLiberated"),
+    ready: () => myDaycount() >= 2 && get("kingLiberated"),
     completed: () =>
       (myAdventures() === 0 &&
         totallyDrunk() &&
@@ -355,6 +355,7 @@ export function AftercoreQuest(): Quest {
       },
       {
         name: "Prepare for LoopCS",
+        ready: () => doCS,
         completed: () =>
           have($item`Pizza of Legend`) &&
           have($item`Deep Dish of Legend`) &&
@@ -364,6 +365,22 @@ export function AftercoreQuest(): Quest {
           !have($item`Deep Dish of Legend`) ? retrieveItem($item`Deep Dish of Legend`) : undefined;
           !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
           !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
+        },
+        tracking: "Ascension Prep"
+      },
+      {
+        name: "Prepare for IH8U",
+        ready: () => args.ih8u,
+        completed: () =>
+          have($item`mini kiwi invisible dirigible`) &&
+          have($item`mini kiwi digitized cookies`) &&
+          have($item`mini kiwi intoxicating spirits`) &&
+          have($item`incredible mini-pizza`),
+        do: (): void => {
+          retrieveItem($item`mini kiwi invisible dirigible`);
+          retrieveItem($item`mini kiwi digitized cookies`);
+          retrieveItem($item`mini kiwi intoxicating spirits`);
+          retrieveItem($item`incredible mini-pizza`);
         },
         tracking: "Ascension Prep"
       },

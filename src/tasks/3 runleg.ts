@@ -2,11 +2,15 @@ import { step } from "grimoire-kolmafia";
 import {
   cliExecute,
   drink,
+  drinksilent,
   eat,
+  equip,
   fullnessLimit,
+  inebrietyLimit,
   itemAmount,
   myFullness,
   myInebriety,
+  retrieveItem,
   useSkill,
   visitUrl,
 } from "kolmafia";
@@ -27,6 +31,8 @@ const runType = () =>
     ? args.casualscript
     : args.robot
     ? args.robotscript
+    : args.ih8u
+    ? args.ih8uscript
     : "autoscend";
 
 export function howManySausagesCouldIEat() {
@@ -39,6 +45,23 @@ export function howManySausagesCouldIEat() {
     0,
     itemAmount($item`magical sausage`) + itemAmount($item`magical sausage casing`),
   );
+}
+
+function ih8uDrink(): boolean {
+  if(myInebriety() >= inebrietyLimit())
+    return false;
+  if(!have($item`Kremlin's Greatest Briefcase`) || get("_kgbDispenserUses") >= 3 && !(have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`))))
+    return false;
+  if (have($item`Kremlin's Greatest Briefcase`) && get("_kgbDispenserUses") < 3) {
+    cliExecute("briefcase unlock");
+    cliExecute("briefcase collect");
+  }
+  if (have($item`splendid martini`)) return true;
+  if(have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`))) {
+    retrieveItem($item`mini kiwitini`)
+  }
+  if(have($item`mini kiwitini`)) return true;
+  return false;
 }
 
 export function RunQuests(): Quest {
@@ -54,7 +77,26 @@ export function RunQuests(): Quest {
           if (runType() === undefined || runType() === null) throw "no runtime defined";
           else cliExecute(runType());
         },
-        tracking: "Run",
+        clear: "all",
+        tracking: args.cs ? "Ignore" : "Run",
+      },
+      {
+        name: "drink ih8u",
+        ready: () => myInebriety() < inebrietyLimit() && args.ih8u,
+        completed: () => myInebriety() === inebrietyLimit() || !ih8uDrink(),
+        do: (): void => {
+          while(ih8uDrink()) {
+            equip($item`tuxedo shirt`);
+            useSkill($skill`The Ode to Booze`);
+            if(have($item`splendid martini`)) {
+              drinksilent($item`splendid martini`);
+            } else {
+              drinksilent($item`mini kiwitini`);
+            }
+          }
+        },
+        clear: "all",
+        tracking: "Organs",
       },
       {
         name: "drink",

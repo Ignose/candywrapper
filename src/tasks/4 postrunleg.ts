@@ -1,6 +1,7 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
   buy,
+  canAdventure,
   cliExecute,
   drink,
   Effect,
@@ -161,7 +162,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Gold Wedding Ring",
-        ready: () => !args.cs,
+        ready: () => canAdventure($location`A-Boo Peak`),
         completed: () =>
           !have($skill`Comprehensive Cartography`) ||
           myAscensions() === get("lastCartographyBooPeak"),

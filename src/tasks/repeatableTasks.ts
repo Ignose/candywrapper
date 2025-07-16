@@ -3,6 +3,7 @@ import {
   availableAmount,
   canAdventure,
   cliExecute,
+  equip,
   Familiar,
   fullnessLimit,
   getCampground,
@@ -15,6 +16,7 @@ import {
   holiday,
   inebrietyLimit,
   mallPrice,
+  maximize,
   myAdventures,
   myClass,
   myDaycount,
@@ -25,10 +27,12 @@ import {
   myMaxhp,
   myPrimestat,
   mySpleenUse,
+  print,
   restoreHp,
   retrieveItem,
   spleenLimit,
   toInt,
+  toItem,
   toSkill,
   use,
   useFamiliar,
@@ -43,14 +47,18 @@ import {
   $item,
   $items,
   $location,
+  $monster,
   $skill,
+  $skills,
   $stat,
   AprilingBandHelmet,
   AsdonMartin,
+  CombatLoversLocket,
   get,
   getTodaysHolidayWanderers,
   have,
   Macro,
+  PocketProfessor,
   uneffect,
 } from "libram";
 
@@ -58,7 +66,7 @@ import { args } from "../args";
 
 import { Task } from "./structure";
 import { getGarden, maxBase, nextCyberZone, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
-import { leprecondoTask } from "../engine/leprecondo";
+import { buskAt, findOptimalOutfitPower, reconstructOutfit } from "../beret";
 
 const bestFam = () =>
   famCheck($familiar`Pocket Professor`)
@@ -296,6 +304,28 @@ export function postRunQuests(): Task[] {
       limit: { tries: 1 },
     },
     {
+      name: "Beret? Beret.",
+      ready: () => have(toItem(11919)),
+      completed: () => get("_beretBuskingUses",0) >= 5,
+      do: () => {
+        const uselessEffects = $effects`How to Scam Tourists, Empathy`;
+        let busk = get("_beretBuskingUses",0);
+        print(`Busking starting at ${busk} uses.`)
+        for(; busk <5; busk++) {
+          const best = findOptimalOutfitPower(
+            {
+              "Familiar Weight": 10,
+            }, busk, uselessEffects, true
+          );
+          const outfit = reconstructOutfit(best);
+          print(`Outfit is: ${outfit?.hat}, ${outfit?.pants}, ${outfit?.shirt}`);
+          print(`Busking at ${best} power.`);
+          buskAt(best, true);
+        }
+      },
+      limit: { tries: 5 },
+    },
+    {
       name: "Candy Deviler",
       // eslint-disable-next-line libram/verify-constants
       ready: () => have($item`candy egg deviler`),
@@ -336,7 +366,6 @@ export function preRunQuests(): Task[] {
       },
       limit: { tries: 1 },
     },
-    leprecondoTask(),
     {
       name: "Unpack Duffel Bag",
       completed: () => duffo,
@@ -344,6 +373,13 @@ export function preRunQuests(): Task[] {
         visitUrl("inventory.php?action=skiduffel&pwd");
         duffo = true;
       },
+    },
+    {
+      name: "Pantogramming",
+      ready: () => pantogramReady() && args.casual,
+      completed: () => pantogram(),
+      do: () => pantogram(),
+      tracking: "Farming Prep"
     },
     {
       name: "LGR Seed",
@@ -354,7 +390,7 @@ export function preRunQuests(): Task[] {
         !(args.cs || args.zooto),
       completed: () => get("_stenchAirportToday") || get("stenchAirportAlways"),
       do: () => use($item`one-day ticket to Dinseylandfill`),
-      tracking: "Garbo",
+      tracking: "Farming Prep",
     },
     {
       name: "Break Stone",
@@ -369,7 +405,7 @@ export function preRunQuests(): Task[] {
 }
 
 let garboDone1 = false;
-let garboDone2 = false
+let garboDone2 = false;
 
 export function noBarf(): Task[] {
   return [
@@ -382,6 +418,40 @@ export function noBarf(): Task[] {
         myInebriety() >= inebrietyLimit(),
       do: () => cliExecute("consume ALL"),
       tracking: "Organs"
+    },
+    {
+      name: "PProf Penguin Chain",
+      ready: () => ((args.garbo.includes("penguin") && args.garbo.includes(`target="black crayon penguin"`) && myDaycount() === 0)
+        || (args.garboascend.includes("penguin") && args.garboascend.includes(`target="black crayon penguin"`) && myDaycount() > 0)) &&
+        CombatLoversLocket.canReminisce($monster`Black Crayon Flower`) &&
+        PocketProfessor.have() &&
+        PocketProfessor.lecturesDelivered() < 3,
+      prepare: () => {
+        if (!have($item`Pocket Professor memory chip`)) {
+          retrieveItem(1, $item`Pocket Professor memory chip`)
+        }
+
+        useFamiliar($familiar`Pocket Professor`);
+        maximize(`10 familiar weight, -tie, 5.25 Meat Drop, -"equip Amulet of Perpetual Darkness", -"equip Buddy Bjorn", -"equip Roman Candelabra", -"equip Spooky Putty ball", -"equip Spooky Putty leotard", -"equip Spooky Putty mitre", -"equip Spooky Putty snake", -"equip broken champagne bottle", -"equip cheap sunglasses", -"equip dice-shaped backpack", -"equip papier-masque", -"equip papier-mitre", -"equip smoke ball", -"equip stinky fannypack", 100 "bonus pantogram pants", 124.26 "bonus June cleaver", 135 "bonus Crown of Thrones", 180 "bonus Mr. Screege's spectacles", 222.92 "bonus mafia thumb ring", 253.61 "bonus can of mixed everything", 284 "bonus lucky gold ring", 6.25 "bonus Powerful Glove", 700 "bonus mafia pointer finger ring"`, false);
+        $skills`Empathy of the Newt, Leash of Linguini`.forEach((sk) => useSkill(sk));
+        $items`Pocket Professor memory chip, tearaway pants`.forEach((it) => equip(it));
+      },
+      completed: () => PocketProfessor.currentlyAvailableLectures() === 0,
+      do: () => CombatLoversLocket.reminisce($monster`Black Crayon Flower`,""),
+      combat: new CombatStrategy().macro(
+          Macro.externalIf(PocketProfessor.currentlyAvailableLectures() > 0,
+            Macro.trySkill($skill`lecture on relativity`)
+            .trySkill($skill`Sing Along`)
+            .trySkill($skill`Bowl Straight Up`)
+            .trySkill($skill`Tear Away your Pants!`)
+            .trySkillRepeat($skill`Saucestorm`),
+            Macro.trySkill($skill`Sing Along`)
+            .trySkill($skill`Bowl Straight Up`)
+            .trySkill($skill`Tear Away your Pants!`)
+            .trySkillRepeat($skill`Saucestorm`)
+          )
+        ),
+      tracking: "Garbo"
     },
     {
       name: "Pantogramming",
