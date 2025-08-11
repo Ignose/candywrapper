@@ -30,8 +30,10 @@ import {
   $effects,
   $familiar,
   $item,
+  $items,
   $location,
   $skill,
+  byStat,
   get,
   getTodaysHolidayWanderers,
   have,
@@ -270,6 +272,27 @@ export function AftercoreQuest(): Quest {
         tracking: "Bonus"
       },
       {
+        name: "Trip Scrip",
+        ready: () => args.ih8u || args.smol || args.casual,
+        completed: () => have($item`Shore Inc. Ship Trip Scrip`) || myInebriety() > inebrietyLimit(),
+        do: $location`The Shore, Inc. Travel Agency`,
+        outfit: () => {
+          if (!get("candyCaneSwordShore")) return { equip: $items`candy cane sword cane` };
+          else return {};
+        },
+        choices: () => {
+          const swordReady = haveEquipped($item`candy cane sword cane`) && !get("candyCaneSwordShore");
+          const statChoice = byStat({
+            Muscle: 1,
+            Mysticality: 2,
+            Moxie: 3,
+          });
+          return { 793: swordReady ? 5 : statChoice };
+        },
+        limit: { tries: 1 },
+        tracking: "Trip Scrip"
+      },
+      {
         name: "Garbo (Drunk)",
         ready: () => have($item`Drunkula's wineglass`),
         prepare: () => uneffect($effect`Beaten Up`),
@@ -377,6 +400,9 @@ export function AftercoreQuest(): Quest {
           have($item`mini kiwi intoxicating spirits`) &&
           have($item`incredible mini-pizza`),
         do: (): void => {
+          if(args.ih8uscript.includes("speed")) {
+            retrieveItem($item`Boris's key lime pie`)
+          }
           retrieveItem($item`mini kiwi invisible dirigible`);
           retrieveItem($item`mini kiwi digitized cookies`);
           retrieveItem($item`mini kiwi intoxicating spirits`);

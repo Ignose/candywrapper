@@ -3144,10 +3144,10 @@ kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-kolmafia@^5.27815.0:
-  version "5.28554.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.28554.0.tgz#a21b30452752831258534ec7de2e1da7228ab91f"
-  integrity sha512-I8WhVCpu11STkUswCfVmTVAARbLjVcLuQDOm8Tqw4k/fi4lrGD/IzH74y5zdd2eMw9kItyWDyYv9x3rnyiA3Wg==
+kolmafia@^5.28591.0:
+  version "5.28591.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.28591.0.tgz#c73ab814843a1213be4163df11eb90ed2de89620"
+  integrity sha512-9TGUYaipWtbuPmOYJOSG0F+7QU6dbuBGNNiNOIRaESKgpWNIAduhrJ1jLoJcbGmPRfFjalDa8nb3G83VI5mczg==
 
 kuler@^2.0.0:
   version "2.0.0"

@@ -11,10 +11,12 @@ import {
   getClanName,
   getWorkshed,
   guildStoreAvailable,
+  handlingChoice,
   haveEffect,
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
+  lastChoice,
   mallPrice,
   maximize,
   myAdventures,
@@ -30,7 +32,10 @@ import {
   print,
   restoreHp,
   retrieveItem,
+  runChoice,
   spleenLimit,
+  storageAmount,
+  takeStorage,
   toInt,
   toItem,
   toSkill,
@@ -59,6 +64,7 @@ import {
   have,
   Macro,
   PocketProfessor,
+  set,
   uneffect,
 } from "libram";
 
@@ -95,6 +101,35 @@ export function postRunQuests(): Task[] {
       completed: () => get("breakfastCompleted"),
       do: () => cliExecute("breakfast"),
       tracking: "Breakfast"
+    },
+    {
+      name: "Radio",
+      // eslint-disable-next-line libram/verify-constants
+      ready: () => have($item`Allied Radio Backpack`) && get("_alliedRadioDropsUsed", 0) < 3,
+      // eslint-disable-next-line libram/verify-constants
+      completed: () => get("_alliedRadioDropsUsed", 0) >= 3,
+      do: () => {
+      const visitRadio = () => visitUrl(`inventory.php?action=requestdrop&pwd`);
+      visitRadio();
+      if (!handlingChoice() || lastChoice() !== 1563) visitRadio();
+      runChoice(1, `request=radio`);
+      },
+      limit: { tries: 3 },
+    },
+    {
+      name: "Mobius Seed",
+      // eslint-disable-next-line libram/verify-constants
+      ready: () => have($item`Möbius ring`),
+      completed: () => get("_mobiusSeeded", false),
+      prepare: () => {
+        // eslint-disable-next-line libram/verify-constants
+        equip($item`Möbius ring`),
+        equip($item`Greatest American Pants`)
+      },
+      do: () => $location`Noob Cave`,
+      combat: new CombatStrategy().macro(Macro.runaway()),
+      post: () => set("_mobiusSeeded", true),
+      tracking: "Farming Prep"
     },
     {
       name: "Harvest Garden",
@@ -379,6 +414,13 @@ export function preRunQuests(): Task[] {
       ready: () => pantogramReady() && args.casual,
       completed: () => pantogram(),
       do: () => pantogram(),
+      tracking: "Farming Prep"
+    },
+    {
+      name: "Trip Scrip",
+      ready: () => args.ih8u || args.smol || args.robot,
+      completed: () => get("_roninStoragePulls").includes(`${$item`Shore Inc. Ship Trip Scrip`.id}`) || storageAmount($item`Shore Inc. Ship Trip Scrip`) === 0,
+      do: () => takeStorage($item`Shore Inc. Ship Trip Scrip`,1),
       tracking: "Farming Prep"
     },
     {
