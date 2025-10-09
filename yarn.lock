@@ -2358,9 +2358,9 @@ eslint-config-prettier@^8.8.0:
   integrity sha512-wLbQiFre3tdGgpDv67NQKnJuTlcUVYHas3k+DZCc2U2BadthoEY4B7hLPvAxaqdyOGCzuLfii2fqGph10va7oA==
 
 eslint-plugin-libram@^0.4.24:
-  version "0.4.24"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.24.tgz#2c5dcd46a4e280071fc9997a71f911bc3770598c"
-  integrity sha512-TrlblOJjM92p0wMaAyO1P2vrG3JDi6ZZguBZvB19FhynFNyehIM9P2GPUPkKA3Lyo7l1L0j3ofOpRzHtgYK8xw==
+  version "0.4.33"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-libram/-/eslint-plugin-libram-0.4.33.tgz#d76c0a16e5869e050e88f1c8a23f7081df49510c"
+  integrity sha512-QLajjkVuPNoiimfBH4iKHWXZCze8hnkUja+DHo/7ff0ddb1AQf6V2lk/nxXku/t+AtLVw2r0s1AliuZv4HV/8Q==
   dependencies:
     html-entities "^2.5.2"
     requireindex "~1.2.0"
@@ -2850,9 +2850,9 @@ hasown@^2.0.0:
     function-bind "^1.1.2"
 
 html-entities@^2.5.2:
-  version "2.5.2"
-  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.5.2.tgz#201a3cf95d3a15be7099521620d19dfb4f65359f"
-  integrity sha512-K//PSRMQk4FZ78Kyau+mZurHn3FH0Vwr+H36eE0rPbeYkRRi9YxceYPhuN60UwWorxyKHhqoAJl2OFKa4BVtaA==
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.6.0.tgz#7c64f1ea3b36818ccae3d3fb48b6974208e984f8"
+  integrity sha512-kig+rMn/QOVRvr7c86gQ8lWXq+Hkv6CbAH1hLu+RG338StTpE8Z0b44SDVaqVu7HGKf27frdmUYEs9hTUX/cLQ==
 
 human-signals@^2.1.0:
   version "2.1.0"
@@ -3145,9 +3145,9 @@ kind-of@^6.0.2:
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
 kolmafia@^5.28591.0:
-  version "5.28591.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.28591.0.tgz#c73ab814843a1213be4163df11eb90ed2de89620"
-  integrity sha512-9TGUYaipWtbuPmOYJOSG0F+7QU6dbuBGNNiNOIRaESKgpWNIAduhrJ1jLoJcbGmPRfFjalDa8nb3G83VI5mczg==
+  version "5.28725.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.28725.0.tgz#b4699c3b1bdb790d15ef0f127370041c4b8feb65"
+  integrity sha512-dPkZ1D0OOK20cMwsIYDKHU1/3ADy89k4rNfQRfyu3WAib3N2SWxoEA5/ohjyN1WnZ1U8aZ08GjwCr/WFL3m9dg==
 
 kuler@^2.0.0:
   version "2.0.0"

@@ -9,10 +9,8 @@ import {
   getCampground,
   getClanLounge,
   getClanName,
-  getWorkshed,
   guildStoreAvailable,
   handlingChoice,
-  haveEffect,
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
@@ -57,7 +55,6 @@ import {
   $skills,
   $stat,
   AprilingBandHelmet,
-  AsdonMartin,
   CombatLoversLocket,
   get,
   getTodaysHolidayWanderers,
@@ -97,6 +94,11 @@ export function postRunQuests(): Task[] {
       do: () => cliExecute(`/whitelist ${args.clan}`),
     },
     {
+      name: "Set Garbo Pref",
+      completed: () => get("_garbo_beSelfish",false),
+      do: () => set("_garbo_beSelfish",true),
+    },
+    {
       name: "Breakfast",
       completed: () => get("breakfastCompleted"),
       do: () => cliExecute("breakfast"),
@@ -115,21 +117,6 @@ export function postRunQuests(): Task[] {
       runChoice(1, `request=radio`);
       },
       limit: { tries: 3 },
-    },
-    {
-      name: "Mobius Seed",
-      // eslint-disable-next-line libram/verify-constants
-      ready: () => have($item`Möbius ring`),
-      completed: () => get("_mobiusSeeded", false),
-      prepare: () => {
-        // eslint-disable-next-line libram/verify-constants
-        equip($item`Möbius ring`),
-        equip($item`Greatest American Pants`)
-      },
-      do: () => $location`Noob Cave`,
-      combat: new CombatStrategy().macro(Macro.runaway()),
-      post: () => set("_mobiusSeeded", true),
-      tracking: "Farming Prep"
     },
     {
       name: "Harvest Garden",
@@ -161,26 +148,6 @@ export function postRunQuests(): Task[] {
       do: () =>
         // eslint-disable-next-line libram/verify-constants
         use($item`S.I.T. Course Completion Certificate`),
-    },
-    {
-      name: "Drive Observantly",
-      completed: () =>
-        get("dailyDungeonDone") ||
-        getWorkshed() !== $item`Asdon Martin keyfob (on ring)` ||
-        haveEffect($effect`Driving Observantly`) >=
-          (totallyDrunk() || !have($item`Drunkula's wineglass`)
-            ? myAdventures()
-            : myAdventures() + 60),
-      do: () =>
-        AsdonMartin.drive(
-          $effect`Driving Observantly`,
-          totallyDrunk() || !have($item`Drunkula's wineglass`)
-            ? myAdventures()
-            : myAdventures() + 60,
-          false,
-        ),
-      limit: { tries: 5 },
-      tracking: "Other"
     },
     {
       name: "Restore HP",

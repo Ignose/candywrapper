@@ -1,18 +1,19 @@
 import {
   cliExecute,
+  equip,
   handlingChoice,
   myAdventures,
   myDaycount,
   runChoice,
   visitUrl,
 } from "kolmafia";
-import { $class, $item, $path, ascend, CursedMonkeyPaw, have } from "libram";
+import { $class, $item, $path, $skill, $skills, ascend, CursedMonkeyPaw, have } from "libram";
 
 import { args } from "../args";
 
 import { targetPerms } from "./perm";
 import { Quest } from "./structure";
-import { toMoonSign, totallyDrunk } from "./utils";
+import { availableCasts, castDownTo, toMoonSign, totallyDrunk } from "./utils";
 
 const skipPizza = args.cs || args.smol ? false : true
 
@@ -22,6 +23,17 @@ export function AscendQuest(): Quest {
     ready: () => myAdventures() === 0 && totallyDrunk(),
     completed: () => myDaycount() === 1,
     tasks: [
+      {
+        name: "Spend them stats grrrrl",
+        completed: () =>  availableCasts($skill`BCZ: Prepare Spinal Tapas`,0) === 0 &&
+          availableCasts($skill`BCZ: Craft a Pheromone Cocktail`,0) === 0 &&
+          availableCasts($skill`BCZ: Create Blood Thinner`,0) === 0,
+        do: () =>  {
+          equip($item`blood cubic zirconia`);
+          $skills`BCZ: Prepare Spinal Tapas, BCZ: Craft a Pheromone Cocktail, BCZ: Create Blood Thinner`.forEach((sk) => castDownTo(sk, 0));
+        },
+        tracking: "Other"
+      },
       {
         name: "Do the Ascension",
         ready: () =>

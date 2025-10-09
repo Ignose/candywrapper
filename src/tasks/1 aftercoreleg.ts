@@ -400,9 +400,6 @@ export function AftercoreQuest(): Quest {
           have($item`mini kiwi intoxicating spirits`) &&
           have($item`incredible mini-pizza`),
         do: (): void => {
-          if(args.ih8uscript.includes("speed")) {
-            retrieveItem($item`Boris's key lime pie`)
-          }
           retrieveItem($item`mini kiwi invisible dirigible`);
           retrieveItem($item`mini kiwi digitized cookies`);
           retrieveItem($item`mini kiwi intoxicating spirits`);
