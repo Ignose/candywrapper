@@ -52,8 +52,10 @@ import { args } from "../args";
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
 import { Quest } from "./structure";
 import {
+  availableCasts,
   backstageItemsDone,
   bestFam,
+  castDownTo,
   doneAdventuring,
   haveAll,
   maxBase,

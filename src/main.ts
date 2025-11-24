@@ -7,8 +7,8 @@ import { AftercoreQuest } from "./tasks/1 aftercoreleg";
 import { AscendQuest } from "./tasks/2 ascend";
 import { RunQuests } from "./tasks/3 runleg";
 import { PostRunQuests } from "./tasks/4 postrunleg";
-import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
-import { itemPriceValue } from "./tasks/cluedin";
+import { castDownTo, deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
+import { $skill } from "libram";
 
 const version = "0.0.3";
 
@@ -22,7 +22,7 @@ export function main(command?: string): void {
   }
 
   if (args.test) {
-    itemPriceValue();
+    castDownTo($skill`BCZ: Sweat Equity`, 100);
   }
 
   if (dontCS && args.halloween && args.cs) {

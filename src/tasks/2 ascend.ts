@@ -25,6 +25,7 @@ export function AscendQuest(): Quest {
     tasks: [
       {
         name: "Spend them stats grrrrl",
+        ready: () => have($item`blood cubic zirconia`),
         completed: () =>  availableCasts($skill`BCZ: Prepare Spinal Tapas`,0) === 0 &&
           availableCasts($skill`BCZ: Craft a Pheromone Cocktail`,0) === 0 &&
           availableCasts($skill`BCZ: Create Blood Thinner`,0) === 0,
