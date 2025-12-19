@@ -23,6 +23,7 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
+  runChoice,
   setProperty,
   toBoolean,
   use,
@@ -52,10 +53,8 @@ import { args } from "../args";
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
 import { Quest } from "./structure";
 import {
-  availableCasts,
   backstageItemsDone,
   bestFam,
-  castDownTo,
   doneAdventuring,
   haveAll,
   maxBase,
@@ -428,7 +427,15 @@ export function PostRunQuests(): Quest {
         name: "Nightcap",
         ready: () => doneAdventuring(),
         completed: () => totallyDrunk(),
-        do: () => cliExecute("CONSUME NIGHTCAP"),
+        do: () =>   {
+          if($familiar`Cooler Yeti`.experience >= 400) {
+            useFamiliar($familiar`Cooler Yeti`);
+            visitUrl("main.php?talktoyeti=1", false);
+            runChoice(2);
+            useFamiliar($familiar`Stooper`);
+          }
+          cliExecute("CONSUME NIGHTCAP");
+        },
         tracking: "Rollover Prep"
       },
       {

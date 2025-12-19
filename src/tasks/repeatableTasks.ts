@@ -413,9 +413,6 @@ export function preRunQuests(): Task[] {
   ];
 }
 
-let garboDone1 = false;
-let garboDone2 = false;
-
 export function noBarf(): Task[] {
   return [
     {
@@ -472,15 +469,9 @@ export function noBarf(): Task[] {
     {
       name: "Garbo Nobarf",
       ready: () => holiday().includes("Halloween") || args.crimbo || args.chrono,
-      completed: () => (myDaycount() > 1 && garboDone1) ||
-        (myDaycount() === 1 && garboDone2),
+      completed: () => ((myInebriety() > inebrietyLimit()) || (get("_monsterHabitatsRecalled") >=3 && get("_macrometeoriteUses") >= 10)),
       do: (): void => {
-        cliExecute(`garbo nodiet nobarf target="witchess knight"`);
-        if(myDaycount() > 1) {
-          garboDone1 = true;
-        } else {
-          garboDone2 = true;
-        }
+        cliExecute(`garbo nodiet nobarf target="sausage goblin"`);
       },
       tracking: "Garbo"
     },
@@ -571,7 +562,11 @@ export function crimbo(): Task[] {
     {
       name: "Crimbo Time",
       ready: () => args.crimbo,
-      completed: () => myAdventures() === 0 && myInebriety() >= inebrietyLimit(),
+      completed: () =>  {
+        if (myDaycount() === 1)
+          return myAdventures() === 0 || myInebriety() > inebrietyLimit()
+        else return myAdventures() === 0
+      },
       prepare: () => uneffect($effect`Beaten Up`),
       do: (): void => {
         cliExecute(`${args.crimboscript}`);
@@ -591,7 +586,7 @@ export function crimbo(): Task[] {
     {
       name: "Crimbo Drunk",
       ready: () => args.crimbo && myDaycount() > 1,
-      completed: () => myAdventures() === 0,
+      completed: () => myAdventures() === 0 || myDaycount() === 1,
       prepare: () => uneffect($effect`Beaten Up`),
       do: (): void => {
         cliExecute(`${args.crimboscript}`);

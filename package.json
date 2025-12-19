@@ -16,7 +16,7 @@
     "build": "^0.1.4",
     "grimoire-kolmafia": "^0.3.25",
     "kolmafia": "^5.28591.0",
-    "libram": "^0.11.9",
+    "libram": "^0.11.14",
     "mafia-shared-relay": "0.0.7",
     "webpack": "^5.89.0"
   },
@@ -37,7 +37,7 @@
     "esbuild-plugin-babel": "^0.2.3",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-libram": "^0.4.24",
+    "eslint-plugin-libram": "^0.4.34",
     "eslint-plugin-prettier": "^5.0.0",
     "prettier": "^3.0.0",
     "typescript": "^5.1.6",

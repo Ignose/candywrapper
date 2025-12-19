@@ -2,6 +2,7 @@ import { CombatStrategy } from "grimoire-kolmafia";
 import {
   buy,
   cliExecute,
+  daycount,
   getWorkshed,
   haveEquipped,
   hippyStoneBroken,
@@ -19,6 +20,7 @@ import {
   restoreHp,
   restoreMp,
   retrieveItem,
+  runChoice,
   toBoolean,
   use,
   useFamiliar,
@@ -216,7 +218,7 @@ export function AftercoreQuest(): Quest {
         name: "Barfing Drunk with Stooper",
         ready: () =>
           stooperDrunk() && have($familiar`Stooper`) && !have($item`Drunkula's wineglass`),
-        completed: () => myAdventures() === 0 || totallyDrunk(),
+        completed: () => myAdventures() === 0 || totallyDrunk() || daycount() === 1,
         acquire: [{ item: $item`seal tooth` }],
         outfit: () => ({
           familiar: $familiar`Stooper`,
@@ -253,7 +255,15 @@ export function AftercoreQuest(): Quest {
         name: "Nightcap (Wine Glass)",
         ready: () => have($item`Drunkula's wineglass`),
         completed: () => totallyDrunk(),
-        do: () => cliExecute(`CONSUME NIGHTCAP VALUE ${get("valueOfAdventure") - 1000}`),
+        do: () => {
+          if($familiar`Cooler Yeti`.experience >= 400) {
+            useFamiliar($familiar`Cooler Yeti`);
+            visitUrl("main.php?talktoyeti=1", false);
+            runChoice(2);
+            useFamiliar($familiar`Stooper`);
+          }
+          cliExecute(`CONSUME NIGHTCAP VALUE ${get("valueOfAdventure") - 1000}`);
+        },
         tracking: "Organs"
       },
       {
