@@ -23,18 +23,47 @@ export const args = Args.create(
     }),
     cs: Args.flag({
       help: "Ascend into and run CS.",
+      default: false,
       setting: "",
     }),
     smol: Args.flag({
       help: "Ascend into and run smol.",
+      default: false,
       setting: "",
     }),
     casual: Args.flag({
       help: "Ascend into and run casual.",
+      default: false,
       setting: "",
     }),
     robot: Args.flag({
       help: "Ascend into and run You, Robot.",
+      default: false,
+      setting: "",
+    }),
+    zooto: Args.flag({
+      help: "Ascend into and run Zootomist",
+      default: false,
+      setting: "",
+    }),
+    ih8u: Args.flag({
+      help: "Ascend into and run 11 Things I Hate About U",
+      default: false,
+      setting: "",
+    }),
+    crimbo: Args.flag({
+      help: "Farm Crimbo instead of Garbo",
+      default: false,
+      setting: "",
+    }),
+    chrono: Args.flag({
+      help: "Farm TTT instead of Garbo",
+      default: false,
+      setting: "",
+    }),
+    ween: Args.flag({
+      help: "Run Halloween instead of Garbo",
+      default: false,
       setting: "",
     }),
 
@@ -122,6 +151,10 @@ export const args = Args.create(
       help: "The command that will do your You, Robot run for you. Include any arguments desired.",
       default: "",
     }),
+    ih8uscript: Args.string({
+      help: "The command that will do your You, Robot run for you. Include any arguments desired.",
+      default: "",
+    }),
     pulls: Args.items({
       help: "A list of items to pull at the start of the smol run.",
       default: [
@@ -139,6 +172,14 @@ export const args = Args.create(
       help: `The command that will be used to diet and use all your adventures in Day 2 aftercore.`,
       default: "garbo ascend",
     }),
+    crimboscript: Args.string({
+      help: `The command that will be used to run a crimbo farming script - note that if no script is provided, we will default to garbo`,
+      default: "",
+    }),
+    chronoscript: Args.string({
+      help: `The command that will be used to run a TTT farming script - note that if no script is provided, we will default to garbo`,
+      default: "",
+    }),
     itemcleanup: Args.string({
       help: `The script that will be used to mallsale items after a run`,
       default: "",
@@ -151,5 +192,9 @@ export const args = Args.create(
       help: "Define a specific monster for Garbo to target; note that the wrapper will find something useful for you!",
       default: "",
     }),
+    test: Args.flag({
+      help: "test",
+      default: false
+    })
   },
 );

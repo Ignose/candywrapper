@@ -7,6 +7,7 @@ import {
   handleApiRequest,
   RelayPage,
 } from "mafia-shared-relay";
+
 import { args } from "./args";
 
 function convertArgsToHtml(): RelayPage[] {
@@ -40,7 +41,7 @@ function convertArgsToHtml(): RelayPage[] {
     },
     (group, name: string) => {
       pages.push({ page: name, components: [] });
-    }
+    },
   );
 
   pages
@@ -48,9 +49,7 @@ function convertArgsToHtml(): RelayPage[] {
     .forEach((p) => {
       const html: ComponentHtml = {
         type: "html",
-        data: `<h1 style="text-align: center;">CandyWrapper ${
-          p.page
-        }</div>`,
+        data: `<h1 style="text-align: center;">CandyWrapper ${p.page}</div>`,
       };
       p.components.splice(0, 0, html);
     });
@@ -61,7 +60,5 @@ function convertArgsToHtml(): RelayPage[] {
 export function main() {
   if (handleApiRequest()) return;
 
-  write(
-    generateHTML(convertArgsToHtml())
-  );
+  write(generateHTML(convertArgsToHtml()));
 }

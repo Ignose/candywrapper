@@ -1,18 +1,21 @@
 import {
   cliExecute,
+  equip,
   handlingChoice,
   myAdventures,
   myDaycount,
   runChoice,
   visitUrl,
 } from "kolmafia";
-import { $class, $item, $path, ascend, CursedMonkeyPaw, have } from "libram";
+import { $class, $item, $path, $skill, $skills, ascend, CursedMonkeyPaw, have } from "libram";
 
 import { args } from "../args";
 
 import { targetPerms } from "./perm";
 import { Quest } from "./structure";
-import { toMoonSign, totallyDrunk } from "./utils";
+import { availableCasts, castDownTo, toMoonSign, totallyDrunk } from "./utils";
+
+const skipPizza = args.cs || args.smol ? false : true
 
 export function AscendQuest(): Quest {
   return {
@@ -21,11 +24,24 @@ export function AscendQuest(): Quest {
     completed: () => myDaycount() === 1,
     tasks: [
       {
+        name: "Spend them stats grrrrl",
+        ready: () => have($item`blood cubic zirconia`),
+        completed: () =>  availableCasts($skill`BCZ: Prepare Spinal Tapas`,0) === 0 &&
+          availableCasts($skill`BCZ: Craft a Pheromone Cocktail`,0) === 0 &&
+          availableCasts($skill`BCZ: Create Blood Thinner`,0) === 0,
+        do: () =>  {
+          equip($item`blood cubic zirconia`);
+          $skills`BCZ: Prepare Spinal Tapas, BCZ: Craft a Pheromone Cocktail, BCZ: Create Blood Thinner`.forEach((sk) => castDownTo(sk, 0));
+        },
+        tracking: "Other"
+      },
+      {
         name: "Do the Ascension",
         ready: () =>
-          have($item`Pizza of Legend`) &&
+          (have($item`Pizza of Legend`) &&
           have($item`Deep Dish of Legend`) &&
-          have($item`Calzone of Legend`),
+          have($item`Calzone of Legend`)) ||
+          skipPizza,
         completed: () => myDaycount() === 1, //Change this
         do: (): void => {
           const [skills, permLifestyle] = targetPerms();
@@ -41,6 +57,10 @@ export function AscendQuest(): Quest {
             ? $path.none
             : args.robot
             ? $path`You, Robot`
+            : args.zooto
+            ? $path`Z is for Zootomist`
+            : args.ih8u
+            ? $path`11 Things I Hate About U`
             : undefined;
           const lifestyle = args.casual ? 1 : 2;
 
@@ -57,7 +77,7 @@ export function AscendQuest(): Quest {
 
           ascend({
             path: path,
-            playerClass: myClass,
+            playerClass: args.zooto ? $class`Zootomist` : myClass,
             lifestyle: lifestyle,
             moon: moonsign,
             consumable: $item`astral six-pack`,
