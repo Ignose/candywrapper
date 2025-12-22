@@ -22,6 +22,7 @@ import {
   myFamiliar,
   myFullness,
   myInebriety,
+  myName,
   myPrimestat,
   mySpleenUse,
   outfitPieces,
@@ -279,7 +280,7 @@ export interface Kmail {
 }
 
 export function notifyVoters(): void {
-  if (get("_kmailSentToday").includes("true")) return;
+  if (get("_kmailSentToday").includes("true") || myName() !== 'seraphiii') return;
 
   const recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline", "Lucasyeo"];
 
