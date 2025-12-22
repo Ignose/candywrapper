@@ -8773,7 +8773,7 @@ function backstageItemsDone() {
   return (lib_have(template_string_$item(utils_templateObject35 || (utils_templateObject35 = utils_taggedTemplateLiteral(["giant marshmallow"])))) ? 1 : 0) + (lib_have(template_string_$item(utils_templateObject36 || (utils_templateObject36 = utils_taggedTemplateLiteral(["beer-scented teddy bear"])))) ? 1 : 0) + (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(utils_templateObject37 || (utils_templateObject37 = utils_taggedTemplateLiteral(["gin-soaked blotter paper"])))) >= 2 && (lib_have(template_string_$item(utils_templateObject38 || (utils_templateObject38 = utils_taggedTemplateLiteral(["booze-soaked cherry"])))) ? 1 : 0) + (lib_have(template_string_$item(utils_templateObject39 || (utils_templateObject39 = utils_taggedTemplateLiteral(["comfy pillow"])))) ? 1 : 0) + (0,external_kolmafia_namespaceObject.itemAmount)(template_string_$item(utils_templateObject40 || (utils_templateObject40 = utils_taggedTemplateLiteral(["sponge cake"])))) >= 2;
 }
 function notifyVoters() {
-  if (property_get("_kmailSentToday").includes("true")) return;
+  if (property_get("_kmailSentToday").includes("true") || (0,external_kolmafia_namespaceObject.myName)() !== 'seraphiii') return;
   var recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline", "Lucasyeo"];
   var message = "Voter Monster Today is ".concat(property_get("_voteMonster"));
   recipients.forEach(recipient => {
