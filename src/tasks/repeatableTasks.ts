@@ -469,7 +469,7 @@ export function noBarf(): Task[] {
     {
       name: "Garbo Nobarf",
       ready: () => holiday().includes("Halloween") || args.crimbo || args.chrono,
-      completed: () => ((myInebriety() > inebrietyLimit()) || (get("_monsterHabitatsRecalled") >=3 && get("_macrometeoriteUses") >= 10)),
+      completed: () => ((myInebriety() > inebrietyLimit()) || (get("_monsterHabitatsRecalled") >=3)),
       do: (): void => {
         cliExecute(`garbo nodiet nobarf target="sausage goblin"`);
       },

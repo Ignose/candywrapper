@@ -13,7 +13,8 @@ import { args } from "../args";
 
 import { targetPerms } from "./perm";
 import { Quest } from "./structure";
-import { availableCasts, castDownTo, toMoonSign, totallyDrunk } from "./utils";
+import { toMoonSign, totallyDrunk } from "./utils";
+import { availableCasts, castDownTo } from "libram/dist/resources/2025/BloodCubicZirconia";
 
 const skipPizza = args.cs || args.smol ? false : true
 
