@@ -165,16 +165,6 @@ export function AftercoreQuest(): Quest {
         tracking: "Workshed"
       },
       {
-        name: "Pre-Run Photobooth",
-        ready: () => have($item`Clan VIP Lounge key`) && get("_photoBoothEquipment", 0) === 0,
-        completed: () => get("_photoBoothEquipment", 0) >= 3,
-        do: () => {
-          cliExecute("photobooth item fake arrow-through-the-head");
-          cliExecute("photobooth item oversized monocle on a stick");
-          cliExecute("photobooth item feather boa");
-        },
-      },
-      {
         name: "PvP Closet Safety 1",
         ready: () => args.pvp && get("autoSatisfyWithCloset") && !args.safepvp,
         completed: () => toBoolean(get("_safetyCloset1")),

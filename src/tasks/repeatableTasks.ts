@@ -34,7 +34,6 @@ import {
   spleenLimit,
   storageAmount,
   takeStorage,
-  toInt,
   toItem,
   toSkill,
   use,
@@ -327,19 +326,6 @@ export function postRunQuests(): Task[] {
       },
       limit: { tries: 5 },
     },
-    {
-      name: "Candy Deviler",
-      // eslint-disable-next-line libram/verify-constants
-      ready: () => have($item`candy egg deviler`),
-      completed: () => toInt(get("_candyEggsDeviled")) >= 3,
-      do: () => {
-        visitUrl(`inventory.php?action=eggdevil&pwd`);
-        visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-        visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-        visitUrl("choice.php?a=3054&whichchoice=1544&option=1&pwd");
-      },
-      tracking: "Garbo"
-    },
   ];
 }
 
@@ -422,7 +408,7 @@ export function noBarf(): Task[] {
         myFullness() >= fullnessLimit() &&
         mySpleenUse() >= spleenLimit() &&
         myInebriety() >= inebrietyLimit(),
-      do: () => cliExecute("consume ALL"),
+      do: () => cliExecute("CONSUME ALL"),
       tracking: "Organs"
     },
     {
