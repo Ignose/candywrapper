@@ -2,7 +2,7 @@ import { CombatResources, CombatStrategy, Engine } from "grimoire-kolmafia";
 import { cliExecute, equippedAmount, Location, logprint, setAutoAttack, writeCcs } from "kolmafia";
 import { $item, clearMaximizerCache, get, JuneCleaver, PropertiesManager } from "libram";
 
-import { getCurrentLeg, Task } from "../tasks/structure";
+import { getCurrentLeg, Task } from "../structure";
 
 import { printProfits, ProfitTracker } from "./profits";
 

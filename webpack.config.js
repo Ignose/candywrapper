@@ -58,7 +58,7 @@ const entry = merge(
       path: path.resolve(__dirname, "KoLmafia", "scripts", packageData.name),
     },
   },
-  shared
+  shared,
 );
 
 const relay = merge(
@@ -72,7 +72,7 @@ const relay = merge(
       path: path.resolve(__dirname, "KoLmafia", "relay"),
     },
   },
-  shared
+  shared,
 );
 
 module.exports = [entry, relay];

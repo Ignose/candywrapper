@@ -51,7 +51,7 @@ import {
 import { args } from "../args";
 
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import {
   backstageItemsDone,
   bestFam,
@@ -69,13 +69,14 @@ const sasqBonus = (0.5 * 30 * 1000) / get("valueOfAdventure");
 const ratskinBonus = (0.3 * 40 * 1000) / get("valueOfAdventure");
 
 const checkMelange = () =>
-  get("valueOfAdventure") * 45 > mallPrice($item`spice melange`) &&
+  get("valueOfAdventure") * 7 * 6 > mallPrice($item`spice melange`) &&
   !have($item`designer sweatpants`);
 
 export function PostRunQuests(): Quest {
   return {
     name: "Post-Run Aftercore",
-    ready: () => (myDaycount() === 1 || (myDaycount() === 2 && args.zooto)) && get("kingLiberated", false),
+    ready: () =>
+      (myDaycount() === 1 || (myDaycount() === 2 && args.zooto)) && get("kingLiberated", false),
     completed: () => totallyDrunk() && pajamas,
     tasks: [
       {
@@ -92,7 +93,7 @@ export function PostRunQuests(): Quest {
           uneffect($effect`Citizen of a Zone`);
           cliExecute(`set _citizenZone = ""`);
         },
-        tracking: "Other"
+        tracking: "Other",
       },
       {
         name: "Ensure prefs reset",
@@ -103,13 +104,13 @@ export function PostRunQuests(): Quest {
         name: "But dad I don't want to feel lost",
         completed: () => !have($effect`Feeling Lost`),
         do: () => uneffect($effect`Feeling Lost`),
-        tracking: "Other"
+        tracking: "Other",
       },
       {
         name: "Hey kids, let's take a trip to the beach",
         completed: () => have($item`bitchin' meatcar`) || have($item`Desert Bus pass`),
         do: () => cliExecute("acquire bitchin"),
-        tracking: "Other"
+        tracking: "Other",
       },
       {
         name: "Sober Up",
@@ -130,7 +131,7 @@ export function PostRunQuests(): Quest {
             use($item`cuppa Sobrie tea`);
           }
         },
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "PvP Closet Safety 1",
@@ -151,7 +152,7 @@ export function PostRunQuests(): Quest {
           if (have($item`astral six-pack`)) use($item`astral six-pack`);
         },
         do: () => drink(1, $item`astral pilsner`),
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "Moon Spoon",
@@ -170,7 +171,7 @@ export function PostRunQuests(): Quest {
         choices: { 1430: 3, 606: 4, 610: 1, 1056: 1 },
         do: $location`A-Boo Peak`,
         outfit: { modifier: "initiative 40 min 40 max, -tie" },
-        tracking: "Other"
+        tracking: "Other",
       },
       {
         name: "Emergency Drink",
@@ -184,12 +185,15 @@ export function PostRunQuests(): Quest {
             drink(1, $item`astral pilsner`);
           }
         },
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "Emergency Drink Part 2",
         ready: () => myAdventures() === 0 && myInebriety() < 11,
-        completed: () => myAdventures() > 0 || myInebriety() >= 11 || (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
+        completed: () =>
+          myAdventures() > 0 ||
+          myInebriety() >= 11 ||
+          (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
         prepare: () => {
           if (have($item`astral six-pack`)) use($item`astral six-pack`);
         },
@@ -200,7 +204,7 @@ export function PostRunQuests(): Quest {
           }
         },
         limit: { tries: 6 },
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "Laugh Floor",
@@ -241,7 +245,7 @@ export function PostRunQuests(): Quest {
             .repeat(),
         ),
         limit: { tries: 15 },
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Infernal Rackets Backstage",
@@ -280,7 +284,7 @@ export function PostRunQuests(): Quest {
             .repeat(),
         ),
         limit: { tries: 15 },
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Mourn",
@@ -293,7 +297,7 @@ export function PostRunQuests(): Quest {
           equip: $items`hilarious comedy prop, observational glasses, Victor\, the Insult Comic Hellhound Puppet`,
         },
         do: () => cliExecute("panda comedy insult; panda comedy observe"),
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Sven Golly",
@@ -320,7 +324,7 @@ export function PostRunQuests(): Quest {
           );
           cliExecute(`panda arena Jim ${$items`comfy pillow, sponge cake`.find((a) => have(a))}`);
         },
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Moaning Panda",
@@ -337,26 +341,29 @@ export function PostRunQuests(): Quest {
           })),
         do: () => cliExecute("panda moan"),
         limit: { tries: 3 },
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Steel Margarita",
         ready: () => haveAll($items`Azazel's tutu, Azazel's lollipop, Azazel's unicorn`),
         completed: () => have($skill`Liver of Steel`) || have($item`steel margarita`),
         do: () => cliExecute("panda temple"),
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Liver of Steel",
         ready: () => have($item`steel margarita`),
         completed: () => have($skill`Liver of Steel`),
         do: () => drink(1, $item`steel margarita`),
-        tracking: "Steel Organ"
+        tracking: "Steel Organ",
       },
       {
         name: "Emergency Drink Part 3",
         ready: () => myAdventures() < 40 && myInebriety() < 11,
-        completed: () => myAdventures() > 40 || myInebriety() >= 11|| (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
+        completed: () =>
+          myAdventures() > 40 ||
+          myInebriety() >= 11 ||
+          (!have($item`astral pilsner`) && !have($item`astral six-pack`)),
         prepare: () => {
           if (have($item`astral six-pack`)) use($item`astral six-pack`);
         },
@@ -367,7 +374,7 @@ export function PostRunQuests(): Quest {
           }
         },
         limit: { tries: 6 },
-        tracking: "Organs"
+        tracking: "Organs",
       },
       ...postRunQuests(),
       ...noBarf(),
@@ -421,14 +428,14 @@ export function PostRunQuests(): Quest {
           useFamiliar($familiar`Stooper`);
           cliExecute("drink stillsuit distillate");
         },
-        tracking: "Rollover Prep"
+        tracking: "Rollover Prep",
       },
       {
         name: "Nightcap",
         ready: () => doneAdventuring(),
         completed: () => totallyDrunk(),
-        do: () =>   {
-          if($familiar`Cooler Yeti`.experience >= 400) {
+        do: () => {
+          if ($familiar`Cooler Yeti`.experience >= 400) {
             useFamiliar($familiar`Cooler Yeti`);
             visitUrl("main.php?talktoyeti=1", false);
             runChoice(2);
@@ -436,7 +443,7 @@ export function PostRunQuests(): Quest {
           }
           cliExecute("CONSUME NIGHTCAP");
         },
-        tracking: "Rollover Prep"
+        tracking: "Rollover Prep",
       },
       {
         name: "Smoke em if you got em",
@@ -453,7 +460,7 @@ export function PostRunQuests(): Quest {
             smoke = smoke + 1;
           }
         },
-        tracking: "Community Service"
+        tracking: "Community Service",
       },
       {
         name: "Offhand Remarkable",
@@ -463,7 +470,7 @@ export function PostRunQuests(): Quest {
           have($effect`Offhand Remarkable`) ||
           get("_aug13Cast", false),
         do: () => useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
-        tracking: "Rollover Prep"
+        tracking: "Rollover Prep",
       },
       {
         name: "PvP Closet Safety 3",
@@ -490,7 +497,7 @@ export function PostRunQuests(): Quest {
           use($item`TakerSpace letter of Marque`);
           visitUrl("campground.php?action=workshed");
         },
-        tracking: "Workshed"
+        tracking: "Workshed",
       },
       {
         name: "Pajamas",
@@ -514,7 +521,7 @@ export function PostRunQuests(): Quest {
             args.pvp ? ", 0.3 fites" : ""
           }`,
         }),
-        tracking: "Rollover Prep"
+        tracking: "Rollover Prep",
       },
       {
         name: "Alert-No Nightcap",

@@ -49,11 +49,11 @@ import {
 import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/TrainSet";
 
 import { args } from "../args";
+import { garboValue } from "../engine/profits";
 
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
-import { garboValue } from "../engine/profits";
 
 const RESOURCES = ["Spice", "Rum", "Anchor", "Mast", "Silk", "Gold"] as const;
 export type Resource = (typeof RESOURCES)[number];
@@ -83,9 +83,7 @@ const RECIPES = new Map<Item, Recipe>([
  * @returns A copy of our map of all recipes
  */
 export function allRecipes(): Map<Item, Recipe> {
-  return new Map(
-    [...RECIPES.entries()].map(([item, recipe]) => [item, [...recipe]]),
-  );
+  return new Map([...RECIPES.entries()].map(([item, recipe]) => [item, [...recipe]]));
 }
 
 export function affordableRecipes(): Item[] {
@@ -155,14 +153,15 @@ export function AftercoreQuest(): Quest {
     tasks: [
       {
         name: "Takerspace",
-        ready: () => getWorkshed() === $item`TakerSpace letter of Marque` && !get("_workshedItemUsed"),
+        ready: () =>
+          getWorkshed() === $item`TakerSpace letter of Marque` && !get("_workshedItemUsed"),
         completed: () => getWorkshed() === $item`model train set`,
         do: () => {
           visitUrl("campground.php?action=workshed");
-          takerSpaceOptimizer()
+          takerSpaceOptimizer();
           use($item`model train set`);
         },
-        tracking: "Workshed"
+        tracking: "Workshed",
       },
       {
         name: "PvP Closet Safety 1",
@@ -239,14 +238,14 @@ export function AftercoreQuest(): Quest {
               .repeat(),
           ),
         limit: { tries: 30 },
-        tracking: "Garbo"
+        tracking: "Garbo",
       },
       {
         name: "Nightcap (Wine Glass)",
         ready: () => have($item`Drunkula's wineglass`),
         completed: () => totallyDrunk(),
         do: () => {
-          if($familiar`Cooler Yeti`.experience >= 400) {
+          if ($familiar`Cooler Yeti`.experience >= 400) {
             useFamiliar($familiar`Cooler Yeti`);
             visitUrl("main.php?talktoyeti=1", false);
             runChoice(2);
@@ -254,14 +253,14 @@ export function AftercoreQuest(): Quest {
           }
           cliExecute(`CONSUME NIGHTCAP VALUE ${get("valueOfAdventure") - 1000}`);
         },
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "Nightcap (Marginal)",
         ready: () => have($item`Beach Comb`) || have($item`Map to Safety Shelter Grimace Prime`),
         completed: () => totallyDrunk(),
         do: () => cliExecute(`CONSUME NIGHTCAP VALUE 500`),
-        tracking: "Organs"
+        tracking: "Organs",
       },
       {
         name: "Grimace Maps",
@@ -269,19 +268,21 @@ export function AftercoreQuest(): Quest {
         completed: () => myAdventures() === 0 || !have($item`Map to Safety Shelter Grimace Prime`),
         do: () => cliExecute("grimace maps"),
         limit: { tries: 30 },
-        tracking: "Bonus"
+        tracking: "Bonus",
       },
       {
         name: "Trip Scrip",
         ready: () => args.ih8u || args.smol || args.casual,
-        completed: () => have($item`Shore Inc. Ship Trip Scrip`) || myInebriety() > inebrietyLimit(),
+        completed: () =>
+          have($item`Shore Inc. Ship Trip Scrip`) || myInebriety() > inebrietyLimit(),
         do: $location`The Shore, Inc. Travel Agency`,
         outfit: () => {
           if (!get("candyCaneSwordShore")) return { equip: $items`candy cane sword cane` };
           else return {};
         },
         choices: () => {
-          const swordReady = haveEquipped($item`candy cane sword cane`) && !get("candyCaneSwordShore");
+          const swordReady =
+            haveEquipped($item`candy cane sword cane`) && !get("candyCaneSwordShore");
           const statChoice = byStat({
             Muscle: 1,
             Mysticality: 2,
@@ -290,7 +291,7 @@ export function AftercoreQuest(): Quest {
           return { 793: swordReady ? 5 : statChoice };
         },
         limit: { tries: 1 },
-        tracking: "Trip Scrip"
+        tracking: "Trip Scrip",
       },
       {
         name: "Garbo (Drunk)",
@@ -316,7 +317,7 @@ export function AftercoreQuest(): Quest {
         ready: () => have($item`Beach Comb`),
         completed: () => myAdventures() === 0,
         do: () => cliExecute(`combo ${11 - get("_freeBeachWalksUsed") + myAdventures()}`),
-        tracking: "Combo"
+        tracking: "Combo",
       },
       {
         name: "Turn in FunFunds",
@@ -360,7 +361,7 @@ export function AftercoreQuest(): Quest {
               "acquire Pizza of Legend; acquire Frosty's frosty mug; acquire Ol' Scratch's salad fork",
             );
         },
-        tracking: "Ascension Prep"
+        tracking: "Ascension Prep",
       },
       {
         name: "Marble Soda!",
@@ -374,7 +375,7 @@ export function AftercoreQuest(): Quest {
             skipSoda = true;
           }
         },
-        tracking: "Ascension Prep"
+        tracking: "Ascension Prep",
       },
       {
         name: "Prepare for LoopCS",
@@ -389,7 +390,7 @@ export function AftercoreQuest(): Quest {
           !have($item`Calzone of Legend`) ? retrieveItem($item`Calzone of Legend`) : undefined;
           !have($item`borrowed time`) ? retrieveItem($item`borrowed time`) : undefined;
         },
-        tracking: "Ascension Prep"
+        tracking: "Ascension Prep",
       },
       {
         name: "Prepare for IH8U",
@@ -405,7 +406,7 @@ export function AftercoreQuest(): Quest {
           retrieveItem($item`mini kiwi intoxicating spirits`);
           retrieveItem($item`incredible mini-pizza`);
         },
-        tracking: "Ascension Prep"
+        tracking: "Ascension Prep",
       },
       {
         name: "Let's do the trainset again",

@@ -8,15 +8,15 @@ import {
   visitUrl,
 } from "kolmafia";
 import { $class, $item, $path, $skill, $skills, ascend, CursedMonkeyPaw, have } from "libram";
+import { availableCasts, castDownTo } from "libram/dist/resources/2025/BloodCubicZirconia";
 
 import { args } from "../args";
 
 import { targetPerms } from "./perm";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import { toMoonSign, totallyDrunk } from "./utils";
-import { availableCasts, castDownTo } from "libram/dist/resources/2025/BloodCubicZirconia";
 
-const skipPizza = args.cs || args.smol ? false : true
+const skipPizza = args.cs || args.smol ? false : true;
 
 export function AscendQuest(): Quest {
   return {
@@ -27,21 +27,24 @@ export function AscendQuest(): Quest {
       {
         name: "Spend them stats grrrrl",
         ready: () => have($item`blood cubic zirconia`),
-        completed: () =>  availableCasts($skill`BCZ: Prepare Spinal Tapas`,0) === 0 &&
-          availableCasts($skill`BCZ: Craft a Pheromone Cocktail`,0) === 0 &&
-          availableCasts($skill`BCZ: Create Blood Thinner`,0) === 0,
-        do: () =>  {
+        completed: () =>
+          availableCasts($skill`BCZ: Prepare Spinal Tapas`, 0) === 0 &&
+          availableCasts($skill`BCZ: Craft a Pheromone Cocktail`, 0) === 0 &&
+          availableCasts($skill`BCZ: Create Blood Thinner`, 0) === 0,
+        do: () => {
           equip($item`blood cubic zirconia`);
-          $skills`BCZ: Prepare Spinal Tapas, BCZ: Craft a Pheromone Cocktail, BCZ: Create Blood Thinner`.forEach((sk) => castDownTo(sk, 0));
+          $skills`BCZ: Prepare Spinal Tapas, BCZ: Craft a Pheromone Cocktail, BCZ: Create Blood Thinner`.forEach(
+            (sk) => castDownTo(sk, 0),
+          );
         },
-        tracking: "Other"
+        tracking: "Other",
       },
       {
         name: "Do the Ascension",
         ready: () =>
           (have($item`Pizza of Legend`) &&
-          have($item`Deep Dish of Legend`) &&
-          have($item`Calzone of Legend`)) ||
+            have($item`Deep Dish of Legend`) &&
+            have($item`Calzone of Legend`)) ||
           skipPizza,
         completed: () => myDaycount() === 1, //Change this
         do: (): void => {

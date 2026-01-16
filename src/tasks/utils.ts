@@ -275,9 +275,17 @@ export interface Kmail {
 }
 
 export function notifyVoters(): void {
-  if (get("_kmailSentToday").includes("true") || myName() !== 'seraphiii') return;
+  if (get("_kmailSentToday").includes("true") || myName() !== "seraphiii") return;
 
-  const recipients = ["Datris", "ange1ade", "miroto1998", "tissen", "nannachi", "Mandoline", "Lucasyeo"];
+  const recipients = [
+    "Datris",
+    "ange1ade",
+    "miroto1998",
+    "tissen",
+    "nannachi",
+    "Mandoline",
+    "Lucasyeo",
+  ];
 
   const message = `Voter Monster Today is ${get("_voteMonster")}`;
 
@@ -443,9 +451,7 @@ export function pantogramReady(): boolean {
   const pantogramValue = 100 * myAdventures();
 
   const cloverPrice = Math.min(
-    ...$items`ten-leaf clover, disassembled clover`.map((item) =>
-      mallPrice(item),
-    ),
+    ...$items`ten-leaf clover, disassembled clover`.map((item) => mallPrice(item)),
   );
   if (cloverPrice + mallPrice($item`porquoise`) > pantogramValue) {
     return false;

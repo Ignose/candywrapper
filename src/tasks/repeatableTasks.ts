@@ -15,7 +15,6 @@ import {
   holiday,
   inebrietyLimit,
   lastChoice,
-  mallPrice,
   maximize,
   myAdventures,
   myClass,
@@ -27,15 +26,12 @@ import {
   myMaxhp,
   myPrimestat,
   mySpleenUse,
-  print,
   restoreHp,
   retrieveItem,
   runChoice,
   spleenLimit,
   storageAmount,
   takeStorage,
-  toItem,
-  toSkill,
   use,
   useFamiliar,
   useSkill,
@@ -44,7 +40,6 @@ import {
 import {
   $class,
   $effect,
-  $effects,
   $familiar,
   $item,
   $items,
@@ -66,22 +61,27 @@ import {
 
 import { args } from "../args";
 
-import { Task } from "./structure";
-import { getGarden, maxBase, nextCyberZone, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
-import { buskAt, findOptimalOutfitPower, reconstructOutfit } from "../beret";
-
-const bestFam = () =>
-  famCheck($familiar`Pocket Professor`)
-    ? $familiar`Pocket Professor`
-    : famCheck($familiar`Chest Mimic`)
-    ? $familiar`Chest Mimic`
-    : famCheck($familiar`Grey Goose`)
-    ? $familiar`Grey Goose`
-    : $familiar`Grey Goose`;
+import { Task } from "../structure";
+import {
+  getGarden,
+  maxBase,
+  pantogram,
+  pantogramReady,
+  stooperDrunk,
+  totallyDrunk,
+} from "./utils";
 
 function famCheck(fam: Familiar): boolean {
   return have(fam) && fam.experience < 400;
 }
+
+const bestFam = (): Familiar =>
+  [
+    $familiar`Cooler Yeti`,
+    $familiar`Pocket Professor`,
+    $familiar`Chest Mimic`,
+    $familiar`Grey Goose`,
+  ].find(famCheck) ?? $familiar`Grey Goose`;
 
 const doSmol = args.smol ? true : false;
 
@@ -94,26 +94,24 @@ export function postRunQuests(): Task[] {
     },
     {
       name: "Set Garbo Pref",
-      completed: () => get("_garbo_beSelfish",false),
-      do: () => set("_garbo_beSelfish",true),
+      completed: () => get("_garbo_beSelfish", false),
+      do: () => set("_garbo_beSelfish", true),
     },
     {
       name: "Breakfast",
       completed: () => get("breakfastCompleted"),
       do: () => cliExecute("breakfast"),
-      tracking: "Breakfast"
+      tracking: "Breakfast",
     },
     {
       name: "Radio",
-      // eslint-disable-next-line libram/verify-constants
       ready: () => have($item`Allied Radio Backpack`) && get("_alliedRadioDropsUsed", 0) < 3,
-      // eslint-disable-next-line libram/verify-constants
       completed: () => get("_alliedRadioDropsUsed", 0) >= 3,
       do: () => {
-      const visitRadio = () => visitUrl(`inventory.php?action=requestdrop&pwd`);
-      visitRadio();
-      if (!handlingChoice() || lastChoice() !== 1563) visitRadio();
-      runChoice(1, `request=radio`);
+        const visitRadio = () => visitUrl(`inventory.php?action=requestdrop&pwd`);
+        visitRadio();
+        if (!handlingChoice() || lastChoice() !== 1563) visitRadio();
+        runChoice(1, `request=radio`);
       },
       limit: { tries: 3 },
     },
@@ -138,21 +136,19 @@ export function postRunQuests(): Task[] {
     },
     {
       name: "SIT Course",
-      // eslint-disable-next-line libram/verify-constants
       ready: () => have($item`S.I.T. Course Completion Certificate`),
       completed: () => get("_sitCourseCompleted", false),
       choices: {
         1494: 2,
       },
       do: () =>
-        // eslint-disable-next-line libram/verify-constants
         use($item`S.I.T. Course Completion Certificate`),
     },
     {
       name: "Restore HP",
       completed: () => myHp() > 0.5 * myMaxhp(),
       do: () => restoreHp(0.95 * myMaxhp()),
-      tracking: "Other"
+      tracking: "Other",
     },
     {
       name: "Implement Glitch",
@@ -217,7 +213,7 @@ export function postRunQuests(): Task[] {
             .attack()
             .repeat(),
         ),
-        tracking: "Other"
+      tracking: "Other",
     },
     {
       name: "Stock Up on MMJs",
@@ -233,7 +229,7 @@ export function postRunQuests(): Task[] {
         },
       ],
       do: () => false,
-      tracking: "Other"
+      tracking: "Other",
     },
     {
       name: "Buy Seal Summoning Supplies",
@@ -249,50 +245,7 @@ export function postRunQuests(): Task[] {
         num: 500,
       })),
       do: () => false,
-      tracking: "Other"
-    },
-    {
-      name: "Run CyberRealm",
-      ready: () => mallPrice($item`1`) > 3_000 && myAdventures() > 60 && myInebriety() < inebrietyLimit(),
-      prepare: () => {
-        $effects`Astral Shell, Elemental Saucesphere, Scarysauce`.forEach((ef) => {
-          if (!have(ef)) useSkill(toSkill(ef));
-        });
-      },
-      completed: () => nextCyberZone() === $location`none`, // $location`Cyberzone 1`.turnsSpent >= 19 * myDaycount(),
-      choices: { 1545: 1, 1546: 1, 1547: 1, 1548: 1, 1549: 1, 1550: 1 },
-      do: () => nextCyberZone(),
-      outfit: {
-        hat: $item`Crown of Thrones`,
-        back: $item`unwrapped knock-off retro superhero cape`,
-        shirt: $item`zero-trust tanktop`,
-        weapon: $item`June cleaver`,
-        offhand: $item`visual packet sniffer`,
-        pants: $item`digibritches`,
-        acc1: $item`retro floppy disk`,
-        acc2: $item`retro floppy disk`,
-        acc3: $item`retro floppy disk`,
-        famequip: $item`familiar-in-the-middle wrapper`,
-        modes: { retrocape: ["vampire", "hold"] },
-        riders: { "crown-of-thrones": $familiar`Mini Kiwi` },
-      },
-      combat: new CombatStrategy().macro(() =>
-        Macro.if_(
-          "!monsterphylum construct",
-          Macro.trySkill($skill`Sing Along`)
-            .trySkill($skill`Micrometeorite`)
-            .trySkill($skill`Saucestorm`)
-            .trySkill($skill`Saucestorm`)
-            .trySkill($skill`Saucestorm`)
-            .trySkill($skill`Saucestorm`)
-            .attack()
-            .repeat(),
-        )
-          .skill($skill`Throw Cyber Rock`)
-          .repeat(),
-      ),
-      limit: { skip: 60 },
-      tracking: "Cyber Realm"
+      tracking: "Other",
     },
     {
       name: "Wardrobe-o-matic",
@@ -303,28 +256,6 @@ export function postRunQuests(): Task[] {
         cliExecute("set _wardrobeUsed = true");
       },
       limit: { tries: 1 },
-    },
-    {
-      name: "Beret? Beret.",
-      ready: () => have(toItem(11919)),
-      completed: () => get("_beretBuskingUses",0) >= 5,
-      do: () => {
-        const uselessEffects = $effects`How to Scam Tourists, Empathy`;
-        let busk = get("_beretBuskingUses",0);
-        print(`Busking starting at ${busk} uses.`)
-        for(; busk <5; busk++) {
-          const best = findOptimalOutfitPower(
-            {
-              "Familiar Weight": 10,
-            }, busk, uselessEffects, true
-          );
-          const outfit = reconstructOutfit(best);
-          print(`Outfit is: ${outfit?.hat}, ${outfit?.pants}, ${outfit?.shirt}`);
-          print(`Busking at ${best} power.`);
-          buskAt(best, true);
-        }
-      },
-      limit: { tries: 5 },
     },
   ];
 }
@@ -349,8 +280,7 @@ export function preRunQuests(): Task[] {
       ready: () => have($item`Clan VIP Lounge key`) && !args.carpe && hasClanFloundry && hasCarpe,
       completed: () => get("_floundryItemCreated"),
       do: (): void => {
-        if(getClanLounge())
-        retrieveItem($item`carpe`);
+        if (getClanLounge()) retrieveItem($item`carpe`);
       },
       limit: { tries: 1 },
     },
@@ -367,14 +297,16 @@ export function preRunQuests(): Task[] {
       ready: () => pantogramReady() && args.casual,
       completed: () => pantogram(),
       do: () => pantogram(),
-      tracking: "Farming Prep"
+      tracking: "Farming Prep",
     },
     {
       name: "Trip Scrip",
       ready: () => args.ih8u || args.smol || args.robot,
-      completed: () => get("_roninStoragePulls").includes(`${$item`Shore Inc. Ship Trip Scrip`.id}`) || storageAmount($item`Shore Inc. Ship Trip Scrip`) === 0,
-      do: () => takeStorage($item`Shore Inc. Ship Trip Scrip`,1),
-      tracking: "Farming Prep"
+      completed: () =>
+        get("_roninStoragePulls").includes(`${$item`Shore Inc. Ship Trip Scrip`.id}`) ||
+        storageAmount($item`Shore Inc. Ship Trip Scrip`) === 0,
+      do: () => takeStorage($item`Shore Inc. Ship Trip Scrip`, 1),
+      tracking: "Farming Prep",
     },
     {
       name: "LGR Seed",
@@ -409,57 +341,66 @@ export function noBarf(): Task[] {
         mySpleenUse() >= spleenLimit() &&
         myInebriety() >= inebrietyLimit(),
       do: () => cliExecute("CONSUME ALL"),
-      tracking: "Organs"
+      tracking: "Organs",
     },
     {
       name: "PProf Penguin Chain",
-      ready: () => ((args.garbo.includes("penguin") && args.garbo.includes(`target="black crayon penguin"`) && myDaycount() === 0)
-        || (args.garboascend.includes("penguin") && args.garboascend.includes(`target="black crayon penguin"`) && myDaycount() > 0)) &&
+      ready: () =>
+        ((args.garbo.includes("penguin") &&
+          args.garbo.includes(`target="black crayon penguin"`) &&
+          myDaycount() === 0) ||
+          (args.garboascend.includes("penguin") &&
+            args.garboascend.includes(`target="black crayon penguin"`) &&
+            myDaycount() > 0)) &&
         CombatLoversLocket.canReminisce($monster`Black Crayon Flower`) &&
         PocketProfessor.have() &&
         PocketProfessor.lecturesDelivered() < 3,
       prepare: () => {
         if (!have($item`Pocket Professor memory chip`)) {
-          retrieveItem(1, $item`Pocket Professor memory chip`)
+          retrieveItem(1, $item`Pocket Professor memory chip`);
         }
 
         useFamiliar($familiar`Pocket Professor`);
-        maximize(`10 familiar weight, -tie, 5.25 Meat Drop, -"equip Amulet of Perpetual Darkness", -"equip Buddy Bjorn", -"equip Roman Candelabra", -"equip Spooky Putty ball", -"equip Spooky Putty leotard", -"equip Spooky Putty mitre", -"equip Spooky Putty snake", -"equip broken champagne bottle", -"equip cheap sunglasses", -"equip dice-shaped backpack", -"equip papier-masque", -"equip papier-mitre", -"equip smoke ball", -"equip stinky fannypack", 100 "bonus pantogram pants", 124.26 "bonus June cleaver", 135 "bonus Crown of Thrones", 180 "bonus Mr. Screege's spectacles", 222.92 "bonus mafia thumb ring", 253.61 "bonus can of mixed everything", 284 "bonus lucky gold ring", 6.25 "bonus Powerful Glove", 700 "bonus mafia pointer finger ring"`, false);
+        maximize(
+          `10 familiar weight, -tie, 5.25 Meat Drop, -"equip Amulet of Perpetual Darkness", -"equip Buddy Bjorn", -"equip Roman Candelabra", -"equip Spooky Putty ball", -"equip Spooky Putty leotard", -"equip Spooky Putty mitre", -"equip Spooky Putty snake", -"equip broken champagne bottle", -"equip cheap sunglasses", -"equip dice-shaped backpack", -"equip papier-masque", -"equip papier-mitre", -"equip smoke ball", -"equip stinky fannypack", 100 "bonus pantogram pants", 124.26 "bonus June cleaver", 135 "bonus Crown of Thrones", 180 "bonus Mr. Screege's spectacles", 222.92 "bonus mafia thumb ring", 253.61 "bonus can of mixed everything", 284 "bonus lucky gold ring", 6.25 "bonus Powerful Glove", 700 "bonus mafia pointer finger ring"`,
+          false,
+        );
         $skills`Empathy of the Newt, Leash of Linguini`.forEach((sk) => useSkill(sk));
         $items`Pocket Professor memory chip, tearaway pants`.forEach((it) => equip(it));
       },
       completed: () => PocketProfessor.currentlyAvailableLectures() === 0,
-      do: () => CombatLoversLocket.reminisce($monster`Black Crayon Flower`,""),
+      do: () => CombatLoversLocket.reminisce($monster`Black Crayon Flower`, ""),
       combat: new CombatStrategy().macro(
-          Macro.externalIf(PocketProfessor.currentlyAvailableLectures() > 0,
-            Macro.trySkill($skill`lecture on relativity`)
+        Macro.externalIf(
+          PocketProfessor.currentlyAvailableLectures() > 0,
+          Macro.trySkill($skill`lecture on relativity`)
             .trySkill($skill`Sing Along`)
             .trySkill($skill`Bowl Straight Up`)
             .trySkill($skill`Tear Away your Pants!`)
             .trySkillRepeat($skill`Saucestorm`),
-            Macro.trySkill($skill`Sing Along`)
+          Macro.trySkill($skill`Sing Along`)
             .trySkill($skill`Bowl Straight Up`)
             .trySkill($skill`Tear Away your Pants!`)
-            .trySkillRepeat($skill`Saucestorm`)
-          )
+            .trySkillRepeat($skill`Saucestorm`),
         ),
-      tracking: "Garbo"
+      ),
+      tracking: "Garbo",
     },
     {
       name: "Pantogramming",
       ready: () => pantogramReady(),
       completed: () => pantogram(),
       do: () => pantogram(),
-      tracking: "Farming Prep"
+      tracking: "Farming Prep",
     },
     {
       name: "Garbo Nobarf",
       ready: () => holiday().includes("Halloween") || args.crimbo || args.chrono,
-      completed: () => ((myInebriety() > inebrietyLimit()) || (get("_monsterHabitatsRecalled") >=3)),
+      completed: () => myInebriety() > inebrietyLimit() || get("_monsterHabitatsRecalled") >= 3,
       do: (): void => {
         cliExecute(`garbo nodiet nobarf target="sausage goblin"`);
       },
-      tracking: "Garbo"
+      tracking: "Garbo",
     },
   ];
 }
@@ -485,7 +426,7 @@ export function garboWeen(): Task[] {
       ready: () => have($item`Drunkula's wineglass`) && holiday().includes("Halloween"),
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
-      tracking: "Organs"
+      tracking: "Organs",
     },
     {
       name: "Freecandy Drunk",
@@ -526,7 +467,7 @@ export function chrono(): Task[] {
         myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
-      tracking: "Organs"
+      tracking: "Organs",
     },
     {
       name: "Chrono Drunk",
@@ -548,10 +489,9 @@ export function crimbo(): Task[] {
     {
       name: "Crimbo Time",
       ready: () => args.crimbo,
-      completed: () =>  {
-        if (myDaycount() === 1)
-          return myAdventures() === 0 || myInebriety() > inebrietyLimit()
-        else return myAdventures() === 0
+      completed: () => {
+        if (myDaycount() === 1) return myAdventures() === 0 || myInebriety() > inebrietyLimit();
+        else return myAdventures() === 0;
       },
       prepare: () => uneffect($effect`Beaten Up`),
       do: (): void => {
@@ -567,7 +507,7 @@ export function crimbo(): Task[] {
         have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
-      tracking: "Organs"
+      tracking: "Organs",
     },
     {
       name: "Crimbo Drunk",

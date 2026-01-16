@@ -19,7 +19,7 @@ import { $item, $skill, clamp, get, have } from "libram";
 import { args } from "../args";
 
 import { preRunQuests } from "./repeatableTasks";
-import { Quest } from "./structure";
+import { Quest } from "../structure";
 import { shouldWeOverdrink } from "./utils";
 
 const runType = () =>
@@ -47,21 +47,68 @@ export function howManySausagesCouldIEat() {
   );
 }
 
-function ih8uDrink(): boolean {
-  if(myInebriety() >= inebrietyLimit())
-    return false;
+function canUseKGB(): boolean {
+  return have($item`Kremlin's Greatest Briefcase`) && get("_kgbDispenserUses") < 3;
+}
+
+function useKGB(): void {
+  if (!canUseKGB()) return;
+  cliExecute("briefcase unlock");
+  cliExecute("briefcase collect");
+}
+
+function canDrinkMore(): boolean {
+  return myInebriety() < inebrietyLimit();
+}
+
+function canEatMore(): boolean {
+  return myFullness() < fullnessLimit();
+}
+
+function hasIh8uDrinkOptions(): boolean {
+  if (!canDrinkMore()) return false;
+
   if (have($item`splendid martini`)) return true;
-  if(!have($item`Kremlin's Greatest Briefcase`) && !(have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`))))
-    return false;
-  if (have($item`Kremlin's Greatest Briefcase`) && get("_kgbDispenserUses") < 3) {
-    cliExecute("briefcase unlock");
-    cliExecute("briefcase collect");
+  if (have($item`mini kiwitini`)) return true;
+
+  return have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`));
+}
+
+function doIh8uDrinks(): void {
+  useKGB();
+
+  while (canDrinkMore() && have($item`splendid martini`)) {
+    equip($item`tuxedo shirt`);
+    useSkill($skill`The Ode to Booze`);
+    drinksilent($item`splendid martini`);
   }
-  if(have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`))) {
-    retrieveItem($item`mini kiwitini`)
+
+  while (
+    canDrinkMore() &&
+    (have($item`mini kiwitini`) ||
+      (have($item`mini kiwi`) &&
+        (have($item`bottle of vodka`) ||
+        have($item`bottle of gin`))))
+  ) {
+    if (!have($item`mini kiwitini`)) retrieveItem($item`mini kiwitini`);
+    useSkill($skill`The Ode to Booze`);
+    drink($item`mini kiwitini`);
   }
-  if(have($item`mini kiwitini`)) return true;
-  return false;
+}
+
+function doMiniKiwiFood(): void {
+  while (canEatMore() && have($item`mini kiwi`, 3)) {
+    retrieveItem($item`mini kiwi digitized cookies`);
+    eat($item`mini kiwi digitized cookies`);
+  }
+}
+
+function drinkBlocked(): boolean {
+  return !hasIh8uDrinkOptions();
+}
+
+function eatBlocked(): boolean {
+  return !canEatMore() || !have($item`mini kiwi`, 3);
 }
 
 export function RunQuests(): Quest {
@@ -82,24 +129,11 @@ export function RunQuests(): Quest {
       },
       {
         name: "drink ih8u",
-        ready: () => myInebriety() < inebrietyLimit() && args.ih8u,
-        completed: () => myInebriety() === inebrietyLimit() || !ih8uDrink(),
+        ready: () => args.ih8u && (canDrinkMore() || canEatMore()),
+        completed: () => eatBlocked() && drinkBlocked(),
         do: (): void => {
-            if (have($item`Kremlin's Greatest Briefcase`) && get("_kgbDispenserUses") < 3) {
-              cliExecute("briefcase unlock");
-              cliExecute("briefcase collect");
-            }
-          while(myInebriety() < inebrietyLimit() && have($item`splendid martini`)) {
-            equip($item`tuxedo shirt`);
-            useSkill($skill`The Ode to Booze`);
-            if(have($item`splendid martini`)) {
-              drinksilent($item`splendid martini`);
-            }
-          }
-          while(myFullness < fullnessLimit && have($item`mini kiwi`,3)) {
-            retrieveItem($item`mini kiwi digitized cookies`);
-            eat($item`mini kiwi digitized cookies`)
-          }
+          doIh8uDrinks();
+          doMiniKiwiFood();
         },
         clear: "all",
         tracking: "Organs",

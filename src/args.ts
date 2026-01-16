@@ -194,7 +194,7 @@ export const args = Args.create(
     }),
     test: Args.flag({
       help: "test",
-      default: false
-    })
+      default: false,
+    }),
   },
 );

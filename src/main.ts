@@ -1,5 +1,6 @@
 import { Args, getTasks } from "grimoire-kolmafia";
 import { gamedayToInt, getRelated, Item, mallPrice, print } from "kolmafia";
+import { $item } from "libram";
 
 import { args } from "./args";
 import { ProfitTrackingEngine } from "./engine/engine";
@@ -8,7 +9,6 @@ import { AscendQuest } from "./tasks/2 ascend";
 import { RunQuests } from "./tasks/3 runleg";
 import { PostRunQuests } from "./tasks/4 postrunleg";
 import { deleteJunkKmails, halloween, notifyVoters, realDay, realMonth } from "./tasks/utils";
-import { $item } from "libram";
 
 const version = "0.0.3";
 
@@ -31,14 +31,13 @@ export function main(command?: string): void {
 
         const value =
           // cold
-          (p?.["stench wad"] ?? 0) * coldWadPrice / 1_000_000 +
-          (p?.["stench nuggets"] ?? 0) * coldWadPrice / 5 / 1_000_000 +
-          (p?.["stench powder"] ?? 0) * coldWadPrice / 25 / 1_000_000 +
-
+          ((p?.["stench wad"] ?? 0) * coldWadPrice) / 1_000_000 +
+          ((p?.["stench nuggets"] ?? 0) * coldWadPrice) / 5 / 1_000_000 +
+          ((p?.["stench powder"] ?? 0) * coldWadPrice) / 25 / 1_000_000 +
           // twinkly
-          (p?.["twinkly wad"] ?? 0) * twinklyWadPrice / 1_000_000 +
-          (p?.["twinkly nuggets"] ?? 0) * twinklyWadPrice / 5 / 1_000_000 +
-          (p?.["twinkly powder"] ?? 0) * twinklyWadPrice / 25 / 1_000_000;
+          ((p?.["twinkly wad"] ?? 0) * twinklyWadPrice) / 1_000_000 +
+          ((p?.["twinkly nuggets"] ?? 0) * twinklyWadPrice) / 5 / 1_000_000 +
+          ((p?.["twinkly powder"] ?? 0) * twinklyWadPrice) / 25 / 1_000_000;
 
         const price = mallPrice(item) > 0 ? mallPrice(item) : Infinity;
         const net = value - price;
@@ -46,13 +45,12 @@ export function main(command?: string): void {
 
         return { item, value, price, net, roi };
       })
-      .filter(o => o.net > 0)
+      .filter((o) => o.net > 0)
       .sort((a, b) => b.net - a.net);
 
     for (const { item, net, roi } of results) {
       print(`${item}: net ${net.toFixed(0)} meat (ROI ${(roi * 100).toFixed(1)}%)`);
     }
-
   }
 
   if (dontCS && args.halloween && args.cs) {

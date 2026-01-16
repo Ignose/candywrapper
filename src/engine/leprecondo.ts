@@ -1,13 +1,16 @@
 import { Effect, Item } from "kolmafia";
 import { $effect, $item, arrayEquals, get, Leprecondo, maxBy, sum, Tuple } from "libram";
+
+import { Task } from "../structure";
+
 import { garboAverageValue, garboValue } from "./profits";
-import { Task } from "../tasks/structure";
 
 function resultValue(result: Leprecondo.Result): number {
   if (result instanceof Item) return garboValue(result);
   if (Array.isArray(result)) return garboAverageValue(...result);
   if (result instanceof Effect) {
-    if (result === $effect`Your Days Are Numbed` || result === $effect`Counter Intelligence`) return 825;
+    if (result === $effect`Your Days Are Numbed` || result === $effect`Counter Intelligence`)
+      return 825;
   }
   return 0;
 }
@@ -15,10 +18,7 @@ function resultValue(result: Leprecondo.Result): number {
 /*
  * @returns Whether `a` is strictly better than `b`
  */
-function strictlyBetterThan(
-  a: Leprecondo.FurnitureStat,
-  b: Leprecondo.FurnitureStat,
-): boolean {
+function strictlyBetterThan(a: Leprecondo.FurnitureStat, b: Leprecondo.FurnitureStat): boolean {
   return Leprecondo.NEEDS.every((need) => {
     const result = b[need];
     if (!result) return true;
@@ -29,15 +29,11 @@ function strictlyBetterThan(
   });
 }
 
-function getStat(
-  furniture: Leprecondo.FurniturePiece,
-): Leprecondo.FurnitureStat {
+function getStat(furniture: Leprecondo.FurniturePiece): Leprecondo.FurnitureStat {
   return Leprecondo.Furniture[furniture];
 }
 
-function getCoveredNeeds(
-  furniture: Leprecondo.FurniturePiece,
-): Leprecondo.Need[] {
+function getCoveredNeeds(furniture: Leprecondo.FurniturePiece): Leprecondo.Need[] {
   return Object.keys(getStat(furniture)) as Leprecondo.Need[];
 }
 
@@ -49,9 +45,7 @@ function viableFurniture(): Leprecondo.FurniturePiece[] {
       (f, index) =>
         !discovered
           .slice(index)
-          .some((futureFurniture) =>
-            strictlyBetterThan(getStat(futureFurniture), getStat(f)),
-          ),
+          .some((futureFurniture) => strictlyBetterThan(getStat(futureFurniture), getStat(f))),
     ),
   ];
 }
@@ -60,9 +54,7 @@ type Combination = Tuple<Leprecondo.FurniturePiece, 4>;
 
 function valueCombination(combo: Combination): number {
   const total = Leprecondo.furnitureBonuses(combo);
-  return sum(Leprecondo.NEEDS, (need) =>
-    resultValue(total[need] ?? $item.none),
-  );
+  return sum(Leprecondo.NEEDS, (need) => resultValue(total[need] ?? $item.none));
 }
 
 function buildCombination<L extends number>(
@@ -74,15 +66,11 @@ function buildCombination<L extends number>(
     const plausibleFurniture = furniture.filter((f) =>
       getCoveredNeeds(f).some((need) => !coveredNeeds.has(need)),
     ); // Only furniture that cover at least one presently-uncovered need need apply
-    return (
-      plausibleFurniture.length ? plausibleFurniture : (["empty"] as const)
-    ).map(
-      (
+    return (plausibleFurniture.length ? plausibleFurniture : (["empty"] as const)).map(
+      (furniture): [...Tuple<Leprecondo.FurniturePiece, L>, Leprecondo.FurniturePiece] => [
+        ...combination,
         furniture,
-      ): [
-        ...Tuple<Leprecondo.FurniturePiece, L>,
-        Leprecondo.FurniturePiece,
-      ] => [...combination, furniture],
+      ],
     );
   });
 }
@@ -115,11 +103,7 @@ export function leprecondoTask(): Task {
   return {
     name: "Configure Leprecondo",
     ready: () => Leprecondo.have() && Leprecondo.rearrangesRemaining() > 0,
-    completed: () =>
-      arrayEquals(
-        Leprecondo.installedFurniture(),
-        getBestLeprecondoCombination(),
-      ),
+    completed: () => arrayEquals(Leprecondo.installedFurniture(), getBestLeprecondoCombination()),
     do: () => Leprecondo.setFurniture(...getBestLeprecondoCombination()),
   };
 }
