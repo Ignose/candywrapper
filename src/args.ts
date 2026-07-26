@@ -51,6 +51,11 @@ export const args = Args.create(
       default: false,
       setting: "",
     }),
+    sea: Args.flag({
+      help: "Ascend into and run seapath",
+      default: false,
+      setting: "",
+    }),
     crimbo: Args.flag({
       help: "Farm Crimbo instead of Garbo",
       default: false,
@@ -152,7 +157,11 @@ export const args = Args.create(
       default: "",
     }),
     ih8uscript: Args.string({
-      help: "The command that will do your You, Robot run for you. Include any arguments desired.",
+      help: "The command that will do your ih8u run for you. Include any arguments desired.",
+      default: "",
+    }),
+    seascript: Args.string({
+      help: "The command that will do your sea for you. Include any arguments desired.",
       default: "",
     }),
     pulls: Args.items({

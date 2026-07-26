@@ -15,6 +15,7 @@ import {
   holiday,
   inebrietyLimit,
   lastChoice,
+  mallPrice,
   maximize,
   myAdventures,
   myClass,
@@ -24,9 +25,11 @@ import {
   myInebriety,
   myLevel,
   myMaxhp,
+  myMp,
   myPrimestat,
   mySpleenUse,
   restoreHp,
+  restoreMp,
   retrieveItem,
   runChoice,
   spleenLimit,
@@ -49,6 +52,7 @@ import {
   $skills,
   $stat,
   AprilingBandHelmet,
+  AsdonMartin,
   CombatLoversLocket,
   get,
   getTodaysHolidayWanderers,
@@ -499,7 +503,7 @@ export function crimbo(): Task[] {
       },
       clear: "all",
       tracking: "Crimbo",
-      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      limit: { tries: 1 },
     },
     {
       name: "Super Nightcap",
@@ -519,7 +523,117 @@ export function crimbo(): Task[] {
       },
       clear: "all",
       tracking: "Crimbo",
-      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      limit: { tries: 1 },
     },
   ];
+}
+
+export function seaPearls(): Task[] {
+  return [
+    {
+      name: "Sea Pearl Mine",
+      ready: () => canSeaPearl() && !get("_unblemishedPearlAnemoneMine") &&
+       myAdventures() >= 10 - get("_unblemishedPearlAnemoneMineProgress") / 10,
+      completed: () => get("_unblemishedPearlAnemoneMine"),
+      prepare: () => seaPearlPrepare(),
+      do: () => $location`Anemone Mine`,
+      outfit: () => ({
+        familiar: bestFam(),
+        modifier: `spooky res`,
+        weapon: $item`June cleaver`
+      }),
+      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      clear: "all",
+      tracking: "Sea Pearl",
+      limit: { tries: 10 },
+    },
+    {
+      name: "Sea Pearl Bar",
+      ready: () => canSeaPearl() && !get("_unblemishedPearlDiveBar") &&
+       myAdventures() >= 10 - get("_unblemishedPearlDiveBarProgress") / 10,
+      completed: () => get("_unblemishedPearlDiveBar"),
+      prepare: () => seaPearlPrepare(),
+      do: () => $location`The Dive Bar`,
+      outfit: () => ({
+        familiar: bestFam(),
+        modifier: `sleaze res`,
+        weapon: $item`June cleaver`
+      }),
+      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      clear: "all",
+      tracking: "Sea Pearl",
+      limit: { tries: 10 },
+    },
+    {
+      name: "Sea Pearl Reef",
+      ready: () => canSeaPearl() && !get("_unblemishedPearlMadnessReef") &&
+       myAdventures() >= 10 - get("_unblemishedPearlMadnessReefProgress") / 10,
+      completed: () => get("_unblemishedPearlMadnessReef"),
+      prepare: () => seaPearlPrepare(),
+      do: () => $location`Madness Reef`,
+      outfit: () => ({
+        familiar: bestFam(),
+        modifier: `stench res`,
+        weapon: $item`June cleaver`
+      }),
+      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      clear: "all",
+      tracking: "Sea Pearl",
+      limit: { tries: 10 },
+    },
+    {
+      name: "Sea Pearl Trench",
+      ready: () => canSeaPearl() && !get("_unblemishedPearlMarinaraTrench") &&
+       myAdventures() >= 10 - get("_unblemishedPearlMarinaraTrenchProgress") / 10,
+      completed: () => get("_unblemishedPearlMarinaraTrench"),
+      prepare: () => seaPearlPrepare(),
+      do: () => $location`The Marinara Trench`,
+      outfit: () => ({
+        familiar: bestFam(),
+        modifier: `hot res`,
+        weapon: $item`June cleaver`
+      }),
+      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      clear: "all",
+      tracking: "Sea Pearl",
+      limit: { tries: 10 },
+    },
+    {
+      name: "Sea Pearl Deepests",
+      ready: () => canSeaPearl() && !get("_unblemishedPearlTheBriniestDeepests") &&
+       myAdventures() >= 10 - get("_unblemishedPearlTheBriniestDeepestsProgress") / 10,
+      completed: () => get("_unblemishedPearlTheBriniestDeepests"),
+      prepare: () => seaPearlPrepare(),
+      do: () => $location`The Briniest Deepests`,
+      outfit: () => ({
+        familiar: bestFam(),
+        modifier: `cold res`,
+        weapon: $item`June cleaver`
+      }),
+      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      clear: "all",
+      tracking: "Sea Pearl",
+      limit: { tries: 10 },
+    },
+  ]
+}
+
+function canSeaPearl(): boolean {
+  return get("isMerkinGladiatorChampion") && mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure");
+}
+
+function seaPearlPrepare(): void {
+  if(!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure")*30) {
+    retrieveItem($item`cuppa Gill tea`);
+    use($item`cuppa Gill tea`);
+  }
+  if(AsdonMartin.installed() && !have($effect`Driving Waterproofly`)) {
+    AsdonMartin.drive(AsdonMartin.Driving.Waterproofly)
+  }
+  if(myHp() < 1000 && myMaxhp() > 1000) {
+    restoreHp(1000);
+  }
+  if(myMp() < 50) {
+    restoreMp(50);
+  }
 }

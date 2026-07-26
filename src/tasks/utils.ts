@@ -42,6 +42,7 @@ import {
   $item,
   $items,
   $location,
+  $monster,
   $phylum,
   $skill,
   Kmail as _Kmail,
@@ -473,4 +474,16 @@ export function pantogram(): boolean {
     "Meat Drop: 60",
   );
   return true;
+}
+
+export function garboTarget(): Monster {
+  const values = new Map<Monster, number>([
+    [$monster`cockroach`, 5_000],
+    [$monster`Witchess Bishop`, mallPrice($item`Sacramento wine`) * 0.9],
+    [$monster`Witchess Knight`, mallPrice($item`jumping horseradish`) * 0.9],
+  ]);
+
+  return [...values.entries()].reduce(
+    (best, current) => (current[1] > best[1] ? current : best)
+  )[0];
 }

@@ -51,7 +51,7 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 import { args } from "../args";
 import { garboValue } from "../engine/profits";
 
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
+import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests, seaPearls } from "./repeatableTasks";
 import { Quest } from "../structure";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
@@ -171,6 +171,7 @@ export function AftercoreQuest(): Quest {
       },
       ...preRunQuests(),
       ...postRunQuests(),
+      ...seaPearls(),
       ...noBarf(),
       ...garboWeen(),
       ...crimbo(),

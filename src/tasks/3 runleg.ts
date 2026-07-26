@@ -33,6 +33,8 @@ const runType = () =>
     ? args.robotscript
     : args.ih8u
     ? args.ih8uscript
+    : args.sea
+    ? args.seascript
     : "autoscend";
 
 export function howManySausagesCouldIEat() {

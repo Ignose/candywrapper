@@ -2,13 +2,14 @@ import {
   cliExecute,
   equip,
   handlingChoice,
+  mallPrice,
   myAdventures,
   myDaycount,
+  retrieveItem,
   runChoice,
   visitUrl,
 } from "kolmafia";
-import { $class, $item, $path, $skill, $skills, ascend, CursedMonkeyPaw, have } from "libram";
-import { availableCasts, castDownTo } from "libram/dist/resources/2025/BloodCubicZirconia";
+import { $class, $item, $items, $path, $skill, $skills, $slot, ascend, BloodCubicZirconia, CursedMonkeyPaw, EternityCodpiece, have } from "libram";
 
 import { args } from "../args";
 
@@ -28,14 +29,48 @@ export function AscendQuest(): Quest {
         name: "Spend them stats grrrrl",
         ready: () => have($item`blood cubic zirconia`),
         completed: () =>
-          availableCasts($skill`BCZ: Prepare Spinal Tapas`, 0) === 0 &&
-          availableCasts($skill`BCZ: Craft a Pheromone Cocktail`, 0) === 0 &&
-          availableCasts($skill`BCZ: Create Blood Thinner`, 0) === 0,
+          BloodCubicZirconia.availableCasts($skill`BCZ: Prepare Spinal Tapas`, 0) === 0 &&
+          BloodCubicZirconia.availableCasts($skill`BCZ: Craft a Pheromone Cocktail`, 0) === 0 &&
+          BloodCubicZirconia.availableCasts($skill`BCZ: Create Blood Thinner`, 0) === 0,
         do: () => {
           equip($item`blood cubic zirconia`);
           $skills`BCZ: Prepare Spinal Tapas, BCZ: Craft a Pheromone Cocktail, BCZ: Create Blood Thinner`.forEach(
-            (sk) => castDownTo(sk, 0),
+            (sk) => {
+              const casts = BloodCubicZirconia.availableCasts(sk, 0);
+              for (let index = 0; index < casts; index++) {
+                BloodCubicZirconia.cast(sk, BloodCubicZirconia.availableCasts(sk, 0))
+              }
+            },
           );
+        },
+        tracking: "Other",
+      },
+      {
+        name: "Do Pizza",
+        ready: () => args.cs || args.smol || args.sea,
+        completed: () =>
+          have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`) && have($item`Pizza of Legend`),
+        do: () => {
+          retrieveItem($item`Deep Dish of Legend`);
+          retrieveItem($item`Calzone of Legend`);
+          retrieveItem($item`Pizza of Legend`);
+        },
+        tracking: "Other",
+      },
+      {
+        name: "Smuggle Pearls",
+        ready: () => (mallPrice($item`unblemished pearl`) <= 75_000 || have($item`unblemished pearl`,5)) &&
+          EternityCodpiece.have() && args.sea,
+        completed: () =>
+          EternityCodpiece.currentGems().join(",") ===
+           $items`unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl`.join(","),
+        do: () => {
+          retrieveItem($item`unblemished pearl`, 5);
+          equip($item`unblemished pearl`, $slot`codpiece1`);
+          equip($item`unblemished pearl`, $slot`codpiece2`);
+          equip($item`unblemished pearl`, $slot`codpiece3`);
+          equip($item`unblemished pearl`, $slot`codpiece4`);
+          equip($item`unblemished pearl`, $slot`codpiece5`);
         },
         tracking: "Other",
       },
@@ -65,6 +100,8 @@ export function AscendQuest(): Quest {
             ? $path`Z is for Zootomist`
             : args.ih8u
             ? $path`11 Things I Hate About U`
+            : args.sea
+            ? $path`11,037 Leagues Under the Sea`
             : undefined;
           const lifestyle = args.casual ? 1 : 2;
 
@@ -90,7 +127,7 @@ export function AscendQuest(): Quest {
           });
           cliExecute("refresh all");
           visitUrl("main.php");
-          if (args.smol || args.robot) {
+          if (args.smol || args.robot || args.sea) {
             while (handlingChoice()) runChoice(1);
           }
         },

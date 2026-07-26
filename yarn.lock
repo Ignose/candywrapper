@@ -2111,6 +2111,11 @@ core-js@^3.16.4:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.41.0.tgz#57714dafb8c751a6095d028a7428f1fb5834a776"
   integrity sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==
 
+core-js@^3.47.0:
+  version "3.49.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.49.0.tgz#8b4d520ac034311fa21aa616f017ada0e0dbbddd"
+  integrity sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==
+
 create-create-app@^7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/create-create-app/-/create-create-app-7.3.0.tgz#d867edabc758167ba6ebca139d79484e8131c72c"
@@ -2247,6 +2252,11 @@ enhanced-resolve@^5.15.0:
   dependencies:
     graceful-fs "^4.2.4"
     tapable "^2.2.0"
+
+entities@^7.0.0:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/entities/-/entities-7.0.1.tgz#26e8a88889db63417dcb9a1e79a3f1bc92b5976b"
+  integrity sha512-TWrgLOFUQTH994YUyl1yT4uyavY5nNB5muff+RtWaqNVCAK408b5ZnnbNAUEWLTCpum9w6arT70i1XdQ4UeOPA==
 
 envinfo@^7.7.3, envinfo@^7.8.1:
   version "7.10.0"
@@ -3144,10 +3154,10 @@ kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-kolmafia@^5.28591.0:
-  version "5.28725.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.28725.0.tgz#b4699c3b1bdb790d15ef0f127370041c4b8feb65"
-  integrity sha512-dPkZ1D0OOK20cMwsIYDKHU1/3ADy89k4rNfQRfyu3WAib3N2SWxoEA5/ohjyN1WnZ1U8aZ08GjwCr/WFL3m9dg==
+kolmafia@^5.29102.0:
+  version "5.29102.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.29102.0.tgz#5b0c9a3c98f04fb30d54411ff8644adf7f380cb5"
+  integrity sha512-UBwRme6TgSRg0mwslMSh6rfA1+LM51Rw/1HgKqF6IXHYrmDMzjdSrfWEYKwy9AiYJtNFQ3g5lymVjGM/pZSK2A==
 
 kuler@^2.0.0:
   version "2.0.0"
@@ -3162,12 +3172,13 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
-libram@^0.11.14:
-  version "0.11.14"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.11.14.tgz#011527aba45e3225809e9f0decaf9b83fcce8325"
-  integrity sha512-EzuyU8fru9rYWnQkaWGcknZJ6JgwLIH+GDI8NbCKgVsA7MuSKE6CU/Do/I18vm/dmgjqSbivzE8wcjKxUDNTAQ==
+libram@^0.11.23:
+  version "0.11.23"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.11.23.tgz#9a19fd88a9e9cd54c77fb10d61ee9248b060a542"
+  integrity sha512-UcTeqIvi4sSKUBXvYZDs4mmyJX8ESM9vOffXJMNCQeN3LZ+PpPLLnobPDzJ5m4o1ge5Alohfab+hMmURPCeR8Q==
   dependencies:
-    html-entities "^2.5.2"
+    core-js "^3.47.0"
+    entities "^7.0.0"
 
 license.js@^3.1.2:
   version "3.1.2"

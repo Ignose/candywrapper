@@ -50,7 +50,7 @@ import {
 
 import { args } from "../args";
 
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
+import { chrono, crimbo, garboWeen, noBarf, postRunQuests, seaPearls } from "./repeatableTasks";
 import { Quest } from "../structure";
 import {
   backstageItemsDone,
@@ -208,7 +208,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Laugh Floor",
-        ready: () => !args.cs,
+        ready: () => !(args.cs || args.sea),
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -249,7 +249,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Infernal Rackets Backstage",
-        ready: () => !args.cs,
+        ready: () => !(args.cs || args.sea),
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -288,7 +288,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Mourn",
-        ready: () => have($item`observational glasses`) && !args.cs,
+        ready: () => have($item`observational glasses`) && !(args.cs || args.sea),
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -328,7 +328,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Moaning Panda",
-        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && !args.cs,
+        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && !(args.cs || args.sea),
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -377,6 +377,7 @@ export function PostRunQuests(): Quest {
         tracking: "Organs",
       },
       ...postRunQuests(),
+      ...seaPearls(),
       ...noBarf(),
       ...garboWeen(),
       ...crimbo(),
