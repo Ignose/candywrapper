@@ -18,7 +18,7 @@ import { $item, $skill, clamp, get, have } from "libram";
 
 import { args } from "../args";
 
-import { preRunQuests } from "./repeatableTasks";
+import { preRunQuests, seaPearls } from "./repeatableTasks";
 import { Quest } from "../structure";
 import { shouldWeOverdrink } from "./utils";
 
@@ -119,6 +119,7 @@ export function RunQuests(): Quest {
     completed: () => get("kingLiberated"),
     tasks: [
       ...preRunQuests(),
+      ...seaPearls(),
       {
         name: "Run",
         completed: () => (get("kingLiberated") && args.cs) || step("questL13Final") > 11,

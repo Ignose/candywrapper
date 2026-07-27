@@ -545,7 +545,7 @@ export function seaPearls(): Task[] {
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
       clear: "all",
       tracking: "Sea Pearl",
-      limit: { tries: 10 },
+      limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Bar",
@@ -562,7 +562,7 @@ export function seaPearls(): Task[] {
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
       clear: "all",
       tracking: "Sea Pearl",
-      limit: { tries: 10 },
+      limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Reef",
@@ -579,7 +579,7 @@ export function seaPearls(): Task[] {
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
       clear: "all",
       tracking: "Sea Pearl",
-      limit: { tries: 10 },
+      limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Trench",
@@ -596,7 +596,7 @@ export function seaPearls(): Task[] {
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
       clear: "all",
       tracking: "Sea Pearl",
-      limit: { tries: 10 },
+      limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Deepests",
@@ -613,7 +613,7 @@ export function seaPearls(): Task[] {
       combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
       clear: "all",
       tracking: "Sea Pearl",
-      limit: { tries: 10 },
+      limit: { turns: 10 },
     },
   ]
 }
@@ -629,6 +629,15 @@ function seaPearlPrepare(): void {
   }
   if(AsdonMartin.installed() && !have($effect`Driving Waterproofly`)) {
     AsdonMartin.drive(AsdonMartin.Driving.Waterproofly)
+  }
+  if(!have($effect`Feeling Peaceful`) && get("_feelPeacefulUsed") < 3) {
+    useSkill($skill`Feel Peaceful`)
+  }
+  if(!have($effect`Astral Shell`)) {
+    useSkill($skill`Astral Shell`)
+  }
+  if(!have($effect`Elemental Saucesphere`)) {
+    useSkill($skill`Elemental Saucesphere`)
   }
   if(myHp() < 1000 && myMaxhp() > 1000) {
     restoreHp(1000);
