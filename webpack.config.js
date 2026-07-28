@@ -26,8 +26,8 @@ const shared = {
         // Include ts, tsx, js, and jsx files.
         test: /\.(ts|js)x?$/,
         resolve: {
-        fullySpecified: false,
-      },
+          fullySpecified: false,
+        },
         // exclude: /node_modules/,
         loader: "babel-loader",
       },

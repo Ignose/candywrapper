@@ -9,12 +9,25 @@ import {
   runChoice,
   visitUrl,
 } from "kolmafia";
-import { $class, $item, $items, $path, $skill, $skills, $slot, ascend, BloodCubicZirconia, CursedMonkeyPaw, EternityCodpiece, have } from "libram";
+import {
+  $class,
+  $item,
+  $items,
+  $path,
+  $skill,
+  $skills,
+  $slot,
+  ascend,
+  BloodCubicZirconia,
+  CursedMonkeyPaw,
+  EternityCodpiece,
+  have,
+} from "libram";
 
 import { args } from "../args";
+import { Quest } from "../structure";
 
 import { targetPerms } from "./perm";
-import { Quest } from "../structure";
 import { toMoonSign, totallyDrunk } from "./utils";
 
 const skipPizza = args.cs || args.smol ? false : true;
@@ -38,7 +51,7 @@ export function AscendQuest(): Quest {
             (sk) => {
               const casts = BloodCubicZirconia.availableCasts(sk, 0);
               for (let index = 0; index < casts; index++) {
-                BloodCubicZirconia.cast(sk, BloodCubicZirconia.availableCasts(sk, 0))
+                BloodCubicZirconia.cast(sk, BloodCubicZirconia.availableCasts(sk, 0));
               }
             },
           );
@@ -49,7 +62,9 @@ export function AscendQuest(): Quest {
         name: "Do Pizza",
         ready: () => args.cs || args.smol || args.sea,
         completed: () =>
-          have($item`Deep Dish of Legend`) && have($item`Calzone of Legend`) && have($item`Pizza of Legend`),
+          have($item`Deep Dish of Legend`) &&
+          have($item`Calzone of Legend`) &&
+          have($item`Pizza of Legend`),
         do: () => {
           retrieveItem($item`Deep Dish of Legend`);
           retrieveItem($item`Calzone of Legend`);
@@ -59,11 +74,15 @@ export function AscendQuest(): Quest {
       },
       {
         name: "Smuggle Pearls",
-        ready: () => (mallPrice($item`unblemished pearl`) <= 75_000 || have($item`unblemished pearl`,5)) &&
-          EternityCodpiece.have() && args.sea,
+        ready: () =>
+          (mallPrice($item`unblemished pearl`) <= 75_000 || have($item`unblemished pearl`, 5)) &&
+          EternityCodpiece.have() &&
+          args.sea,
         completed: () =>
           EternityCodpiece.currentGems().join(",") ===
-           $items`unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl`.join(","),
+          $items`unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl, unblemished pearl`.join(
+            ",",
+          ),
         do: () => {
           retrieveItem($item`unblemished pearl`, 5);
           equip($item`unblemished pearl`, $slot`codpiece1`);

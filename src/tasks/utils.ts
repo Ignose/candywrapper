@@ -483,7 +483,7 @@ export function garboTarget(): Monster {
     [$monster`Witchess Knight`, mallPrice($item`jumping horseradish`) * 0.9],
   ]);
 
-  return [...values.entries()].reduce(
-    (best, current) => (current[1] > best[1] ? current : best)
+  return [...values.entries()].reduce((best, current) =>
+    current[1] > best[1] ? current : best,
   )[0];
 }

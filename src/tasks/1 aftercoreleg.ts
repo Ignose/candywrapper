@@ -50,9 +50,17 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 
 import { args } from "../args";
 import { garboValue } from "../engine/profits";
-
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests, seaPearls } from "./repeatableTasks";
 import { Quest } from "../structure";
+
+import {
+  chrono,
+  crimbo,
+  garboWeen,
+  noBarf,
+  postRunQuests,
+  preRunQuests,
+  seaPearls,
+} from "./repeatableTasks";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 const RESOURCES = ["Spice", "Rum", "Anchor", "Mast", "Silk", "Gold"] as const;

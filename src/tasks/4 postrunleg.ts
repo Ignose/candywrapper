@@ -49,9 +49,9 @@ import {
 } from "libram";
 
 import { args } from "../args";
+import { Quest } from "../structure";
 
 import { chrono, crimbo, garboWeen, noBarf, postRunQuests, seaPearls } from "./repeatableTasks";
-import { Quest } from "../structure";
 import {
   backstageItemsDone,
   bestFam,

@@ -32,9 +32,11 @@ import {
   restoreMp,
   retrieveItem,
   runChoice,
+  Skill,
   spleenLimit,
   storageAmount,
   takeStorage,
+  toPhylum,
   use,
   useFamiliar,
   useSkill,
@@ -48,6 +50,7 @@ import {
   $items,
   $location,
   $monster,
+  $phylum,
   $skill,
   $skills,
   $stat,
@@ -64,16 +67,9 @@ import {
 } from "libram";
 
 import { args } from "../args";
-
 import { Task } from "../structure";
-import {
-  getGarden,
-  maxBase,
-  pantogram,
-  pantogramReady,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+
+import { getGarden, maxBase, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
 
 function famCheck(fam: Familiar): boolean {
   return have(fam) && fam.experience < 400;
@@ -145,8 +141,7 @@ export function postRunQuests(): Task[] {
       choices: {
         1494: 2,
       },
-      do: () =>
-        use($item`S.I.T. Course Completion Certificate`),
+      do: () => use($item`S.I.T. Course Completion Certificate`),
     },
     {
       name: "Restore HP",
@@ -532,117 +527,207 @@ export function seaPearls(): Task[] {
   return [
     {
       name: "Sea Pearl Mine",
-      ready: () => canSeaPearl() && !get("_unblemishedPearlAnemoneMine") &&
-       myAdventures() >= 10 - get("_unblemishedPearlAnemoneMineProgress") / 10,
+      ready: () =>
+        canSeaPearl() &&
+        !get("_unblemishedPearlAnemoneMine") &&
+        myAdventures() >= 10 - get("_unblemishedPearlAnemoneMineProgress") / 10,
       completed: () => get("_unblemishedPearlAnemoneMine"),
       prepare: () => seaPearlPrepare(),
       do: () => $location`Anemone Mine`,
       outfit: () => ({
-        familiar: bestFam(),
+        familiar: useEagleActually(),
         modifier: `spooky res`,
-        weapon: $item`June cleaver`
+        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
+        famequip: useEagleActually().underwater
+          ? undefined
+          : have($effect`Driving Waterproofly`)
+          ? undefined
+          : $item`das boot`,
+        weapon: $item`June cleaver`,
       }),
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .repeat(),
+      ),
       clear: "all",
       tracking: "Sea Pearl",
       limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Bar",
-      ready: () => canSeaPearl() && !get("_unblemishedPearlDiveBar") &&
-       myAdventures() >= 10 - get("_unblemishedPearlDiveBarProgress") / 10,
+      ready: () =>
+        canSeaPearl() &&
+        !get("_unblemishedPearlDiveBar") &&
+        myAdventures() >= 10 - get("_unblemishedPearlDiveBarProgress") / 10,
       completed: () => get("_unblemishedPearlDiveBar"),
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Dive Bar`,
       outfit: () => ({
-        familiar: bestFam(),
+        familiar: useEagleActually(),
         modifier: `sleaze res`,
-        weapon: $item`June cleaver`
+        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
+        famequip: useEagleActually().underwater
+          ? undefined
+          : have($effect`Driving Waterproofly`)
+          ? undefined
+          : $item`das boot`,
+        weapon: $item`June cleaver`,
       }),
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .repeat(),
+      ),
       clear: "all",
       tracking: "Sea Pearl",
       limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Reef",
-      ready: () => canSeaPearl() && !get("_unblemishedPearlMadnessReef") &&
-       myAdventures() >= 10 - get("_unblemishedPearlMadnessReefProgress") / 10,
+      ready: () =>
+        canSeaPearl() &&
+        !get("_unblemishedPearlMadnessReef") &&
+        myAdventures() >= 10 - get("_unblemishedPearlMadnessReefProgress") / 10,
       completed: () => get("_unblemishedPearlMadnessReef"),
       prepare: () => seaPearlPrepare(),
       do: () => $location`Madness Reef`,
       outfit: () => ({
-        familiar: bestFam(),
+        familiar: useEagleActually(),
         modifier: `stench res`,
-        weapon: $item`June cleaver`
+        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
+        famequip: useEagleActually().underwater
+          ? undefined
+          : have($effect`Driving Waterproofly`)
+          ? undefined
+          : $item`das boot`,
+        weapon: $item`June cleaver`,
       }),
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .repeat(),
+      ),
       clear: "all",
       tracking: "Sea Pearl",
       limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Trench",
-      ready: () => canSeaPearl() && !get("_unblemishedPearlMarinaraTrench") &&
-       myAdventures() >= 10 - get("_unblemishedPearlMarinaraTrenchProgress") / 10,
+      ready: () =>
+        canSeaPearl() &&
+        !get("_unblemishedPearlMarinaraTrench") &&
+        myAdventures() >= 10 - get("_unblemishedPearlMarinaraTrenchProgress") / 10,
       completed: () => get("_unblemishedPearlMarinaraTrench"),
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Marinara Trench`,
       outfit: () => ({
-        familiar: bestFam(),
+        familiar: useEagleActually(),
         modifier: `hot res`,
-        weapon: $item`June cleaver`
+        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
+        famequip: useEagleActually().underwater
+          ? undefined
+          : have($effect`Driving Waterproofly`)
+          ? undefined
+          : $item`das boot`,
+        weapon: $item`June cleaver`,
       }),
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .repeat(),
+      ),
       clear: "all",
       tracking: "Sea Pearl",
       limit: { turns: 10 },
     },
     {
       name: "Sea Pearl Deepests",
-      ready: () => canSeaPearl() && !get("_unblemishedPearlTheBriniestDeepests") &&
-       myAdventures() >= 10 - get("_unblemishedPearlTheBriniestDeepestsProgress") / 10,
+      ready: () =>
+        canSeaPearl() &&
+        !get("_unblemishedPearlTheBriniestDeepests") &&
+        myAdventures() >= 10 - get("_unblemishedPearlTheBriniestDeepestsProgress") / 10,
       completed: () => get("_unblemishedPearlTheBriniestDeepests"),
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Briniest Deepests`,
       outfit: () => ({
-        familiar: bestFam(),
+        familiar: useEagleActually(),
         modifier: `cold res`,
-        weapon: $item`June cleaver`
+        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
+        famequip: useEagleActually().underwater
+          ? undefined
+          : have($effect`Driving Waterproofly`)
+          ? undefined
+          : $item`das boot`,
+        weapon: $item`June cleaver`,
       }),
-      combat: new CombatStrategy().macro(Macro.trySkill($skill`Lunging Thrust-Smack`).repeat()),
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .trySkill(combatSkill())
+          .repeat(),
+      ),
       clear: "all",
       tracking: "Sea Pearl",
       limit: { turns: 10 },
     },
-  ]
+  ];
 }
 
 function canSeaPearl(): boolean {
-  return get("isMerkinGladiatorChampion") && mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure");
+  return (
+    get("isMerkinGladiatorChampion") &&
+    mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure")
+  );
 }
 
 function seaPearlPrepare(): void {
-  if(!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure")*30) {
+  if (!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure") * 30) {
     retrieveItem($item`cuppa Gill tea`);
     use($item`cuppa Gill tea`);
   }
-  if(AsdonMartin.installed() && !have($effect`Driving Waterproofly`)) {
-    AsdonMartin.drive(AsdonMartin.Driving.Waterproofly)
+  if (AsdonMartin.installed() && !have($effect`Driving Waterproofly`)) {
+    AsdonMartin.drive(AsdonMartin.Driving.Waterproofly);
   }
-  if(!have($effect`Feeling Peaceful`) && get("_feelPeacefulUsed") < 3) {
-    useSkill($skill`Feel Peaceful`)
+  if (!have($effect`Feeling Peaceful`) && get("_feelPeacefulUsed") < 3) {
+    useSkill($skill`Feel Peaceful`);
   }
-  if(!have($effect`Astral Shell`)) {
-    useSkill($skill`Astral Shell`)
+  if (!have($effect`Astral Shell`)) {
+    useSkill($skill`Astral Shell`);
   }
-  if(!have($effect`Elemental Saucesphere`)) {
-    useSkill($skill`Elemental Saucesphere`)
+  if (!have($effect`Elemental Saucesphere`)) {
+    useSkill($skill`Elemental Saucesphere`);
   }
-  if(myHp() < 1000 && myMaxhp() > 1000) {
+  if (myHp() < 1000 && myMaxhp() > 1000) {
     restoreHp(1000);
   }
-  if(myMp() < 50) {
+  if (myMp() < 50) {
     restoreMp(50);
   }
+}
+
+function useEagleActually(): Familiar {
+  if (toPhylum(get("banishedPhyla")) === $phylum`construct`) {
+    return $familiar`Patriotic Eagle`;
+  } else return bestFam();
+}
+
+function combatSkill(): Skill {
+  if (myPrimestat() === $stat`Muscle`) {
+    return $skill`Lunging Thrust-Smack`;
+  } else return $skill`Saucegeyser`;
 }

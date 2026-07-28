@@ -63,7 +63,15 @@ export function main(command?: string): void {
 
   print(`Running: candyWrapper v${version}`);
 
-  if (!args.cs && !args.smol && !args.casual && !args.robot && !args.zooto && !args.ih8u && !args.sea)
+  if (
+    !args.cs &&
+    !args.smol &&
+    !args.casual &&
+    !args.robot &&
+    !args.zooto &&
+    !args.ih8u &&
+    !args.sea
+  )
     throw "Undefined runtype; please choose an acceptable path";
 
   const tasks = getTasks([AftercoreQuest(), AscendQuest(), RunQuests(), PostRunQuests()]);
