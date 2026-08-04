@@ -207,8 +207,21 @@ export function PostRunQuests(): Quest {
         tracking: "Organs",
       },
       {
+        name: "Fix screech",
+        ready: () => get("banishedPhyla").includes("construct") && get("screechCombats") >= 11 && args.sea,
+        completed: () => !get("banishedPhyla").includes("construct"),
+        do: $location`The Dark Heart of the Woods`,
+        outfit: {
+          familiar: $familiar`Patriotic Eagle`,
+          pants: $item`Greatest American Pants`
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway
+        )
+      },
+      {
         name: "Laugh Floor",
-        ready: () => !(args.cs || args.sea),
+        ready: () => get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -249,7 +262,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Infernal Rackets Backstage",
-        ready: () => !(args.cs || args.sea),
+        ready: () => get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -288,7 +301,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Mourn",
-        ready: () => have($item`observational glasses`) && !(args.cs || args.sea),
+        ready: () => have($item`observational glasses`) && get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -301,7 +314,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Sven Golly",
-        ready: () => backstageItemsDone() && !args.cs,
+        ready: () => backstageItemsDone() && get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -328,7 +341,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Moaning Panda",
-        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && !(args.cs || args.sea),
+        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
