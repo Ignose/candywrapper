@@ -208,7 +208,7 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Fix screech",
-        ready: () => get("banishedPhyla").includes("construct") && get("screechCombats") >= 11 && args.sea,
+        ready: () => get("banishedPhyla").includes("construct") && get("screechCombats") <= 0 && args.sea,
         completed: () => !get("banishedPhyla").includes("construct"),
         do: $location`The Dark Heart of the Woods`,
         outfit: {
@@ -216,7 +216,7 @@ export function PostRunQuests(): Quest {
           pants: $item`Greatest American Pants`
         },
         combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway
+          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway()
         )
       },
       {
