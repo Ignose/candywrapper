@@ -3,6 +3,7 @@ import {
   availableAmount,
   canAdventure,
   cliExecute,
+  cupOf13sTier,
   equip,
   Familiar,
   fullnessLimit,
@@ -14,6 +15,7 @@ import {
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
+  Item,
   lastChoice,
   mallPrice,
   maximize,
@@ -28,6 +30,7 @@ import {
   myMp,
   myPrimestat,
   mySpleenUse,
+  print,
   restoreHp,
   restoreMp,
   retrieveItem,
@@ -36,7 +39,6 @@ import {
   spleenLimit,
   storageAmount,
   takeStorage,
-  toPhylum,
   use,
   useFamiliar,
   useSkill,
@@ -50,13 +52,13 @@ import {
   $items,
   $location,
   $monster,
-  $phylum,
   $skill,
   $skills,
   $stat,
   AprilingBandHelmet,
   AsdonMartin,
   CombatLoversLocket,
+  CupOfThirteens,
   get,
   getTodaysHolidayWanderers,
   have,
@@ -523,6 +525,30 @@ export function crimbo(): Task[] {
   ];
 }
 
+export function cupOf13sDrink(): Task[] {
+  return [
+    {
+      name: "Drink Cup of 13s",
+      ready: () => get("_cupOf13sJewels", 0) >= 13 && myInebriety() < inebrietyLimit(),
+      completed: () => get("_cupOf13sJewels", 0) < 13,
+      do: () => {
+        const combination = cheapestCupOf13sCombination();
+        if (combination === null) {
+          throw "Cup of 13s died";
+        }
+        const item1 = combination[0];
+        const item2 = combination[1];
+        const item3 = combination[2];
+
+        print(`Using items ${item1}, ${item2}, and ${item3} for cup of 13s`);
+
+        combination.forEach((i) => retrieveItem(i, 2));
+        CupOfThirteens.drink(item1, item2, item3);
+      },
+    },
+  ];
+}
+
 export function seaPearls(): Task[] {
   return [
     {
@@ -535,19 +561,17 @@ export function seaPearls(): Task[] {
       prepare: () => seaPearlPrepare(),
       do: () => $location`Anemone Mine`,
       outfit: () => ({
-        familiar: useEagleActually(),
+        familiar: bestFam(),
         modifier: `spooky res`,
         back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: useEagleActually().underwater
+        famequip: bestFam().underwater
           ? undefined
           : have($effect`Driving Waterproofly`)
           ? undefined
           : $item`das boot`,
-        weapon: $item`June cleaver`,
       }),
       combat: new CombatStrategy().macro(
-        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
-          .trySkill(combatSkill())
+        Macro.trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
@@ -567,19 +591,17 @@ export function seaPearls(): Task[] {
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Dive Bar`,
       outfit: () => ({
-        familiar: useEagleActually(),
+        familiar: bestFam(),
         modifier: `sleaze res`,
         back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: useEagleActually().underwater
+        famequip: bestFam().underwater
           ? undefined
           : have($effect`Driving Waterproofly`)
           ? undefined
           : $item`das boot`,
-        weapon: $item`June cleaver`,
       }),
       combat: new CombatStrategy().macro(
-        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
-          .trySkill(combatSkill())
+        Macro.trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
@@ -599,19 +621,17 @@ export function seaPearls(): Task[] {
       prepare: () => seaPearlPrepare(),
       do: () => $location`Madness Reef`,
       outfit: () => ({
-        familiar: useEagleActually(),
+        familiar: bestFam(),
         modifier: `stench res`,
         back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: useEagleActually().underwater
+        famequip: bestFam().underwater
           ? undefined
           : have($effect`Driving Waterproofly`)
           ? undefined
           : $item`das boot`,
-        weapon: $item`June cleaver`,
       }),
       combat: new CombatStrategy().macro(
-        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
-          .trySkill(combatSkill())
+        Macro.trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
@@ -631,19 +651,17 @@ export function seaPearls(): Task[] {
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Marinara Trench`,
       outfit: () => ({
-        familiar: useEagleActually(),
+        familiar: bestFam(),
         modifier: `hot res`,
         back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: useEagleActually().underwater
+        famequip: bestFam().underwater
           ? undefined
           : have($effect`Driving Waterproofly`)
           ? undefined
           : $item`das boot`,
-        weapon: $item`June cleaver`,
       }),
       combat: new CombatStrategy().macro(
-        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
-          .trySkill(combatSkill())
+        Macro.trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
@@ -663,19 +681,17 @@ export function seaPearls(): Task[] {
       prepare: () => seaPearlPrepare(),
       do: () => $location`The Briniest Deepests`,
       outfit: () => ({
-        familiar: useEagleActually(),
+        familiar: bestFam(),
         modifier: `cold res`,
         back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: useEagleActually().underwater
+        famequip: bestFam().underwater
           ? undefined
           : have($effect`Driving Waterproofly`)
           ? undefined
           : $item`das boot`,
-        weapon: $item`June cleaver`,
       }),
       combat: new CombatStrategy().macro(
-        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
-          .trySkill(combatSkill())
+        Macro.trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
           .trySkill(combatSkill())
@@ -712,6 +728,9 @@ function seaPearlPrepare(): void {
   if (!have($effect`Elemental Saucesphere`)) {
     useSkill($skill`Elemental Saucesphere`);
   }
+  if (have($effect`The Colors...`)) {
+    uneffect($effect`The Colors...`);
+  }
   if (myHp() < 1000 && myMaxhp() > 1000) {
     restoreHp(1000);
   }
@@ -720,14 +739,41 @@ function seaPearlPrepare(): void {
   }
 }
 
-function useEagleActually(): Familiar {
-  if (toPhylum(get("banishedPhyla")) === $phylum`construct`) {
-    return $familiar`Patriotic Eagle`;
-  } else return bestFam();
-}
-
 function combatSkill(): Skill {
   if (myPrimestat() === $stat`Muscle`) {
     return $skill`Lunging Thrust-Smack`;
   } else return $skill`Saucegeyser`;
+}
+
+function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
+  const items = Item.all().filter((item) => cupOf13sTier(item) > 2 && mallPrice(item) <= 500);
+
+  let best: [Item, Item, Item] | null = null;
+  let bestPrice = Infinity;
+
+  for (let i = 0; i < items.length; i++) {
+    const item1 = items[i];
+    const tier1 = cupOf13sTier(item1);
+
+    for (let j = i; j < items.length; j++) {
+      const item2 = items[j];
+      const tier2 = cupOf13sTier(item2);
+
+      for (let k = j; k < items.length; k++) {
+        const item3 = items[k];
+        const tier3 = cupOf13sTier(item3);
+
+        if (tier1 + tier2 + tier3 !== 13) continue;
+
+        const price = mallPrice(item1) + mallPrice(item2) + mallPrice(item3);
+
+        if (price < bestPrice) {
+          bestPrice = price;
+          best = [item1, item2, item3];
+        }
+      }
+    }
+  }
+
+  return best;
 }

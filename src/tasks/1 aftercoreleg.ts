@@ -55,6 +55,7 @@ import { Quest } from "../structure";
 import {
   chrono,
   crimbo,
+  cupOf13sDrink,
   garboWeen,
   noBarf,
   postRunQuests,
@@ -180,6 +181,7 @@ export function AftercoreQuest(): Quest {
       ...preRunQuests(),
       ...postRunQuests(),
       ...seaPearls(),
+      ...cupOf13sDrink(),
       ...noBarf(),
       ...garboWeen(),
       ...crimbo(),

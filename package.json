@@ -15,8 +15,8 @@
     "babel-loader": "^9.1.3",
     "build": "^0.1.4",
     "grimoire-kolmafia": "^0.3.25",
-    "kolmafia": "^5.29102.0",
-    "libram": "^0.11.23",
+    "kolmafia": "^5.29180.0",
+    "libram": "^0.11.24",
     "mafia-shared-relay": "0.0.7",
     "webpack": "^5.89.0"
   },

@@ -51,7 +51,15 @@ import {
 import { args } from "../args";
 import { Quest } from "../structure";
 
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests, seaPearls } from "./repeatableTasks";
+import {
+  chrono,
+  crimbo,
+  cupOf13sDrink,
+  garboWeen,
+  noBarf,
+  postRunQuests,
+  seaPearls,
+} from "./repeatableTasks";
 import {
   backstageItemsDone,
   bestFam,
@@ -208,16 +216,17 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Fix screech",
-        ready: () => get("banishedPhyla").includes("construct") && get("screechCombats") <= 0 && args.sea,
+        ready: () =>
+          get("banishedPhyla").includes("construct") && get("screechCombats") <= 0 && args.sea,
         completed: () => !get("banishedPhyla").includes("construct"),
         do: $location`The Dark Heart of the Woods`,
         outfit: {
           familiar: $familiar`Patriotic Eagle`,
-          pants: $item`Greatest American Pants`
+          pants: $item`Greatest American Pants`,
         },
         combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway()
-        )
+          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway(),
+        ),
       },
       {
         name: "Laugh Floor",
@@ -341,7 +350,9 @@ export function PostRunQuests(): Quest {
       },
       {
         name: "Moaning Panda",
-        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && get("questL06Friar") === "finished",
+        ready: () =>
+          haveAll($items`Azazel's lollipop, Azazel's unicorn`) &&
+          get("questL06Friar") === "finished",
         completed: () =>
           have($skill`Liver of Steel`) ||
           have($item`steel margarita`) ||
@@ -390,6 +401,7 @@ export function PostRunQuests(): Quest {
         tracking: "Organs",
       },
       ...postRunQuests(),
+      ...cupOf13sDrink(),
       ...seaPearls(),
       ...noBarf(),
       ...garboWeen(),
