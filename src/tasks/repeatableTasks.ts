@@ -1,15 +1,18 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  autosellPrice,
   availableAmount,
   canAdventure,
   cliExecute,
   cupOf13sTier,
+  eatsilent,
   equip,
   Familiar,
   fullnessLimit,
   getCampground,
   getClanLounge,
   getClanName,
+  getWorkshed,
   guildStoreAvailable,
   handlingChoice,
   hippyStoneBroken,
@@ -17,6 +20,7 @@ import {
   inebrietyLimit,
   Item,
   lastChoice,
+  Location,
   mallPrice,
   maximize,
   myAdventures,
@@ -71,7 +75,7 @@ import {
 import { args } from "../args";
 import { Task } from "../structure";
 
-import { getGarden, maxBase, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
+import { cheapestItem, getGarden, getNextFreeKill, maxBase, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
 
 function famCheck(fam: Familiar): boolean {
   return have(fam) && fam.experience < 400;
@@ -505,7 +509,7 @@ export function crimbo(): Task[] {
     {
       name: "Super Nightcap",
       ready: () =>
-        have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
+        have($item`Drunkula's wineglass`) && args.crimbo && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
       tracking: "Organs",
@@ -529,7 +533,7 @@ export function cupOf13sDrink(): Task[] {
   return [
     {
       name: "Drink Cup of 13s",
-      ready: () => get("_cupOf13sJewels", 0) >= 13 && myInebriety() < inebrietyLimit(),
+      ready: () => get("_cupOf13sJewels", 0) >= 13 && myInebriety() < inebrietyLimit() && args.cs,
       completed: () => get("_cupOf13sJewels", 0) < 13,
       do: () => {
         const combination = cheapestCupOf13sCombination();
@@ -549,159 +553,47 @@ export function cupOf13sDrink(): Task[] {
   ];
 }
 
-export function seaPearls(): Task[] {
+export function pregamePasta(): Task[] {
   return [
     {
-      name: "Sea Pearl Mine",
-      ready: () =>
-        canSeaPearl() &&
-        !get("_unblemishedPearlAnemoneMine") &&
-        myAdventures() >= 10 - get("_unblemishedPearlAnemoneMineProgress") / 10,
-      completed: () => get("_unblemishedPearlAnemoneMine"),
-      prepare: () => seaPearlPrepare(),
-      do: () => $location`Anemone Mine`,
-      outfit: () => ({
-        familiar: bestFam(),
-        modifier: `spooky res`,
-        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: bestFam().underwater
-          ? undefined
-          : have($effect`Driving Waterproofly`)
-          ? undefined
-          : $item`das boot`,
-      }),
-      combat: new CombatStrategy().macro(
-        Macro.trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .repeat(),
-      ),
-      clear: "all",
-      tracking: "Sea Pearl",
-      limit: { turns: 10 },
-    },
-    {
-      name: "Sea Pearl Bar",
-      ready: () =>
-        canSeaPearl() &&
-        !get("_unblemishedPearlDiveBar") &&
-        myAdventures() >= 10 - get("_unblemishedPearlDiveBarProgress") / 10,
-      completed: () => get("_unblemishedPearlDiveBar"),
-      prepare: () => seaPearlPrepare(),
-      do: () => $location`The Dive Bar`,
-      outfit: () => ({
-        familiar: bestFam(),
-        modifier: `sleaze res`,
-        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: bestFam().underwater
-          ? undefined
-          : have($effect`Driving Waterproofly`)
-          ? undefined
-          : $item`das boot`,
-      }),
-      combat: new CombatStrategy().macro(
-        Macro.trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .repeat(),
-      ),
-      clear: "all",
-      tracking: "Sea Pearl",
-      limit: { turns: 10 },
-    },
-    {
-      name: "Sea Pearl Reef",
-      ready: () =>
-        canSeaPearl() &&
-        !get("_unblemishedPearlMadnessReef") &&
-        myAdventures() >= 10 - get("_unblemishedPearlMadnessReefProgress") / 10,
-      completed: () => get("_unblemishedPearlMadnessReef"),
-      prepare: () => seaPearlPrepare(),
-      do: () => $location`Madness Reef`,
-      outfit: () => ({
-        familiar: bestFam(),
-        modifier: `stench res`,
-        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: bestFam().underwater
-          ? undefined
-          : have($effect`Driving Waterproofly`)
-          ? undefined
-          : $item`das boot`,
-      }),
-      combat: new CombatStrategy().macro(
-        Macro.trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .repeat(),
-      ),
-      clear: "all",
-      tracking: "Sea Pearl",
-      limit: { turns: 10 },
-    },
-    {
-      name: "Sea Pearl Trench",
-      ready: () =>
-        canSeaPearl() &&
-        !get("_unblemishedPearlMarinaraTrench") &&
-        myAdventures() >= 10 - get("_unblemishedPearlMarinaraTrenchProgress") / 10,
-      completed: () => get("_unblemishedPearlMarinaraTrench"),
-      prepare: () => seaPearlPrepare(),
-      do: () => $location`The Marinara Trench`,
-      outfit: () => ({
-        familiar: bestFam(),
-        modifier: `hot res`,
-        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: bestFam().underwater
-          ? undefined
-          : have($effect`Driving Waterproofly`)
-          ? undefined
-          : $item`das boot`,
-      }),
-      combat: new CombatStrategy().macro(
-        Macro.trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .repeat(),
-      ),
-      clear: "all",
-      tracking: "Sea Pearl",
-      limit: { turns: 10 },
-    },
-    {
-      name: "Sea Pearl Deepests",
-      ready: () =>
-        canSeaPearl() &&
-        !get("_unblemishedPearlTheBriniestDeepests") &&
-        myAdventures() >= 10 - get("_unblemishedPearlTheBriniestDeepestsProgress") / 10,
-      completed: () => get("_unblemishedPearlTheBriniestDeepests"),
-      prepare: () => seaPearlPrepare(),
-      do: () => $location`The Briniest Deepests`,
-      outfit: () => ({
-        familiar: bestFam(),
-        modifier: `cold res`,
-        back: have($effect`Driving Waterproofly`) ? undefined : $item`Elf Guard SCUBA tank`,
-        famequip: bestFam().underwater
-          ? undefined
-          : have($effect`Driving Waterproofly`)
-          ? undefined
-          : $item`das boot`,
-      }),
-      combat: new CombatStrategy().macro(
-        Macro.trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .trySkill(combatSkill())
-          .repeat(),
-      ),
-      clear: "all",
-      tracking: "Sea Pearl",
-      limit: { turns: 10 },
-    },
-  ];
+      name: "Pregame Legendary Pasta",
+      ready: () => getWorkshed() === $item`portable Mayo Clinic`,
+      completed: () => true,
+      do: () => {
+        // eslint-disable-next-line libram/verify-constants
+        const legendaryPasta = $items`Pesto alla Marziano, Arrattabbattabiata, Frutti di Scatoletta, Orzo di Riso, Pasta Grimavera, Linguini Ubriacapa, Gnocci Domani, Formica e Pepe, Tubetto Gelatto`;
+        const cheapestPasta = cheapestItem(legendaryPasta);
+        const deepDish = $item`Deep Dish of Legend`;
+        retrieveItem($item`Mayoflex`);
+        use($item`Mayoflex`);
+        retrieveItem(cheapestPasta);
+        eatsilent(cheapestPasta, 1);
+        runChoice(5);
+        retrieveItem($item`Mayozapine`);
+        use($item`Mayozapine`);
+        retrieveItem(deepDish);
+        eatsilent(deepDish);
+      }
+    }
+  ]
+}
+
+export function seaPearls(): Task[] {
+  return SEA_PEARL_ZONES.map((zone) => ({
+    name: zone.name,
+    ready: () =>
+      canSeaPearl() &&
+      !get(zone.prop) &&
+      myAdventures() >= 10 - get(`${zone.prop}Progress`, 0) / 10,
+    completed: () => get(zone.prop, false),
+    prepare: () => seaPearlPrepare(),
+    do: () => zone.location,
+    outfit: () => getSeaPearlOutfit(zone.modifier),
+    combat: new CombatStrategy().macro(buildSeaPearlMacro()),
+    clear: "all",
+    tracking: "Sea Pearl",
+    limit: { turns: 10 },
+  }));
 }
 
 function canSeaPearl(): boolean {
@@ -712,6 +604,9 @@ function canSeaPearl(): boolean {
 }
 
 function seaPearlPrepare(): void {
+  if(mallPrice($item`shadow brick`) < get("valueOfAdventure")) {
+    retrieveItem($item`shadow brick`, 13);
+  }
   if (!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure") * 30) {
     retrieveItem($item`cuppa Gill tea`);
     use($item`cuppa Gill tea`);
@@ -746,7 +641,7 @@ function combatSkill(): Skill {
 }
 
 function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
-  const items = Item.all().filter((item) => cupOf13sTier(item) > 2 && mallPrice(item) <= 500);
+  const items = Item.all().filter((item) => !(item.name.includes("Loathing Idol")) && cupOf13sTier(item) > 3 && autosellPrice(item) < 250 && mallPrice(item) <= 500);
 
   let best: [Item, Item, Item] | null = null;
   let bestPrice = Infinity;
@@ -777,3 +672,72 @@ function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
 
   return best;
 }
+
+function buildSeaPearlMacro(): Macro {
+  const macro = Macro.trySkill($skill`Sea *dent: Talk to Some Fish`);
+  const freeKill = getNextFreeKill();
+
+  if (freeKill) {
+    if (freeKill.do instanceof Skill) {
+      macro.trySkill(freeKill.do);
+    } else if (freeKill.do instanceof Item) {
+      macro.tryItem(freeKill.do);
+    }
+  }
+
+  return macro.trySkill(combatSkill()).repeat();
+}
+
+function getSeaPearlOutfit(elementModifier: string) {
+  const needsScuba = !have($effect`Driving Waterproofly`);
+  const isUnderwaterFam = bestFam().underwater;
+
+  return {
+    familiar: bestFam(),
+    modifier: elementModifier,
+    back: needsScuba ? $item`Elf Guard SCUBA tank` : undefined,
+    weapon: myClass() === $class`Seal Clubber` ? $item`Monodent of the Sea` : undefined,
+    famequip: !isUnderwaterFam && needsScuba ? $item`das boot` : undefined,
+    ...getNextFreeKill()?.equip, // Dynamically equips the item needed for the available free kill
+  };
+}
+
+interface SeaPearlZone {
+  name: string;
+  prop: string;
+  location: Location;
+  modifier: string;
+}
+
+const SEA_PEARL_ZONES: SeaPearlZone[] = [
+  {
+    name: "Sea Pearl Mine",
+    prop: "_unblemishedPearlAnemoneMine",
+    location: $location`Anemone Mine`,
+    modifier: "spooky res",
+  },
+  {
+    name: "Sea Pearl Bar",
+    prop: "_unblemishedPearlDiveBar",
+    location: $location`The Dive Bar`,
+    modifier: "sleaze res",
+  },
+  {
+    name: "Sea Pearl Reef",
+    prop: "_unblemishedPearlMadnessReef",
+    location: $location`Madness Reef`,
+    modifier: "stench res",
+  },
+  {
+    name: "Sea Pearl Trench",
+    prop: "_unblemishedPearlMarinaraTrench",
+    location: $location`The Marinara Trench`,
+    modifier: "hot res",
+  },
+  {
+    name: "Sea Pearl Deepests",
+    prop: "_unblemishedPearlTheBriniestDeepests",
+    location: $location`The Briniest Deepests`,
+    modifier: "cold res",
+  },
+];

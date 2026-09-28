@@ -148,6 +148,7 @@ export function AscendQuest(): Quest {
           visitUrl("main.php");
           if (args.smol || args.robot || args.sea) {
             while (handlingChoice()) runChoice(1);
+            runChoice(1);
           }
         },
       },

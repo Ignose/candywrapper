@@ -2112,9 +2112,9 @@ core-js@^3.16.4:
   integrity sha512-SJ4/EHwS36QMJd6h/Rg+GyR4A5xE0FSI3eZ+iBVpfqf1x0eTSg1smWLHrA+2jQThZSh97fmSgFSU8B61nxosxA==
 
 core-js@^3.47.0:
-  version "3.49.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.49.0.tgz#8b4d520ac034311fa21aa616f017ada0e0dbbddd"
-  integrity sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==
+  version "3.50.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.50.0.tgz#a18646fcb0097650189b4504c803e887bcae4c0a"
+  integrity sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw==
 
 create-create-app@^7.3.0:
   version "7.3.0"
@@ -3154,10 +3154,10 @@ kind-of@^6.0.2:
   resolved "https://registry.yarnpkg.com/kind-of/-/kind-of-6.0.3.tgz#07c05034a6c349fa06e24fa35aa76db4580ce4dd"
   integrity sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==
 
-kolmafia@^5.29180.0:
-  version "5.29180.0"
-  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.29180.0.tgz#4d5e49200e4b9fc680f3ba5097abadb6a96a46ae"
-  integrity sha512-GyPL/Y64/9k6IjbGmWd7zGkGAmGBrpSgD/n7ndAbeoY/02mSDAdxMeuDjl8dTOFMLBGRGZ+33FPUj7g+zb/2wA==
+kolmafia@^5.29297.0:
+  version "5.29297.0"
+  resolved "https://registry.yarnpkg.com/kolmafia/-/kolmafia-5.29297.0.tgz#1132f659f9bbfb4568ded2046ee7f69dee1e5cad"
+  integrity sha512-X0NWjDrukvxz1OcZ6tDi7d15DcjUCaaR4OwDuhK1mHcq6PRGfWqEfoll11N2XU4wtvstm6NqkdxK193+1QQqag==
 
 kuler@^2.0.0:
   version "2.0.0"
@@ -3173,9 +3173,9 @@ levn@^0.4.1:
     type-check "~0.4.0"
 
 libram@^0.11.24:
-  version "0.11.24"
-  resolved "https://registry.yarnpkg.com/libram/-/libram-0.11.24.tgz#fd29e6c50285ed7b90d42ab3a7159b91f2928ff4"
-  integrity sha512-3KZMFy+mcEAYVgMMSTZwT5ZDpcJjISUkWxMfOHdG0NPwHNWcOKfaeOar2kYWqkGfQcwOtccmbOT0PW62XNLDYA==
+  version "0.11.32"
+  resolved "https://registry.yarnpkg.com/libram/-/libram-0.11.32.tgz#1a6c0171ac46dbb418937dc6e69468b9a3320bfe"
+  integrity sha512-z2ga1C46ZvZZ7CFWIlnQmxLSON23ZpftX+Dj72Wzbke9WwIUqQ2SjQ8YQpeDHR7lc2JHYEDTsC1h4FsFyM6qkA==
   dependencies:
     core-js "^3.47.0"
     entities "^7.0.0"

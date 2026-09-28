@@ -1,4 +1,5 @@
 import {
+  blackAndWhiteApronKitContents,
   canEquip,
   chew,
   cliExecute,
@@ -22,6 +23,7 @@ import {
   myFullness,
   myInebriety,
   myName,
+  myPath,
   myPrimestat,
   mySpleenUse,
   outfitPieces,
@@ -29,6 +31,7 @@ import {
   print,
   putCloset,
   retrieveItem,
+  Skill,
   spleenLimit,
   storageAmount,
   toItem,
@@ -37,20 +40,24 @@ import {
   visitUrl,
 } from "kolmafia";
 import {
+  $effect,
   $familiar,
   $familiars,
   $item,
   $items,
   $location,
   $monster,
+  $path,
   $phylum,
   $skill,
   Kmail as _Kmail,
   gameDay,
   get,
   getBanishedMonsters,
+  getModifier,
   have,
   maxBy,
+  MenuItem,
   Pantogram,
   set,
   Snapper,
@@ -59,6 +66,7 @@ import {
 
 import { args } from "../args";
 import { garboAverageValue, garboValue } from "../engine/profits";
+import { CombatResource as BaseCombatResource, OutfitSpec } from "grimoire-kolmafia";
 
 export function haveAll(its: Item[]): boolean {
   return its.reduce((a, it) => a && have(it), true);
@@ -486,4 +494,96 @@ export function garboTarget(): Monster {
   return [...values.entries()].reduce((best, current) =>
     current[1] > best[1] ? current : best,
   )[0];
+}
+
+export const cheapestItem: (items: Item[]) => Item = (items: Item[]) =>
+  maxBy(items, MenuItem.defaultPriceFunction, true);
+
+const apron = () => blackAndWhiteApronKitContents();
+
+export const totalApronMeatDrop = () => {
+  let total = getModifier("Meat Drop", apron().main_effect);
+
+  for (let mealIndex = 0; mealIndex < 3; mealIndex++) {
+    for (let foodIndex = 0; foodIndex < 5; foodIndex++) {
+      total += getModifier(
+        "Meat Drop",
+        apron().meals[mealIndex][foodIndex].effect
+      );
+    }
+  }
+
+  return total;
+};
+
+export interface Resource {
+  name: string;
+  available: () => boolean;
+  prepare?: () => void;
+  equip?: Item | Familiar | OutfitSpec | OutfitSpec[];
+  effect?: Effect;
+  chance?: () => number;
+}
+
+export type CombatResource = Resource & BaseCombatResource;
+
+interface FreekillSource extends CombatResource {
+  do: Item | Skill;
+}
+
+export const freekillSources: FreekillSource[] = [
+  {
+    name: "Lil' Doctor™ bag",
+    available: () => have($item`Lil' Doctor™ bag`) && get("_chestXRayUsed") < 3,
+    do: $skill`Chest X-Ray`,
+    equip: $item`Lil' Doctor™ bag`,
+  },
+  {
+    name: "Gingerbread Mob Hit",
+    available: () => have($skill`Gingerbread Mob Hit`) && !get("_gingerbreadMobHitUsed"),
+    do: $skill`Gingerbread Mob Hit`,
+  },
+  {
+    name: "Shattering Punch",
+    available: () => have($skill`Shattering Punch`) && get("_shatteringPunchUsed") < 3,
+    do: $skill`Shattering Punch`,
+  },
+  {
+    name: "Replica bat-oomerang",
+    available: () => have($item`replica bat-oomerang`) && get("_usedReplicaBatoomerang") < 3,
+    do: $item`replica bat-oomerang`,
+  },
+  {
+    name: "The Jokester's gun",
+    available: () => have($item`The Jokester's gun`) && !get("_firedJokestersGun"),
+    do: $skill`Fire the Jokester's Gun`,
+    equip: $item`The Jokester's gun`,
+  },
+  {
+    name: "Shadow Brick",
+    available: () => have($item`shadow brick`) && get("_shadowBricksUsed") < 13,
+    do: $item`shadow brick`,
+  },
+  {
+    name: "Sweat Bullets",
+    available: () =>
+      have($item`blood cubic zirconia`) &&
+      get("_bczSweatBulletsCasts", 0) < 7 &&
+      myPath() !== $path`Grey You`,
+    do: $skill`BCZ: Sweat Bullets`,
+    equip: $item`blood cubic zirconia`,
+  },
+  {
+    name: "Jurassic Parka",
+    available: () =>
+      have($skill`Torso Awareness`) &&
+      have($item`Jurassic Parka`) &&
+      !have($effect`Everything Looks Yellow`),
+    equip: { equip: $items`Jurassic Parka`, modes: { parka: "dilophosaur" } },
+    do: $skill`Spit jurassic acid`,
+  },
+];
+
+export function getNextFreeKill(): FreekillSource | undefined {
+  return freekillSources.find((source) => source.available());
 }
