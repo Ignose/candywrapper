@@ -56,10 +56,13 @@ import {
   chrono,
   crimbo,
   cupOf13sDrink,
+  fixScreech,
   postRunQuests,
   pregamePasta,
   preRunQuests,
+  sealClubberFishySetup,
   seaPearls,
+  sWordSetup,
 } from "./repeatableTasks";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
@@ -181,7 +184,10 @@ export function AftercoreQuest(): Quest {
       ...postRunQuests(),
       ...pregamePasta(),
       ...cupOf13sDrink(),
+      ...sealClubberFishySetup(),
+      ...sWordSetup(),
       ...seaPearls(),
+      ...fixScreech(),
       //...noBarf(),
       //...garboWeen(),
       ...crimbo(),
@@ -266,6 +272,7 @@ export function AftercoreQuest(): Quest {
         },
         tracking: "Organs",
       },
+      ...seaPearls(),
       {
         name: "Nightcap (Marginal)",
         ready: () => have($item`Beach Comb`) || have($item`Map to Safety Shelter Grimace Prime`),

@@ -532,16 +532,30 @@ interface FreekillSource extends CombatResource {
 }
 
 export const freekillSources: FreekillSource[] = [
+    {
+    name: "Shadow Brick",
+    available: () => have($item`shadow brick`) && get("_shadowBricksUsed") < 13,
+    do: $item`shadow brick`,
+  },
   {
-    name: "Lil' Doctor™ bag",
-    available: () => have($item`Lil' Doctor™ bag`) && get("_chestXRayUsed") < 3,
-    do: $skill`Chest X-Ray`,
-    equip: $item`Lil' Doctor™ bag`,
+    name: "Sweat Bullets",
+    available: () =>
+      have($item`blood cubic zirconia`) &&
+      get("_bczSweatBulletsCasts", 0) < 7 &&
+      myPath() !== $path`Grey You`,
+    do: $skill`BCZ: Sweat Bullets`,
+    equip: $item`blood cubic zirconia`,
   },
   {
     name: "Gingerbread Mob Hit",
     available: () => have($skill`Gingerbread Mob Hit`) && !get("_gingerbreadMobHitUsed"),
     do: $skill`Gingerbread Mob Hit`,
+  },
+  {
+    name: "Lil' Doctor™ bag",
+    available: () => have($item`Lil' Doctor™ bag`) && get("_chestXRayUsed") < 3,
+    do: $skill`Chest X-Ray`,
+    equip: $item`Lil' Doctor™ bag`,
   },
   {
     name: "Shattering Punch",
@@ -558,20 +572,6 @@ export const freekillSources: FreekillSource[] = [
     available: () => have($item`The Jokester's gun`) && !get("_firedJokestersGun"),
     do: $skill`Fire the Jokester's Gun`,
     equip: $item`The Jokester's gun`,
-  },
-  {
-    name: "Shadow Brick",
-    available: () => have($item`shadow brick`) && get("_shadowBricksUsed") < 13,
-    do: $item`shadow brick`,
-  },
-  {
-    name: "Sweat Bullets",
-    available: () =>
-      have($item`blood cubic zirconia`) &&
-      get("_bczSweatBulletsCasts", 0) < 7 &&
-      myPath() !== $path`Grey You`,
-    do: $skill`BCZ: Sweat Bullets`,
-    equip: $item`blood cubic zirconia`,
   },
   {
     name: "Jurassic Parka",

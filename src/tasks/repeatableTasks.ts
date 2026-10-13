@@ -3,6 +3,7 @@ import {
   autosellPrice,
   availableAmount,
   canAdventure,
+  chew,
   cliExecute,
   cupOf13sTier,
   eatsilent,
@@ -19,10 +20,12 @@ import {
   holiday,
   inebrietyLimit,
   Item,
+  itemDropsArray,
   lastChoice,
   Location,
   mallPrice,
   maximize,
+  Monster,
   myAdventures,
   myClass,
   myDaycount,
@@ -56,6 +59,8 @@ import {
   $items,
   $location,
   $monster,
+  $monsters,
+  $phylum,
   $skill,
   $skills,
   $stat,
@@ -67,15 +72,27 @@ import {
   getTodaysHolidayWanderers,
   have,
   Macro,
+  maxBy,
   PocketProfessor,
   set,
+  Snapper,
+  sum,
   uneffect,
 } from "libram";
 
 import { args } from "../args";
 import { Task } from "../structure";
 
-import { cheapestItem, getGarden, getNextFreeKill, maxBase, pantogram, pantogramReady, stooperDrunk, totallyDrunk } from "./utils";
+import {
+  cheapestItem,
+  getGarden,
+  getNextFreeKill,
+  maxBase,
+  pantogram,
+  pantogramReady,
+  stooperDrunk,
+  totallyDrunk,
+} from "./utils";
 
 function famCheck(fam: Familiar): boolean {
   return have(fam) && fam.experience < 400;
@@ -88,6 +105,9 @@ const bestFam = (): Familiar =>
     $familiar`Chest Mimic`,
     $familiar`Grey Goose`,
   ].find(famCheck) ?? $familiar`Grey Goose`;
+
+const bestSeaFam =
+  get("screechCombats") > 0 ? $familiar`Patriotic Eagle` : $familiar`Red-Nosed Snapper`;
 
 const doSmol = args.smol ? true : false;
 
@@ -508,8 +528,7 @@ export function crimbo(): Task[] {
     },
     {
       name: "Super Nightcap",
-      ready: () =>
-        have($item`Drunkula's wineglass`) && args.crimbo && myDaycount() > 1,
+      ready: () => have($item`Drunkula's wineglass`) && args.crimbo && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
       tracking: "Organs",
@@ -553,6 +572,118 @@ export function cupOf13sDrink(): Task[] {
   ];
 }
 
+export function sWordSetup(): Task[] {
+  if (!CombatLoversLocket.have() || !CombatLoversLocket.reminiscesLeft()) {
+    return [];
+  } else
+    return [
+      {
+        name: "Set up S Word",
+        ready: () => have($familiar`Sword of S Words`),
+        completed: () => get("swordOfSWordsMonster", Monster.none) === getSWordMonster(),
+        do: () => CombatLoversLocket.reminisce(getSWordMonster()),
+        outfit: () => {
+          return {
+            pants: $item`Greatest American Pants`,
+            familiar: $familiar`Sword of S Words`,
+          };
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`%fn, kill a lot of these guys`).runaway(),
+        ),
+      },
+    ];
+}
+
+function getSWordMonster(): Monster {
+  // eslint-disable-next-line libram/verify-constants
+  const goodMonsters = $monsters`giant flamingo statue, Sloppy Seconds Burger, strong wind`;
+
+  return maxBy(goodMonsters, (monster) =>
+    sum(itemDropsArray(monster), ({ drop, rate }) => (rate / 100) * mallPrice(drop)),
+  );
+}
+
+export function sealClubberFishySetup(): Task[] {
+  if (myClass() !== $class`Seal Clubber`) return [];
+  else
+    return [
+      {
+        name: "Set up Screech",
+        ready: () =>
+          get("screechCombats") <= 0 &&
+          !get("banishedPhyla").includes("fish") &&
+          get("beGregariousFightsLeft") <= 0,
+        completed: () => get("banishedPhyla").includes("fish"),
+        do: () => $location`The Briniest Deepests`,
+        outfit: () => {
+          return {
+            modifier: "cold res",
+          };
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+            .trySkillRepeat(combatSkill())
+            .repeat(),
+        ),
+      },
+      {
+        name: "Set up Greg",
+        ready: () => mySpleenUse() < spleenLimit() - 2,
+        prepare: () => {
+          retrieveItem($item`Extrovermectin™`);
+          chew($item`Extrovermectin™`);
+        },
+        completed: () =>
+          have($effect`Fishy`, 300) ||
+          mySpleenUse() >= spleenLimit() ||
+          get("beGregariousFightsLeft") > 0,
+        do: () => CombatLoversLocket.reminisce($monster`cockroach`),
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Be Gregarious`)
+            .trySkillRepeat(combatSkill())
+            .repeat(),
+        ),
+      },
+    ];
+}
+
+export function fixScreech(): Task[] {
+  return [
+    {
+      name: "Fix screech",
+      ready: () =>
+        (get("banishedPhyla").includes("construct") || get("banishedPhyla").includes("fish")) &&
+        get("screechCombats") <= 0 &&
+        args.sea,
+      completed: () =>
+        !get("banishedPhyla").includes("construct") && !get("banishedPhyla").includes("fish"),
+      do: $location`Pandamonium Slums`,
+      outfit: {
+        familiar: $familiar`Patriotic Eagle`,
+        pants: $item`Greatest American Pants`,
+      },
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway(),
+      ),
+    },
+  ];
+}
+
+export function pompeii(): Task[] {
+  return [
+    {
+      name: "Pompeii (bastille)",
+      ready: () => !get("_pompeiiRun", false),
+      completed: () => get("_pompeiiRun", false),
+      do: () => {
+        cliExecute("pompeii");
+        set("_pompeiiRun", true);
+      },
+    },
+  ];
+}
+
 export function pregamePasta(): Task[] {
   return [
     {
@@ -573,9 +704,9 @@ export function pregamePasta(): Task[] {
         use($item`Mayozapine`);
         retrieveItem(deepDish);
         eatsilent(deepDish);
-      }
-    }
-  ]
+      },
+    },
+  ];
 }
 
 export function seaPearls(): Task[] {
@@ -599,12 +730,17 @@ export function seaPearls(): Task[] {
 function canSeaPearl(): boolean {
   return (
     get("isMerkinGladiatorChampion") &&
-    mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure")
+    (mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure") ||
+      myInebriety() > inebrietyLimit() + 1)
   );
 }
 
 function seaPearlPrepare(): void {
-  if(mallPrice($item`shadow brick`) < get("valueOfAdventure")) {
+  const goodphylum = $phylum`fish`;
+  if (Snapper.getTrackedPhylum() !== goodphylum) {
+    Snapper.trackPhylum(goodphylum);
+  }
+  if (mallPrice($item`shadow brick`) < get("valueOfAdventure")) {
     retrieveItem($item`shadow brick`, 13);
   }
   if (!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure") * 30) {
@@ -641,7 +777,13 @@ function combatSkill(): Skill {
 }
 
 function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
-  const items = Item.all().filter((item) => !(item.name.includes("Loathing Idol")) && cupOf13sTier(item) > 3 && autosellPrice(item) < 250 && mallPrice(item) <= 500);
+  const items = Item.all().filter(
+    (item) =>
+      !item.name.includes("Loathing Idol") &&
+      cupOf13sTier(item) > 3 &&
+      autosellPrice(item) < 250 &&
+      mallPrice(item) <= 500,
+  );
 
   let best: [Item, Item, Item] | null = null;
   let bestPrice = Infinity;
@@ -674,7 +816,10 @@ function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
 }
 
 function buildSeaPearlMacro(): Macro {
-  const macro = Macro.trySkill($skill`Sea *dent: Talk to Some Fish`);
+  const macro = Macro.if_(`monsterphylum plant`, Macro.trySkill($skill`Tear Away your Pants!`)).if_(
+    `!monsterphylum ${$phylum`fish`}`,
+    Macro.trySkill($skill`Sea *dent: Talk to Some Fish`),
+  );
   const freeKill = getNextFreeKill();
 
   if (freeKill) {
@@ -685,7 +830,7 @@ function buildSeaPearlMacro(): Macro {
     }
   }
 
-  return macro.trySkill(combatSkill()).repeat();
+  return macro.trySkillRepeat(combatSkill()).repeat();
 }
 
 function getSeaPearlOutfit(elementModifier: string) {
@@ -693,11 +838,12 @@ function getSeaPearlOutfit(elementModifier: string) {
   const isUnderwaterFam = bestFam().underwater;
 
   return {
-    familiar: bestFam(),
+    familiar: bestSeaFam,
     modifier: elementModifier,
     back: needsScuba ? $item`Elf Guard SCUBA tank` : undefined,
     weapon: myClass() === $class`Seal Clubber` ? $item`Monodent of the Sea` : undefined,
     famequip: !isUnderwaterFam && needsScuba ? $item`das boot` : undefined,
+    pants: $item`tearaway pants`,
     ...getNextFreeKill()?.equip, // Dynamically equips the item needed for the available free kill
   };
 }

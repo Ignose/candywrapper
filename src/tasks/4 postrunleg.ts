@@ -1,4 +1,3 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   buy,
   canAdventure,
@@ -39,7 +38,6 @@ import {
   BarrelShrine,
   get,
   have,
-  Macro,
   uneffect,
 } from "libram";
 
@@ -50,16 +48,15 @@ import {
   chrono,
   crimbo,
   cupOf13sDrink,
+  fixScreech,
+  pompeii,
   postRunQuests,
   pregamePasta,
+  sealClubberFishySetup,
   seaPearls,
+  sWordSetup,
 } from "./repeatableTasks";
-import {
-  doneAdventuring,
-  pvpCloset,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+import { doneAdventuring, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 let pajamas = false;
 let smoke = 0;
@@ -206,20 +203,6 @@ export function PostRunQuests(): Quest {
         tracking: "Organs",
       },
       {
-        name: "Fix screech",
-        ready: () =>
-          get("banishedPhyla").includes("construct") && get("screechCombats") <= 0 && args.sea,
-        completed: () => !get("banishedPhyla").includes("construct"),
-        do: $location`The Dark Heart of the Woods`,
-        outfit: {
-          familiar: $familiar`Patriotic Eagle`,
-          pants: $item`Greatest American Pants`,
-        },
-        combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway(),
-        ),
-      },
-      {
         name: "Steel Margarita",
         ready: () => !args.cs,
         completed: () => have($skill`Liver of Steel`) || have($item`steel margarita`),
@@ -254,8 +237,12 @@ export function PostRunQuests(): Quest {
       },
       ...pregamePasta(),
       ...postRunQuests(),
+      ...pompeii(),
+      ...sWordSetup(),
       ...cupOf13sDrink(),
+      ...sealClubberFishySetup(),
       ...seaPearls(),
+      ...fixScreech(),
       //...noBarf(),
       //...garboWeen(),
       ...crimbo(),
