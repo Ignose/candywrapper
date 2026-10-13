@@ -1,21 +1,31 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
+  autosellPrice,
   availableAmount,
   canAdventure,
+  chew,
   cliExecute,
+  cupOf13sTier,
+  eatsilent,
   equip,
   Familiar,
   fullnessLimit,
   getCampground,
   getClanLounge,
   getClanName,
+  getWorkshed,
   guildStoreAvailable,
   handlingChoice,
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
+  Item,
+  itemDropsArray,
   lastChoice,
+  Location,
+  mallPrice,
   maximize,
+  Monster,
   myAdventures,
   myClass,
   myDaycount,
@@ -24,11 +34,15 @@ import {
   myInebriety,
   myLevel,
   myMaxhp,
+  myMp,
   myPrimestat,
   mySpleenUse,
+  print,
   restoreHp,
+  restoreMp,
   retrieveItem,
   runChoice,
+  Skill,
   spleenLimit,
   storageAmount,
   takeStorage,
@@ -45,25 +59,34 @@ import {
   $items,
   $location,
   $monster,
+  $monsters,
+  $phylum,
   $skill,
   $skills,
   $stat,
   AprilingBandHelmet,
+  AsdonMartin,
   CombatLoversLocket,
+  CupOfThirteens,
   get,
   getTodaysHolidayWanderers,
   have,
   Macro,
+  maxBy,
   PocketProfessor,
   set,
+  Snapper,
+  sum,
   uneffect,
 } from "libram";
 
 import { args } from "../args";
-
 import { Task } from "../structure";
+
 import {
+  cheapestItem,
   getGarden,
+  getNextFreeKill,
   maxBase,
   pantogram,
   pantogramReady,
@@ -82,6 +105,9 @@ const bestFam = (): Familiar =>
     $familiar`Chest Mimic`,
     $familiar`Grey Goose`,
   ].find(famCheck) ?? $familiar`Grey Goose`;
+
+const bestSeaFam =
+  get("screechCombats") > 0 ? $familiar`Patriotic Eagle` : $familiar`Red-Nosed Snapper`;
 
 const doSmol = args.smol ? true : false;
 
@@ -141,8 +167,7 @@ export function postRunQuests(): Task[] {
       choices: {
         1494: 2,
       },
-      do: () =>
-        use($item`S.I.T. Course Completion Certificate`),
+      do: () => use($item`S.I.T. Course Completion Certificate`),
     },
     {
       name: "Restore HP",
@@ -499,12 +524,11 @@ export function crimbo(): Task[] {
       },
       clear: "all",
       tracking: "Crimbo",
-      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      limit: { tries: 1 },
     },
     {
       name: "Super Nightcap",
-      ready: () =>
-        have($item`Drunkula's wineglass`) && holiday().includes("Halloween") && myDaycount() > 1,
+      ready: () => have($item`Drunkula's wineglass`) && args.crimbo && myDaycount() > 1,
       completed: () => totallyDrunk(),
       do: () => cliExecute(`CONSUME NIGHTCAP`),
       tracking: "Organs",
@@ -519,7 +543,347 @@ export function crimbo(): Task[] {
       },
       clear: "all",
       tracking: "Crimbo",
-      limit: { tries: 1 }, //this will run again after installing CMC, by magic
+      limit: { tries: 1 },
     },
   ];
 }
+
+export function cupOf13sDrink(): Task[] {
+  return [
+    {
+      name: "Drink Cup of 13s",
+      ready: () => get("_cupOf13sJewels", 0) >= 13 && myInebriety() < inebrietyLimit() && args.cs,
+      completed: () => get("_cupOf13sJewels", 0) < 13,
+      do: () => {
+        const combination = cheapestCupOf13sCombination();
+        if (combination === null) {
+          throw "Cup of 13s died";
+        }
+        const item1 = combination[0];
+        const item2 = combination[1];
+        const item3 = combination[2];
+
+        print(`Using items ${item1}, ${item2}, and ${item3} for cup of 13s`);
+
+        combination.forEach((i) => retrieveItem(i, 2));
+        CupOfThirteens.drink(item1, item2, item3);
+      },
+    },
+  ];
+}
+
+export function sWordSetup(): Task[] {
+  if (!CombatLoversLocket.have() || !CombatLoversLocket.reminiscesLeft()) {
+    return [];
+  } else
+    return [
+      {
+        name: "Set up S Word",
+        ready: () => have($familiar`Sword of S Words`),
+        completed: () => get("swordOfSWordsMonster", Monster.none) === getSWordMonster(),
+        do: () => CombatLoversLocket.reminisce(getSWordMonster()),
+        outfit: () => {
+          return {
+            pants: $item`Greatest American Pants`,
+            familiar: $familiar`Sword of S Words`,
+          };
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`%fn, kill a lot of these guys`).runaway(),
+        ),
+      },
+    ];
+}
+
+function getSWordMonster(): Monster {
+  // eslint-disable-next-line libram/verify-constants
+  const goodMonsters = $monsters`giant flamingo statue, Sloppy Seconds Burger, strong wind`;
+
+  return maxBy(goodMonsters, (monster) =>
+    sum(itemDropsArray(monster), ({ drop, rate }) => (rate / 100) * mallPrice(drop)),
+  );
+}
+
+export function sealClubberFishySetup(): Task[] {
+  if (myClass() !== $class`Seal Clubber`) return [];
+  else
+    return [
+      {
+        name: "Set up Screech",
+        ready: () =>
+          get("screechCombats") <= 0 &&
+          !get("banishedPhyla").includes("fish") &&
+          get("beGregariousFightsLeft") <= 0,
+        completed: () => get("banishedPhyla").includes("fish"),
+        do: () => $location`The Briniest Deepests`,
+        outfit: () => {
+          return {
+            modifier: "cold res",
+          };
+        },
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`%fn, Release the Patriotic Screech!`)
+            .trySkillRepeat(combatSkill())
+            .repeat(),
+        ),
+      },
+      {
+        name: "Set up Greg",
+        ready: () => mySpleenUse() < spleenLimit() - 2,
+        prepare: () => {
+          retrieveItem($item`Extrovermectin™`);
+          chew($item`Extrovermectin™`);
+        },
+        completed: () =>
+          have($effect`Fishy`, 300) ||
+          mySpleenUse() >= spleenLimit() ||
+          get("beGregariousFightsLeft") > 0,
+        do: () => CombatLoversLocket.reminisce($monster`cockroach`),
+        combat: new CombatStrategy().macro(
+          Macro.trySkill($skill`Be Gregarious`)
+            .trySkillRepeat(combatSkill())
+            .repeat(),
+        ),
+      },
+    ];
+}
+
+export function fixScreech(): Task[] {
+  return [
+    {
+      name: "Fix screech",
+      ready: () =>
+        (get("banishedPhyla").includes("construct") || get("banishedPhyla").includes("fish")) &&
+        get("screechCombats") <= 0 &&
+        args.sea,
+      completed: () =>
+        !get("banishedPhyla").includes("construct") && !get("banishedPhyla").includes("fish"),
+      do: $location`Pandamonium Slums`,
+      outfit: {
+        familiar: $familiar`Patriotic Eagle`,
+        pants: $item`Greatest American Pants`,
+      },
+      combat: new CombatStrategy().macro(
+        Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway(),
+      ),
+    },
+  ];
+}
+
+export function pompeii(): Task[] {
+  return [
+    {
+      name: "Pompeii (bastille)",
+      ready: () => !get("_pompeiiRun", false),
+      completed: () => get("_pompeiiRun", false),
+      do: () => {
+        cliExecute("pompeii");
+        set("_pompeiiRun", true);
+      },
+    },
+  ];
+}
+
+export function pregamePasta(): Task[] {
+  return [
+    {
+      name: "Pregame Legendary Pasta",
+      ready: () => getWorkshed() === $item`portable Mayo Clinic`,
+      completed: () => true,
+      do: () => {
+        // eslint-disable-next-line libram/verify-constants
+        const legendaryPasta = $items`Pesto alla Marziano, Arrattabbattabiata, Frutti di Scatoletta, Orzo di Riso, Pasta Grimavera, Linguini Ubriacapa, Gnocci Domani, Formica e Pepe, Tubetto Gelatto`;
+        const cheapestPasta = cheapestItem(legendaryPasta);
+        const deepDish = $item`Deep Dish of Legend`;
+        retrieveItem($item`Mayoflex`);
+        use($item`Mayoflex`);
+        retrieveItem(cheapestPasta);
+        eatsilent(cheapestPasta, 1);
+        runChoice(5);
+        retrieveItem($item`Mayozapine`);
+        use($item`Mayozapine`);
+        retrieveItem(deepDish);
+        eatsilent(deepDish);
+      },
+    },
+  ];
+}
+
+export function seaPearls(): Task[] {
+  return SEA_PEARL_ZONES.map((zone) => ({
+    name: zone.name,
+    ready: () =>
+      canSeaPearl() &&
+      !get(zone.prop) &&
+      myAdventures() >= 10 - get(`${zone.prop}Progress`, 0) / 10,
+    completed: () => get(zone.prop, false),
+    prepare: () => seaPearlPrepare(),
+    do: () => zone.location,
+    outfit: () => getSeaPearlOutfit(zone.modifier),
+    combat: new CombatStrategy().macro(buildSeaPearlMacro()),
+    clear: "all",
+    tracking: "Sea Pearl",
+    limit: { turns: 10 },
+  }));
+}
+
+function canSeaPearl(): boolean {
+  return (
+    get("isMerkinGladiatorChampion") &&
+    (mallPrice($item`unblemished pearl`) / 10 >= get("valueOfAdventure") ||
+      myInebriety() > inebrietyLimit() + 1)
+  );
+}
+
+function seaPearlPrepare(): void {
+  const goodphylum = $phylum`fish`;
+  if (Snapper.getTrackedPhylum() !== goodphylum) {
+    Snapper.trackPhylum(goodphylum);
+  }
+  if (mallPrice($item`shadow brick`) < get("valueOfAdventure")) {
+    retrieveItem($item`shadow brick`, 13);
+  }
+  if (!have($effect`Fishy`) && mallPrice($item`cuppa Gill tea`) < get("valueOfAdventure") * 30) {
+    retrieveItem($item`cuppa Gill tea`);
+    use($item`cuppa Gill tea`);
+  }
+  if (AsdonMartin.installed() && !have($effect`Driving Waterproofly`)) {
+    AsdonMartin.drive(AsdonMartin.Driving.Waterproofly);
+  }
+  if (!have($effect`Feeling Peaceful`) && get("_feelPeacefulUsed") < 3) {
+    useSkill($skill`Feel Peaceful`);
+  }
+  if (!have($effect`Astral Shell`)) {
+    useSkill($skill`Astral Shell`);
+  }
+  if (!have($effect`Elemental Saucesphere`)) {
+    useSkill($skill`Elemental Saucesphere`);
+  }
+  if (have($effect`The Colors...`)) {
+    uneffect($effect`The Colors...`);
+  }
+  if (myHp() < 1000 && myMaxhp() > 1000) {
+    restoreHp(1000);
+  }
+  if (myMp() < 50) {
+    restoreMp(50);
+  }
+}
+
+function combatSkill(): Skill {
+  if (myPrimestat() === $stat`Muscle`) {
+    return $skill`Lunging Thrust-Smack`;
+  } else return $skill`Saucegeyser`;
+}
+
+function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
+  const items = Item.all().filter(
+    (item) =>
+      !item.name.includes("Loathing Idol") &&
+      cupOf13sTier(item) > 3 &&
+      autosellPrice(item) < 250 &&
+      mallPrice(item) <= 500,
+  );
+
+  let best: [Item, Item, Item] | null = null;
+  let bestPrice = Infinity;
+
+  for (let i = 0; i < items.length; i++) {
+    const item1 = items[i];
+    const tier1 = cupOf13sTier(item1);
+
+    for (let j = i; j < items.length; j++) {
+      const item2 = items[j];
+      const tier2 = cupOf13sTier(item2);
+
+      for (let k = j; k < items.length; k++) {
+        const item3 = items[k];
+        const tier3 = cupOf13sTier(item3);
+
+        if (tier1 + tier2 + tier3 !== 13) continue;
+
+        const price = mallPrice(item1) + mallPrice(item2) + mallPrice(item3);
+
+        if (price < bestPrice) {
+          bestPrice = price;
+          best = [item1, item2, item3];
+        }
+      }
+    }
+  }
+
+  return best;
+}
+
+function buildSeaPearlMacro(): Macro {
+  const macro = Macro.if_(`monsterphylum plant`, Macro.trySkill($skill`Tear Away your Pants!`)).if_(
+    `!monsterphylum ${$phylum`fish`}`,
+    Macro.trySkill($skill`Sea *dent: Talk to Some Fish`),
+  );
+  const freeKill = getNextFreeKill();
+
+  if (freeKill) {
+    if (freeKill.do instanceof Skill) {
+      macro.trySkill(freeKill.do);
+    } else if (freeKill.do instanceof Item) {
+      macro.tryItem(freeKill.do);
+    }
+  }
+
+  return macro.trySkillRepeat(combatSkill()).repeat();
+}
+
+function getSeaPearlOutfit(elementModifier: string) {
+  const needsScuba = !have($effect`Driving Waterproofly`);
+  const isUnderwaterFam = bestFam().underwater;
+
+  return {
+    familiar: bestSeaFam,
+    modifier: elementModifier,
+    back: needsScuba ? $item`Elf Guard SCUBA tank` : undefined,
+    weapon: myClass() === $class`Seal Clubber` ? $item`Monodent of the Sea` : undefined,
+    famequip: !isUnderwaterFam && needsScuba ? $item`das boot` : undefined,
+    pants: $item`tearaway pants`,
+    ...getNextFreeKill()?.equip, // Dynamically equips the item needed for the available free kill
+  };
+}
+
+interface SeaPearlZone {
+  name: string;
+  prop: string;
+  location: Location;
+  modifier: string;
+}
+
+const SEA_PEARL_ZONES: SeaPearlZone[] = [
+  {
+    name: "Sea Pearl Mine",
+    prop: "_unblemishedPearlAnemoneMine",
+    location: $location`Anemone Mine`,
+    modifier: "spooky res",
+  },
+  {
+    name: "Sea Pearl Bar",
+    prop: "_unblemishedPearlDiveBar",
+    location: $location`The Dive Bar`,
+    modifier: "sleaze res",
+  },
+  {
+    name: "Sea Pearl Reef",
+    prop: "_unblemishedPearlMadnessReef",
+    location: $location`Madness Reef`,
+    modifier: "stench res",
+  },
+  {
+    name: "Sea Pearl Trench",
+    prop: "_unblemishedPearlMarinaraTrench",
+    location: $location`The Marinara Trench`,
+    modifier: "hot res",
+  },
+  {
+    name: "Sea Pearl Deepests",
+    prop: "_unblemishedPearlTheBriniestDeepests",
+    location: $location`The Briniest Deepests`,
+    modifier: "cold res",
+  },
+];

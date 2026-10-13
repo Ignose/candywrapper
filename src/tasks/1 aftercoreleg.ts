@@ -50,9 +50,20 @@ import { Cycle, setConfiguration, Station } from "libram/dist/resources/2022/Tra
 
 import { args } from "../args";
 import { garboValue } from "../engine/profits";
-
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests, preRunQuests } from "./repeatableTasks";
 import { Quest } from "../structure";
+
+import {
+  chrono,
+  crimbo,
+  cupOf13sDrink,
+  fixScreech,
+  postRunQuests,
+  pregamePasta,
+  preRunQuests,
+  sealClubberFishySetup,
+  seaPearls,
+  sWordSetup,
+} from "./repeatableTasks";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 const RESOURCES = ["Spice", "Rum", "Anchor", "Mast", "Silk", "Gold"] as const;
@@ -171,8 +182,14 @@ export function AftercoreQuest(): Quest {
       },
       ...preRunQuests(),
       ...postRunQuests(),
-      ...noBarf(),
-      ...garboWeen(),
+      ...pregamePasta(),
+      ...cupOf13sDrink(),
+      ...sealClubberFishySetup(),
+      ...sWordSetup(),
+      ...seaPearls(),
+      ...fixScreech(),
+      //...noBarf(),
+      //...garboWeen(),
       ...crimbo(),
       ...chrono(),
       {
@@ -255,6 +272,7 @@ export function AftercoreQuest(): Quest {
         },
         tracking: "Organs",
       },
+      ...seaPearls(),
       {
         name: "Nightcap (Marginal)",
         ready: () => have($item`Beach Comb`) || have($item`Map to Safety Shelter Grimace Prime`),

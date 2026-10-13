@@ -17,9 +17,9 @@ import {
 import { $item, $skill, clamp, get, have } from "libram";
 
 import { args } from "../args";
-
-import { preRunQuests } from "./repeatableTasks";
 import { Quest } from "../structure";
+
+import { preRunQuests, seaPearls } from "./repeatableTasks";
 import { shouldWeOverdrink } from "./utils";
 
 const runType = () =>
@@ -33,6 +33,8 @@ const runType = () =>
     ? args.robotscript
     : args.ih8u
     ? args.ih8uscript
+    : args.sea
+    ? args.seascript
     : "autoscend";
 
 export function howManySausagesCouldIEat() {
@@ -86,9 +88,7 @@ function doIh8uDrinks(): void {
   while (
     canDrinkMore() &&
     (have($item`mini kiwitini`) ||
-      (have($item`mini kiwi`) &&
-        (have($item`bottle of vodka`) ||
-        have($item`bottle of gin`))))
+      (have($item`mini kiwi`) && (have($item`bottle of vodka`) || have($item`bottle of gin`))))
   ) {
     if (!have($item`mini kiwitini`)) retrieveItem($item`mini kiwitini`);
     useSkill($skill`The Ode to Booze`);
@@ -117,6 +117,7 @@ export function RunQuests(): Quest {
     completed: () => get("kingLiberated"),
     tasks: [
       ...preRunQuests(),
+      ...seaPearls(),
       {
         name: "Run",
         completed: () => (get("kingLiberated") && args.cs) || step("questL13Final") > 11,

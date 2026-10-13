@@ -1,10 +1,8 @@
-import { CombatStrategy } from "grimoire-kolmafia";
 import {
   buy,
   canAdventure,
   cliExecute,
   drink,
-  Effect,
   getWorkshed,
   hippyStoneBroken,
   inebrietyLimit,
@@ -15,13 +13,10 @@ import {
   myDaycount,
   myInebriety,
   myLevel,
-  myMaxhp,
   mySign,
   numericModifier,
   print,
   pvpAttacksLeft,
-  restoreHp,
-  restoreMp,
   retrieveItem,
   runChoice,
   setProperty,
@@ -30,7 +25,6 @@ import {
   useFamiliar,
   useSkill,
   visitUrl,
-  wait,
 } from "kolmafia";
 import {
   $coinmaster,
@@ -39,29 +33,30 @@ import {
   $familiar,
   $familiars,
   $item,
-  $items,
   $location,
   $skill,
+  BarrelShrine,
   get,
   have,
-  Macro,
   uneffect,
 } from "libram";
 
 import { args } from "../args";
-
-import { chrono, crimbo, garboWeen, noBarf, postRunQuests } from "./repeatableTasks";
 import { Quest } from "../structure";
+
 import {
-  backstageItemsDone,
-  bestFam,
-  doneAdventuring,
-  haveAll,
-  maxBase,
-  pvpCloset,
-  stooperDrunk,
-  totallyDrunk,
-} from "./utils";
+  chrono,
+  crimbo,
+  cupOf13sDrink,
+  fixScreech,
+  pompeii,
+  postRunQuests,
+  pregamePasta,
+  sealClubberFishySetup,
+  seaPearls,
+  sWordSetup,
+} from "./repeatableTasks";
+import { doneAdventuring, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
 let pajamas = false;
 let smoke = 0;
@@ -87,8 +82,9 @@ export function PostRunQuests(): Quest {
       {
         name: "Clear citizen",
         completed: () =>
-          !get("_citizenZone", "").includes("castle") &&
-          !get("_citizenZone", "").includes("Madness Bakery"),
+          !get("_citizenZone") ||
+          get("_citizenZone") === $location`The Dire Warren` ||
+          get("_citizenZone") === $location`Barf Mountain`,
         do: (): void => {
           uneffect($effect`Citizen of a Zone`);
           cliExecute(`set _citizenZone = ""`);
@@ -207,147 +203,10 @@ export function PostRunQuests(): Quest {
         tracking: "Organs",
       },
       {
-        name: "Laugh Floor",
-        ready: () => !args.cs,
-        completed: () =>
-          have($skill`Liver of Steel`) ||
-          have($item`steel margarita`) ||
-          have($item`Azazel's lollipop`) ||
-          have($item`observational glasses`),
-        effects: () => [
-          ...(have($skill`Musk of the Moose`) ? $effects`Musk of the Moose` : []),
-          ...(have($skill`Carlweather's Cantata of Confrontation`)
-            ? $effects`Carlweather's Cantata of Confrontation`
-            : []),
-        ],
-        prepare: (): void => {
-          if (!have($effect`Carlweather's Cantata of Confrontation`)) {
-            cliExecute("kmail to Buffy || 10 Cantata of Confrontation");
-            wait(15);
-            cliExecute("refresh effects");
-          }
-          $effects`Smooth Movements, The Sonata of Sneakiness, Darkened Photons, Shifted Phase`.forEach(
-            (ef: Effect) => cliExecute(`uneffect ${ef}`),
-          );
-          restoreHp(0.75 * myMaxhp());
-          restoreMp(20);
-        },
-        do: $location`The Laugh Floor`,
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${maxBase()}, 100 combat rate, 3 item, 250 bonus carnivorous potted plant`,
-        }),
-        combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`Curse of Weaksauce`)
-            .tryItem($item`train whistle`)
-            .tryItem($item`porquoise-handled sixgun`)
-            .attack()
-            .repeat(),
-        ),
-        limit: { tries: 15 },
-        tracking: "Steel Organ",
-      },
-      {
-        name: "Infernal Rackets Backstage",
-        ready: () => !args.cs,
-        completed: () =>
-          have($skill`Liver of Steel`) ||
-          have($item`steel margarita`) ||
-          have($item`Azazel's unicorn`) ||
-          backstageItemsDone(),
-        effects: () => [
-          ...(have($skill`Smooth Movement`) ? $effects`Smooth Movements` : []),
-          ...(have($skill`The Sonata of Sneakiness`) ? $effects`The Sonata of Sneakiness` : []),
-        ],
-        prepare: (): void => {
-          if (!have($effect`The Sonata of Sneakiness`)) {
-            cliExecute("kmail to Buffy || 10 Sonata of Sneakiness");
-            wait(15);
-            cliExecute("refresh effects");
-          }
-          $effects`Musk of the Moose, Carlweather's Cantata of Confrontation, Hooooooooonk!`.forEach(
-            (ef: Effect) => cliExecute(`uneffect ${ef}`),
-          );
-          restoreHp(0.75 * myMaxhp());
-          restoreMp(20);
-        },
-        do: $location`Infernal Rackets Backstage`,
-        outfit: () => ({
-          familiar: bestFam(),
-          modifier: `${maxBase()}, -100 combat rate, 3 item, 250 bonus carnivorous potted plant`,
-        }),
-        combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`Curse of Weaksauce`)
-            .tryItem($item`train whistle`)
-            .tryItem($item`porquoise-handled sixgun`)
-            .attack()
-            .repeat(),
-        ),
-        limit: { tries: 15 },
-        tracking: "Steel Organ",
-      },
-      {
-        name: "Mourn",
-        ready: () => have($item`observational glasses`) && !args.cs,
-        completed: () =>
-          have($skill`Liver of Steel`) ||
-          have($item`steel margarita`) ||
-          have($item`Azazel's lollipop`),
-        outfit: {
-          equip: $items`hilarious comedy prop, observational glasses, Victor\, the Insult Comic Hellhound Puppet`,
-        },
-        do: () => cliExecute("panda comedy insult; panda comedy observe"),
-        tracking: "Steel Organ",
-      },
-      {
-        name: "Sven Golly",
-        ready: () => backstageItemsDone() && !args.cs,
-        completed: () =>
-          have($skill`Liver of Steel`) ||
-          have($item`steel margarita`) ||
-          have($item`Azazel's unicorn`),
-        do: (): void => {
-          cliExecute(
-            `panda arena Bognort ${$items`giant marshmallow, gin-soaked blotter paper`.find((a) =>
-              have(a),
-            )}`,
-          );
-          cliExecute(
-            `panda arena Stinkface ${$items`beer-scented teddy bear, gin-soaked blotter paper`.find(
-              (a) => have(a),
-            )}`,
-          );
-          cliExecute(
-            `panda arena Flargwurm ${$items`booze-soaked cherry, sponge cake`.find((a) =>
-              have(a),
-            )}`,
-          );
-          cliExecute(`panda arena Jim ${$items`comfy pillow, sponge cake`.find((a) => have(a))}`);
-        },
-        tracking: "Steel Organ",
-      },
-      {
-        name: "Moaning Panda",
-        ready: () => haveAll($items`Azazel's lollipop, Azazel's unicorn`) && !args.cs,
-        completed: () =>
-          have($skill`Liver of Steel`) ||
-          have($item`steel margarita`) ||
-          have($item`Azazel's tutu`),
-        acquire: () =>
-          $items`bus pass, imp air`.map((it) => ({
-            item: it,
-            num: 5,
-            price: get("valueOfAdventure"),
-          })),
-        do: () => cliExecute("panda moan"),
-        limit: { tries: 3 },
-        tracking: "Steel Organ",
-      },
-      {
         name: "Steel Margarita",
-        ready: () => haveAll($items`Azazel's tutu, Azazel's lollipop, Azazel's unicorn`),
+        ready: () => !args.cs,
         completed: () => have($skill`Liver of Steel`) || have($item`steel margarita`),
-        do: () => cliExecute("panda temple"),
+        do: () => cliExecute(`loopstar goal="organ"`),
         tracking: "Steel Organ",
       },
       {
@@ -376,9 +235,16 @@ export function PostRunQuests(): Quest {
         limit: { tries: 6 },
         tracking: "Organs",
       },
+      ...pregamePasta(),
       ...postRunQuests(),
-      ...noBarf(),
-      ...garboWeen(),
+      ...pompeii(),
+      ...sWordSetup(),
+      ...cupOf13sDrink(),
+      ...sealClubberFishySetup(),
+      ...seaPearls(),
+      ...fixScreech(),
+      //...noBarf(),
+      //...garboWeen(),
       ...crimbo(),
       ...chrono(),
       {
@@ -468,7 +334,8 @@ export function PostRunQuests(): Quest {
         completed: () =>
           !have($skill`Aug. 13th: Left/Off Hander's Day!`) ||
           have($effect`Offhand Remarkable`) ||
-          get("_aug13Cast", false),
+          get("_aug13Cast", false) ||
+          (get("_augSkillsCast") >= 5 && get("_augTodayCast")),
         do: () => useSkill($skill`Aug. 13th: Left/Off Hander's Day!`),
         tracking: "Rollover Prep",
       },
@@ -510,6 +377,7 @@ export function PostRunQuests(): Quest {
           if (have($item`clockwork maid`)) {
             use($item`clockwork maid`);
           }
+          BarrelShrine.smashParty();
           pajamas = true;
         },
         outfit: () => ({
