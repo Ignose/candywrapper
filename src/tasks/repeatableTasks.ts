@@ -580,11 +580,13 @@ export function sWordSetup(): Task[] {
       {
         name: "Set up S Word",
         ready: () => have($familiar`Sword of S Words`),
-        completed: () => get("swordOfSWordsMonster", Monster.none) === getSWordMonster(),
+        completed: () => get("swordOfSWordsMonster", Monster.none) === getSWordMonster() || true,
         do: () => CombatLoversLocket.reminisce(getSWordMonster()),
         outfit: () => {
           return {
-            pants: $item`Greatest American Pants`,
+            pants: have($item`Greatest American Pants`)
+              ? $item`Greatest American Pants`
+              : undefined,
             familiar: $familiar`Sword of S Words`,
           };
         },
@@ -661,7 +663,7 @@ export function fixScreech(): Task[] {
       do: $location`Pandamonium Slums`,
       outfit: {
         familiar: $familiar`Patriotic Eagle`,
-        pants: $item`Greatest American Pants`,
+        pants: have($item`Greatest American Pants`) ? $item`Greatest American Pants` : undefined,
       },
       combat: new CombatStrategy().macro(
         Macro.trySkill($skill`%fn, Release the Patriotic Screech!`).runaway(),
@@ -842,6 +844,7 @@ function getSeaPearlOutfit(elementModifier: string) {
     modifier: elementModifier,
     back: needsScuba ? $item`Elf Guard SCUBA tank` : undefined,
     weapon: myClass() === $class`Seal Clubber` ? $item`Monodent of the Sea` : undefined,
+    offhand: myInebriety() > inebrietyLimit() ? $item`Drunkula's wineglass` : undefined,
     famequip: !isUnderwaterFam && needsScuba ? $item`das boot` : undefined,
     pants: $item`tearaway pants`,
     ...getNextFreeKill()?.equip, // Dynamically equips the item needed for the available free kill

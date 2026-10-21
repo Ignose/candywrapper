@@ -241,7 +241,6 @@ export function PostRunQuests(): Quest {
       ...sWordSetup(),
       ...cupOf13sDrink(),
       ...sealClubberFishySetup(),
-      ...seaPearls(),
       ...fixScreech(),
       //...noBarf(),
       //...garboWeen(),
