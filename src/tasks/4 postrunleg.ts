@@ -47,14 +47,10 @@ import { Quest } from "../structure";
 import {
   chrono,
   crimbo,
-  cupOf13sDrink,
   fixScreech,
   pompeii,
   postRunQuests,
-  pregamePasta,
   sealClubberFishySetup,
-  seaPearls,
-  sWordSetup,
 } from "./repeatableTasks";
 import { doneAdventuring, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
@@ -235,11 +231,8 @@ export function PostRunQuests(): Quest {
         limit: { tries: 6 },
         tracking: "Organs",
       },
-      ...pregamePasta(),
       ...postRunQuests(),
       ...pompeii(),
-      ...sWordSetup(),
-      ...cupOf13sDrink(),
       ...sealClubberFishySetup(),
       ...fixScreech(),
       //...noBarf(),

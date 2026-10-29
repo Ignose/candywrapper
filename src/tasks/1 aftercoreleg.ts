@@ -55,14 +55,12 @@ import { Quest } from "../structure";
 import {
   chrono,
   crimbo,
-  cupOf13sDrink,
   fixScreech,
+  pompeii,
   postRunQuests,
-  pregamePasta,
   preRunQuests,
   sealClubberFishySetup,
   seaPearls,
-  sWordSetup,
 } from "./repeatableTasks";
 import { maxBase, pvpCloset, stooperDrunk, totallyDrunk } from "./utils";
 
@@ -182,12 +180,10 @@ export function AftercoreQuest(): Quest {
       },
       ...preRunQuests(),
       ...postRunQuests(),
-      ...pregamePasta(),
-      ...cupOf13sDrink(),
       ...sealClubberFishySetup(),
-      ...sWordSetup(),
       ...seaPearls(),
       ...fixScreech(),
+      ...pompeii(),
       //...noBarf(),
       //...garboWeen(),
       ...crimbo(),

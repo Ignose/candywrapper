@@ -1,31 +1,25 @@
 import { CombatStrategy } from "grimoire-kolmafia";
 import {
-  autosellPrice,
   availableAmount,
   canAdventure,
   chew,
   cliExecute,
-  cupOf13sTier,
-  eatsilent,
   equip,
   Familiar,
   fullnessLimit,
   getCampground,
   getClanLounge,
   getClanName,
-  getWorkshed,
   guildStoreAvailable,
   handlingChoice,
   hippyStoneBroken,
   holiday,
   inebrietyLimit,
   Item,
-  itemDropsArray,
   lastChoice,
   Location,
   mallPrice,
   maximize,
-  Monster,
   myAdventures,
   myClass,
   myDaycount,
@@ -37,7 +31,6 @@ import {
   myMp,
   myPrimestat,
   mySpleenUse,
-  print,
   restoreHp,
   restoreMp,
   retrieveItem,
@@ -59,7 +52,6 @@ import {
   $items,
   $location,
   $monster,
-  $monsters,
   $phylum,
   $skill,
   $skills,
@@ -67,16 +59,13 @@ import {
   AprilingBandHelmet,
   AsdonMartin,
   CombatLoversLocket,
-  CupOfThirteens,
   get,
   getTodaysHolidayWanderers,
   have,
   Macro,
-  maxBy,
   PocketProfessor,
   set,
   Snapper,
-  sum,
   uneffect,
 } from "libram";
 
@@ -84,7 +73,6 @@ import { args } from "../args";
 import { Task } from "../structure";
 
 import {
-  cheapestItem,
   getGarden,
   getNextFreeKill,
   maxBase,
@@ -548,63 +536,6 @@ export function crimbo(): Task[] {
   ];
 }
 
-export function cupOf13sDrink(): Task[] {
-  return [
-    {
-      name: "Drink Cup of 13s",
-      ready: () => get("_cupOf13sJewels", 0) >= 13 && myInebriety() < inebrietyLimit() && args.cs,
-      completed: () => get("_cupOf13sJewels", 0) < 13,
-      do: () => {
-        const combination = cheapestCupOf13sCombination();
-        if (combination === null) {
-          throw "Cup of 13s died";
-        }
-        const item1 = combination[0];
-        const item2 = combination[1];
-        const item3 = combination[2];
-
-        print(`Using items ${item1}, ${item2}, and ${item3} for cup of 13s`);
-
-        combination.forEach((i) => retrieveItem(i, 2));
-        CupOfThirteens.drink(item1, item2, item3);
-      },
-    },
-  ];
-}
-
-export function sWordSetup(): Task[] {
-  if (!CombatLoversLocket.have() || !CombatLoversLocket.reminiscesLeft()) {
-    return [];
-  } else
-    return [
-      {
-        name: "Set up S Word",
-        ready: () => have($familiar`Sword of S Words`),
-        completed: () => get("swordOfSWordsMonster", Monster.none) === getSWordMonster() || true,
-        do: () => CombatLoversLocket.reminisce(getSWordMonster()),
-        outfit: () => {
-          return {
-            pants: have($item`Greatest American Pants`)
-              ? $item`Greatest American Pants`
-              : undefined,
-            familiar: $familiar`Sword of S Words`,
-          };
-        },
-        combat: new CombatStrategy().macro(
-          Macro.trySkill($skill`%fn, kill a lot of these guys`).runaway(),
-        ),
-      },
-    ];
-}
-
-function getSWordMonster(): Monster {
-  // eslint-disable-next-line libram/verify-constants
-  const goodMonsters = $monsters`giant flamingo statue, Sloppy Seconds Burger, strong wind`;
-
-  return maxBy(goodMonsters, (monster) =>
-    sum(itemDropsArray(monster), ({ drop, rate }) => (rate / 100) * mallPrice(drop)),
-  );
-}
 
 export function sealClubberFishySetup(): Task[] {
   if (myClass() !== $class`Seal Clubber`) return [];
@@ -679,33 +610,8 @@ export function pompeii(): Task[] {
       ready: () => !get("_pompeiiRun", false),
       completed: () => get("_pompeiiRun", false),
       do: () => {
-        cliExecute("pompeii");
+        cliExecute("pompeii barbershop draftsman gesture");
         set("_pompeiiRun", true);
-      },
-    },
-  ];
-}
-
-export function pregamePasta(): Task[] {
-  return [
-    {
-      name: "Pregame Legendary Pasta",
-      ready: () => getWorkshed() === $item`portable Mayo Clinic`,
-      completed: () => true,
-      do: () => {
-        // eslint-disable-next-line libram/verify-constants
-        const legendaryPasta = $items`Pesto alla Marziano, Arrattabbattabiata, Frutti di Scatoletta, Orzo di Riso, Pasta Grimavera, Linguini Ubriacapa, Gnocci Domani, Formica e Pepe, Tubetto Gelatto`;
-        const cheapestPasta = cheapestItem(legendaryPasta);
-        const deepDish = $item`Deep Dish of Legend`;
-        retrieveItem($item`Mayoflex`);
-        use($item`Mayoflex`);
-        retrieveItem(cheapestPasta);
-        eatsilent(cheapestPasta, 1);
-        runChoice(5);
-        retrieveItem($item`Mayozapine`);
-        use($item`Mayozapine`);
-        retrieveItem(deepDish);
-        eatsilent(deepDish);
       },
     },
   ];
@@ -776,45 +682,6 @@ function combatSkill(): Skill {
   if (myPrimestat() === $stat`Muscle`) {
     return $skill`Lunging Thrust-Smack`;
   } else return $skill`Saucegeyser`;
-}
-
-function cheapestCupOf13sCombination(): [Item, Item, Item] | null {
-  const items = Item.all().filter(
-    (item) =>
-      !item.name.includes("Loathing Idol") &&
-      cupOf13sTier(item) > 3 &&
-      autosellPrice(item) < 250 &&
-      mallPrice(item) <= 500,
-  );
-
-  let best: [Item, Item, Item] | null = null;
-  let bestPrice = Infinity;
-
-  for (let i = 0; i < items.length; i++) {
-    const item1 = items[i];
-    const tier1 = cupOf13sTier(item1);
-
-    for (let j = i; j < items.length; j++) {
-      const item2 = items[j];
-      const tier2 = cupOf13sTier(item2);
-
-      for (let k = j; k < items.length; k++) {
-        const item3 = items[k];
-        const tier3 = cupOf13sTier(item3);
-
-        if (tier1 + tier2 + tier3 !== 13) continue;
-
-        const price = mallPrice(item1) + mallPrice(item2) + mallPrice(item3);
-
-        if (price < bestPrice) {
-          bestPrice = price;
-          best = [item1, item2, item3];
-        }
-      }
-    }
-  }
-
-  return best;
 }
 
 function buildSeaPearlMacro(): Macro {
